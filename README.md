@@ -2,6 +2,13 @@
 
 인프런과 같이 교육 관련 영상을 카테고리별로 묶어 쉽게 시청할 수 있도록 서비스를 제공하는 플랫폼입니다.
 
+# 기술 스택
+
+- 협업툴: **github(pr label, issue)**
+- 프레임워크: **Next.js 14**
+- 상태관리툴 : **zustand / react-query**
+- style: **Styled Component / MUI**
+
 # 제공 서비스
 
 ## 동영상 스트리밍 리스트
