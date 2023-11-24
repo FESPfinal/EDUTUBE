@@ -1,7 +1,7 @@
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <form>
-      <h2>Create</h2>
+      <h2>Video Layout</h2>
       {children}
     </form>
   );
