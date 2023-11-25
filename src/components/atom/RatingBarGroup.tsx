@@ -2,20 +2,20 @@
 
 import RatingBar from './RatingBar';
 
-type PersentList = { five: string; four: string; three: string; two: string; one: string };
+type PercentList = { five: string; four: string; three: string; two: string; one: string };
 
 interface Props {
-  persentList: PersentList;
+  percentList: PercentList;
 }
 
-const RatingBarGroup = ({ persentList }: Props) => {
+const RatingBarGroup = ({ percentList }: Props) => {
   return (
     <>
-      <RatingBar point={'5'} percent={persentList.five} />
-      <RatingBar point={'4'} percent={persentList.four} />
-      <RatingBar point={'3'} percent={persentList.three} />
-      <RatingBar point={'2'} percent={persentList.two} />
-      <RatingBar point={'1'} percent={persentList.one} />
+      <RatingBar point={'5'} percent={percentList.five} />
+      <RatingBar point={'4'} percent={percentList.four} />
+      <RatingBar point={'3'} percent={percentList.three} />
+      <RatingBar point={'2'} percent={percentList.two} />
+      <RatingBar point={'1'} percent={percentList.one} />
     </>
   );
 };
