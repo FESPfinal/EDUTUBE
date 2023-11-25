@@ -1,8 +1,13 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { useTheme } from 'next-themes';
 
+interface StepperProps {
+  title: string;
+  state: string
+}
 
 const lightStepper: Record<string, string> = {
   default: 'bg-light-disabled',
@@ -16,12 +21,12 @@ const darkStepper: Record<string, string> = {
   active: 'bg-dark-main',
 };
 
-const Stepper = ({ title, state='default' }: StepperType) => {
+const Stepper = ({ title, state='default' }: StepperProps) => {
   const { systemTheme, theme } = useTheme();
   const currentTheme = theme === 'system' ? systemTheme : theme;
   return (
     <>
-      <a href="#">
+      <Link href="#">
         <span className={`
         inline-block 
         w-3.5 h-3.5 
@@ -30,14 +35,9 @@ const Stepper = ({ title, state='default' }: StepperType) => {
         ${currentTheme === 'dark' ? darkStepper[state] : lightStepper[state]} 
         `}></span>
         {title}
-      </a>
+      </Link>
     </>
   );
 };
-
-interface StepperType {
-  title: string;
-  state: string
-}
 
 export default Stepper;
