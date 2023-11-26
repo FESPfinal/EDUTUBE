@@ -1,6 +1,16 @@
 'use client';
 import { useTheme } from 'next-themes';
 
+interface Props {
+  content: string | number;
+  onClick?: (event?: React.MouseEvent<HTMLButtonElement>) => void;
+  disabled?: boolean;
+  color?: string;
+  darkColor?: string;
+  textColor?: string;
+  size?: 'large' | 'medium' | 'small';
+}
+
 const sizes = {
   small: ' px-2 py-2 rounded-lg text-base w-content',
   medium: 'px-4 py-4 rounded-lg text-base min-h-12 w-full',
@@ -12,10 +22,10 @@ const Button = ({
   onClick,
   disabled = false,
   color = 'bg-light-main',
-  darkColor = 'bg-dark-main',
+  darkColor = 'bg-light-main',
   textColor = 'text-white',
   size = 'large',
-}: ButtonType) => {
+}: Props) => {
   const { systemTheme, theme } = useTheme();
   const currentTheme = theme === 'system' ? systemTheme : theme;
   let sizeClass = sizes[size];
@@ -23,7 +33,7 @@ const Button = ({
     <button
       className={`font-medium ${
         disabled == true ? `bg-light-disabled` : currentTheme === 'light' ? color : darkColor
-      } ${textColor} ${sizeClass}`}
+      } ${textColor} ${sizeClass} hover:bg-dark-main`}
       type="button"
       onClick={onClick}
       disabled={disabled}
@@ -32,15 +42,5 @@ const Button = ({
     </button>
   );
 };
-
-interface ButtonType {
-  content: string | number;
-  onClick?: (event?: React.MouseEvent<HTMLButtonElement>) => void;
-  disabled?: boolean;
-  color?: string;
-  darkColor?: string;
-  textColor?: string;
-  size?: 'large' | 'medium' | 'small';
-}
 
 export default Button;
