@@ -2,10 +2,6 @@
 
 import { FC, useState } from 'react';
 
-type CategoryList = {
-  [key in string]: number;
-};
-
 interface CategoryProps {
   name: string;
   setSelectedCategory: ({ isSelected, name }: { isSelected: boolean; name: string }) => void;
