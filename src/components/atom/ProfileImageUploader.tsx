@@ -5,11 +5,11 @@ import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faImage } from '@fortawesome/free-solid-svg-icons';
 
-interface ProfileImageUploaderProps {
+interface Props {
   onImageUpload: (image: File) => void;
 }
 
-const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({ onImageUpload }) => {
+const ProfileImageUploader: React.FC<Props> = ({ onImageUpload }) => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
