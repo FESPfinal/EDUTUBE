@@ -14,7 +14,6 @@ const Inquire = () => {
 
   const handleClick = () => {
     setToggle(!toggle);
-    console.log(toggle);
   };
 
   return (
@@ -67,7 +66,7 @@ const Inquire = () => {
           </p>
           <Image
             src={currentTheme === 'dark' ? darkLogo : lightLogo}
-            alt=''
+            alt='로고'
             style={{
               height: '80px',
               position: 'absolute',
