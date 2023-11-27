@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useTheme } from 'next-themes';
 
-interface StepperProps {
+interface Props {
   title: string;
   state: string
 }
@@ -21,7 +21,7 @@ const darkStepper: Record<string, string> = {
   active: 'bg-dark-main',
 };
 
-const Stepper = ({ title, state='default' }: StepperProps) => {
+const Stepper = ({ title, state='default' }: Props) => {
   const { systemTheme, theme } = useTheme();
   const currentTheme = theme === 'system' ? systemTheme : theme;
   return (
