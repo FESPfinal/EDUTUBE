@@ -1,7 +1,7 @@
 'use client';
 import { useTheme } from 'next-themes';
 
-interface InputProps {
+interface Props {
   border: string;
   type: string;
   placeholder: string;
@@ -27,7 +27,7 @@ const Input = ({
   helperTxt,
   isError,
   label
-}: InputProps) => {
+}: Props) => {
 
   const { systemTheme, theme } = useTheme();
   const currentTheme = theme === 'system' ? systemTheme : theme;
@@ -40,6 +40,7 @@ const Input = ({
       <input
         className={
           `
+          w-full
           border border-solid ${currentTheme === 'dark' ? darkborders[border] : lightborders[border]} 
           ${errorState ? (currentTheme === 'dark' ? 'border-dark-error' : 'border-light-error') : ''} 
           rounded 
