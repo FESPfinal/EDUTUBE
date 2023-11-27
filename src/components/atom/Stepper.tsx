@@ -25,7 +25,6 @@ const Stepper = ({ title, state='default' }: Props) => {
   const { systemTheme, theme } = useTheme();
   const currentTheme = theme === 'system' ? systemTheme : theme;
   return (
-    <>
       <Link href="#">
         <span className={`
         inline-block 
@@ -36,7 +35,6 @@ const Stepper = ({ title, state='default' }: Props) => {
         `}></span>
         {title}
       </Link>
-    </>
   );
 };
 
