@@ -3,12 +3,12 @@
 import Image from 'next/image';
 import { FC } from 'react';
 
-interface AvatarProps {
+interface Props {
   imageUrl: string;
   size?: 'small' | 'medium' | 'large';
 }
 
-const Avatar: FC<AvatarProps> = ({ imageUrl = '/images/default.png', size = 'medium' }) => {
+const Avatar = ({ imageUrl = '/images/default.png', size = 'medium' }: Props) => {
   const sizeClasses = {
     small: { width: 24, height: 24 },
     medium: { width: 40, height: 40 },
