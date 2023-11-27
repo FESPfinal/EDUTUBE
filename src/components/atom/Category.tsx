@@ -1,13 +1,13 @@
 'use client';
 
-import { FC, useState } from 'react';
+import { useState } from 'react';
 
-interface CategoryProps {
+interface Props {
   name: string;
   setSelectedCategory: ({ isSelected, name }: { isSelected: boolean; name: string }) => void;
 }
 
-const Category: FC<CategoryProps> = ({ name, setSelectedCategory }) => {
+const Category: Props = ({ name, setSelectedCategory }: Props) => {
   const [isSelected, setIsSelected] = useState(false);
 
   const handleClick = () => {
