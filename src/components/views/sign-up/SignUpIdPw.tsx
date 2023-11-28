@@ -1,11 +1,12 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
 import Radio from '@/components/atom/Radio';
 import useCheckDuplicateEmail from '@/queries/signUp/useCheckDuplicateEmail';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import { USER_TYPES } from './consts';
 import { Step1Data } from './types';
 
 const schema = yup.object().shape({
@@ -24,11 +25,6 @@ const schema = yup.object().shape({
 });
 
 type FormData = yup.InferType<typeof schema>;
-
-const USER_TYPES = {
-  USER: 'user',
-  SELLER: 'seller',
-} as { [key in string]: string };
 
 const USER_TYPE = 'userType';
 
