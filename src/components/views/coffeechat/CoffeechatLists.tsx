@@ -15,7 +15,10 @@ const CoffeechatLists = () => {
   }
   return (
     <>
-      <h1 className="text-3xl font-bold mb-4">이것은 커피챗 리스트</h1>
+      <div className="h-60 bg-black text-white">광고중</div>
+      <div className="h-10"></div>
+      <h1 className="text-xl font-bold mb-4 text-center">커피챗 전체 보기</h1>
+      <div className="h-10" />
       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {커피챗리스트데이터?.item.map(item => (
           <li key={item._id} className="bg-white p-4 rounded-lg shadow-md">
