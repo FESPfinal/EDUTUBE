@@ -1,16 +1,12 @@
 'use client';
-import { QueryClientProvider, QueryClient } from 'react-query';
-
-const queryClient = new QueryClient();
+import ReactQueryClient from '../../src/helper/utils/ReactQueryClient';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <form>
-        <h2>Coffechat Layout</h2>
-        {children}
-      </form>
-    </QueryClientProvider>
+    <form>
+      <h2>Coffechat Layout</h2>
+      <ReactQueryClient>{children}</ReactQueryClient>
+    </form>
   );
 };
 
