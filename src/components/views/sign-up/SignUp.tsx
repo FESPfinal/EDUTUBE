@@ -5,6 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import Radio from '@/components/atom/Radio';
 import useCheckDuplicateEmail from '@/queries/signUp/useCheckDuplicateEmail';
+import { useState } from 'react';
 
 const schema = yup.object().shape({
   email: yup.string().email('이메일 형식이 잘못되었습니다.').required('email is required'),
@@ -23,7 +24,16 @@ const schema = yup.object().shape({
 
 type FormData = yup.InferType<typeof schema>;
 
+const USER_TYPES = {
+  USER: 'user',
+  SELLER: 'seller',
+} as { [key in string]: string };
+
+const USER_TYPE = 'userType';
+
 const SignUp = () => {
+  const [userType, setUserType] = useState(USER_TYPES.USER);
+
   const {
     register,
     handleSubmit,
@@ -46,11 +56,14 @@ const SignUp = () => {
     });
   };
 
+  const handleUserType = (type: string) => {
+    setUserType(type);
+  };
+
   const onSubmit = (data: FormData) => {
     console.log(data);
     // 여기에 회원가입 로직을 구현하세요.
   };
-  console.log(errors);
 
   return (
     <>
@@ -59,10 +72,10 @@ const SignUp = () => {
         <p>에듀튜브에서 당신의 꿈을 펼쳐보세요</p>
       </div>
       <div className="flex justify-center">
-        <Radio value={'user'} name={'author'}>
+        <Radio value={USER_TYPES.USER} name={USER_TYPE} defaultChecked onClick={handleUserType}>
           일반 회원
         </Radio>
-        <Radio value={'seller'} name={'author'}>
+        <Radio value={USER_TYPES.SELLER} name={USER_TYPE} onClick={handleUserType}>
           강사 회원
         </Radio>
       </div>
