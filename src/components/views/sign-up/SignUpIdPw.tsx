@@ -6,6 +6,7 @@ import * as yup from 'yup';
 import Radio from '@/components/atom/Radio';
 import useCheckDuplicateEmail from '@/queries/signUp/useCheckDuplicateEmail';
 import { useState } from 'react';
+import { Step1Data } from './types';
 
 const schema = yup.object().shape({
   email: yup.string().email('이메일 형식이 잘못되었습니다.').required('email is required'),
@@ -31,7 +32,11 @@ const USER_TYPES = {
 
 const USER_TYPE = 'userType';
 
-const SignUpIdPw = () => {
+interface Props {
+  nextStep: (data: Step1Data) => void;
+}
+
+const SignUpIdPw = ({ nextStep }: Props) => {
   const [userType, setUserType] = useState(USER_TYPES.USER);
 
   const {
@@ -61,8 +66,7 @@ const SignUpIdPw = () => {
   };
 
   const onSubmit = (data: FormData) => {
-    console.log(data);
-    // 여기에 회원가입 로직을 구현하세요.
+    nextStep({ type: userType, email: data.email, password: data.password });
   };
 
   return (
