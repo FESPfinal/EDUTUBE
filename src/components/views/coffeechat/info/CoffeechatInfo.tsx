@@ -4,14 +4,14 @@ import Link from 'next/link';
 
 const CoffeechatInfo = ({ _id }: { _id: string }) => {
   const {
-    커피챗디테일데이터,
-    커피챗디테일데이터Loading,
-    커피챗디테일에러여부,
+    data: coffeechatDetailData,
+    loading: coffeechatDetailLoading,
+    isError: coffeechatDetailIsError,
   } = useSelectCoffeechatInfo(_id);
 
-  if (커피챗디테일데이터Loading) return <></>;
-  if (커피챗디테일에러여부) {
-    return <div>Error: {커피챗디테일에러여부.message}</div>;
+  if (coffeechatDetailLoading) return <></>;
+  if (coffeechatDetailIsError) {
+    return <div>Error: {coffeechatDetailIsError.message}</div>;
   }
 
   return (
@@ -21,16 +21,16 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
         <div className="flex flex-col md:flex-row">
           <div className="md:w-1/2 mb-4 md:mr-4">
             <img
-              src={커피챗디테일데이터?.item?.mainImages[0]}
-              alt={커피챗디테일데이터?.item?.name}
+              src={coffeechatDetailData?.item.mainImages[0]}
+              alt={coffeechatDetailData?.item.name}
               className="w-full h-auto"
             />
           </div>
           <div className="md:w-1/2">
-            <h3 className="text-lg font-bold mb-2">{커피챗디테일데이터.item.name}</h3>
-            <p className="mb-2">{커피챗디테일데이터?.item?.seller_id}</p>
+            <h3 className="text-lg font-bold mb-2">{coffeechatDetailData?.item.name}</h3>
+            <p className="mb-2">{coffeechatDetailData?.item.seller_id}</p>
             {/* 셀러 id로 셀러 정보 가져와서 프로필 이미지와 이름 정보 가져오기 */}
-            <p className="mb-2">{커피챗디테일데이터?.item?.extra?.category}</p>
+            <p className="mb-2">{coffeechatDetailData?.item.extra.category}</p>
           </div>
         </div>
         <div className="flex justify-between mt-4">
@@ -40,7 +40,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
           </div>
           <div>
             <p className="text-lg font-bold">가격</p>
-            <p>{커피챗디테일데이터?.item?.price} 포인트</p>
+            <p>{coffeechatDetailData?.item.price} 포인트</p>
           </div>
         </div>
       </div>
