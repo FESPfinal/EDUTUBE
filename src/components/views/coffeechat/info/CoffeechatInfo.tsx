@@ -24,8 +24,8 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
         },
       ],
       address: {
-        name: '학교',
-        value: '서울시 강남구 역삼동 234',
+        name: '',
+        value: '',
       },
     };
 
