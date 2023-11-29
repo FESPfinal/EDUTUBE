@@ -18,7 +18,7 @@ export type SignUpData = {
     nickname: string;
     contactEmail: string;
     intro?: string;
-    sns?: [];
+    sns?: string;
   };
 };
 

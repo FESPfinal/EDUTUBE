@@ -6,6 +6,7 @@ import SignUpUserInfo from './SignUpUserInfo';
 import { Step1Data, Step2UserData } from './types';
 import { USER_TYPES } from './consts';
 import useCreateUser, { SignUpData } from '@/queries/signUp/useCreateUser';
+import SignUpSellerInfo from './SignUpSellerInfo';
 
 type DefaultUserData = {
   email: string;
@@ -47,7 +48,9 @@ const SignUp = () => {
       {signUpStep === STEPS.STEP2 && step1Data?.type === USER_TYPES.USER && (
         <SignUpUserInfo step1Data={step1Data} />
       )}
-      {/* {signUpStep === STEPS.STEP2 && signUpData?.type === USER_TYPES.SELLER && <SignUpSellerInfo />} */}
+      {signUpStep === STEPS.STEP2 && step1Data?.type === USER_TYPES.SELLER && (
+        <SignUpSellerInfo step1Data={step1Data} />
+      )}
     </>
   );
 };
