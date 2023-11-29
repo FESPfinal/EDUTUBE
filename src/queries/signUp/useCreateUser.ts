@@ -3,8 +3,6 @@
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 
-const BASE_URL = process.env.NEXT_PUBLIC_EDUTUBE_API;
-const URL = '/users';
 export type SignUpData = {
   email: string;
   password: string;
@@ -22,13 +20,15 @@ export type SignUpData = {
   };
 };
 
+const BASE_URL = process.env.NEXT_PUBLIC_EDUTUBE_API;
+const URL = '/users';
+
+const axiosPost = async (userData: SignUpData) => {
+  const response = await axios.post(BASE_URL + URL, userData);
+  return response.data;
+};
+
 const useCreateUser = () => {
-  return useMutation({
-    mutationFn: async (userData: SignUpData) => {
-      console.log(userData);
-      const response = await axios.post(BASE_URL + URL, userData);
-      return response.data;
-    },
-  });
+  return useMutation({ mutationFn: axiosPost });
 };
 export default useCreateUser;
