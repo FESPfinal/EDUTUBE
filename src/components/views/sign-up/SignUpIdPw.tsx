@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { USER_TYPES } from './consts';
 import { Step1Data } from './types';
+import { AxiosError } from 'axios';
 
 const schema = yup.object().shape({
   email: yup.string().email('이메일 형식이 잘못되었습니다.').required('email is required'),
@@ -34,6 +35,7 @@ interface Props {
 
 const SignUpIdPw = ({ getData }: Props) => {
   const [userType, setUserType] = useState(USER_TYPES.USER);
+  const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
 
   const {
     register,
@@ -48,11 +50,14 @@ const SignUpIdPw = ({ getData }: Props) => {
     const email = getValues('email');
 
     mutateCheckEmail(email, {
-      onSuccess: data => {
-        console.log(data);
+      onSuccess: () => {
+        alert('사용할 수 있는 이메일입니다.');
+        setIsButtonDisabled(false);
       },
       onError: error => {
-        console.log(error.message);
+        if (error instanceof AxiosError) {
+          alert(error.response?.data.message);
+        }
       },
     });
   };
@@ -121,7 +126,8 @@ const SignUpIdPw = ({ getData }: Props) => {
         </label>
         <button
           type="submit"
-          className="w-full px-3 py-4 text-white bg-light-main rounded-md hover:bg-dark-main focus:outline-none"
+          disabled={isButtonDisabled}
+          className="w-full px-3 py-4 text-white bg-light-main rounded-md hover:bg-dark-main focus:outline-none disabled:bg-dark-disabled"
         >
           다음
         </button>
