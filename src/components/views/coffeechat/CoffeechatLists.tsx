@@ -4,14 +4,14 @@ import Link from 'next/link';
 
 const CoffeechatLists = () => {
   const {
-    커피챗리스트데이터,
-    커피챗리스트데이터Loading,
-    커피챗리스트에러여부,
+    data: coffeechatListData,
+    loading: coffeechatListLoading,
+    isError: coffeechatListIsError,
   } = useSelectCoffeechatList();
 
-  if (커피챗리스트데이터Loading) return <></>;
-  if (커피챗리스트에러여부) {
-    return <div>Error: {커피챗리스트에러여부.message}</div>;
+  if (coffeechatListLoading) return <></>;
+  if (coffeechatListIsError) {
+    return <div>Error: {coffeechatListIsError.message}</div>;
   }
   return (
     <>
@@ -20,7 +20,7 @@ const CoffeechatLists = () => {
       <h1 className="text-xl font-bold mb-4 text-center">커피챗 전체 보기</h1>
       <div className="h-10" />
       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {커피챗리스트데이터?.item.map(item => (
+        {coffeechatListData?.item.map(item => (
           <li key={item._id} className="bg-white p-4 rounded-lg shadow-md">
             <Link href={`coffeechat/info/${item._id}`}>
               <img
