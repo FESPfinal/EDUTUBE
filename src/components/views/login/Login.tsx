@@ -4,16 +4,11 @@ import useLogin from '@/queries/login/useLogin';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
+import Cookies from 'js-cookie';
 
 const schema = yup.object().shape({
   email: yup.string().email().required('이메일 형식이 잘못되었습니다.'),
-  password: yup
-    .string()
-    .matches(
-      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@!%*#?&])[A-Za-z\d@!%*#?&]{8,}$/,
-      '8글자 이상 영문자, 숫자, 특수문자를 조합해서 입력하세요.',
-    )
-    .required('비밀번호를 입력해 주세요'),
+  password: yup.string().required('비밀번호를 입력해 주세요'),
 });
 
 type FormData = yup.InferType<typeof schema>;
@@ -34,7 +29,8 @@ const Login = () => {
       },
       {
         onSuccess: data => {
-          console.log(data);
+          Cookies.set('accessToken', data.token.accessToken);
+          Cookies.set('refreshToken', data.token.refreshToken);
         },
         onError: () => {
           alert('아이디 혹은 비밀번호가 일치하지 않습니다.');
