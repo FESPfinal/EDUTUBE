@@ -29,10 +29,10 @@ type FormData = yup.InferType<typeof schema>;
 const USER_TYPE = 'userType';
 
 interface Props {
-  nextStep: (data: Step1Data) => void;
+  getData: (data: Step1Data) => void;
 }
 
-const SignUpIdPw = ({ nextStep }: Props) => {
+const SignUpIdPw = ({ getData }: Props) => {
   const [userType, setUserType] = useState(USER_TYPES.USER);
 
   const {
@@ -62,7 +62,7 @@ const SignUpIdPw = ({ nextStep }: Props) => {
   };
 
   const onSubmit = (data: FormData) => {
-    nextStep({ type: userType, email: data.email, password: data.password });
+    getData({ type: userType, email: data.email, password: data.password });
   };
 
   return (

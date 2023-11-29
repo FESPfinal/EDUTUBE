@@ -5,6 +5,7 @@ import SignUpIdPw from './SignUpIdPw';
 import SignUpUserInfo from './SignUpUserInfo';
 import { Step1Data, Step2UserData } from './types';
 import { USER_TYPES } from './consts';
+import useCreateUser, { SignUpData } from '@/queries/signUp/useCreateUser';
 
 type DefaultUserData = {
   email: string;
@@ -17,6 +18,7 @@ type DefaultUserData = {
 
 type UserData = {
   extra: {
+    profileImage: File | undefined;
     major: string;
     contactEmail: string;
     profile: string;
@@ -32,22 +34,18 @@ const STEPS = {
 
 const SignUp = () => {
   const [signUpStep, setSignUpStep] = useState(STEPS.STEP1);
-  const [signUpData, setSignUpData] = useState<Step1Data | Step2UserData | UserData>();
+  const [step1Data, setStep1Data] = useState<Step1Data>();
 
   const goNextStep = (data: Step1Data) => {
     setSignUpStep(step => step + 1);
-    setSignUpData(acc => ({ ...acc, ...data }));
-  };
-
-  const goFinStep = (data: Step2UserData) => {
-    setSignUpData(acc => ({ ...acc, ...data }));
+    setStep1Data(acc => ({ ...acc, ...data }));
   };
 
   return (
     <>
-      {signUpStep === STEPS.STEP1 && <SignUpIdPw nextStep={goNextStep} />}
-      {signUpStep === STEPS.STEP2 && signUpData?.type === USER_TYPES.USER && (
-        <SignUpUserInfo finStep={goFinStep} />
+      {signUpStep === STEPS.STEP1 && <SignUpIdPw getData={goNextStep} />}
+      {signUpStep === STEPS.STEP2 && step1Data?.type === USER_TYPES.USER && (
+        <SignUpUserInfo step1Data={step1Data} />
       )}
       {/* {signUpStep === STEPS.STEP2 && signUpData?.type === USER_TYPES.SELLER && <SignUpSellerInfo />} */}
     </>

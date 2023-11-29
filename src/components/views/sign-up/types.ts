@@ -7,8 +7,12 @@ export type Step1Data = {
 export type Step2UserData = {
   type: string;
   name: string;
-  nickname: string;
   address: string;
-  contactEmail: string;
-  major: string;
+  phone: string;
+  extra: {
+    profileImage: File | undefined;
+    nickname: string;
+    contactEmail: string;
+    major: string;
+  };
 };

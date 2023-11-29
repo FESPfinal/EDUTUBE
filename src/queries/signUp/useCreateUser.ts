@@ -1,38 +1,32 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 
-const BASE_URL = 'https://localhost/api';
+const BASE_URL = process.env.NEXT_PUBLIC_EDUTUBE_API;
 const URL = '/users';
+export type SignUpData = {
+  email: string;
+  password: string;
+  name: string;
+  phone: string;
+  address: string;
+  type: string;
+  extra: {
+    profileImage: File | undefined;
+    major: string;
+    nickname: string;
+    contactEmail: string;
+    intro?: string;
+    sns?: [];
+  };
+};
 
 const useCreateUser = () => {
-  return useQuery({
-    queryKey: [URL],
-    queryFn: async () => {
-      const response = await axios.post(BASE_URL + URL, {
-        email: 'test@market.com',
-        password: '11111111',
-        name: 'postman',
-        phone: '0118889999',
-        address: '서울시 강남구 역삼동 123',
-        type: 'user',
-        extra: {
-          birthday: '03-23',
-          address: [
-            {
-              id: 1,
-              name: '집',
-              value: '서울시 강남구 역삼동 123',
-            },
-            {
-              id: 2,
-              name: '회사',
-              value: '서울시 강남구 신사동 234',
-            },
-          ],
-        },
-      });
+  return useMutation({
+    mutationFn: async (userData: SignUpData) => {
+      console.log(userData);
+      const response = await axios.post(BASE_URL + URL, userData);
       return response.data;
     },
   });
