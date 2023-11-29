@@ -46,31 +46,21 @@ const SignUpSellerInfo = ({ step1Data }: Props) => {
 
   const { mutate: createUserMutate } = useCreateUser();
   const onSubmit = (data: FormData) => {
-    createUserMutate(
-      {
-        ...step1Data,
-        type: USER_TYPES.SELLER,
-        name: data.name,
-        address: data.address || '',
-        phone: data.phone || '',
-        extra: {
-          profileImage: imageFile,
-          major: data.major || '',
-          nickname: data.nickname,
-          contactEmail: data.contactEmail,
-          intro: data.intro,
-          sns: data.sns,
-        },
+    createUserMutate({
+      ...step1Data,
+      type: USER_TYPES.SELLER,
+      name: data.name,
+      address: data.address || '',
+      phone: data.phone || '',
+      extra: {
+        profileImage: imageFile,
+        major: data.major || '',
+        nickname: data.nickname,
+        contactEmail: data.contactEmail,
+        intro: data.intro,
+        sns: data.sns,
       },
-      {
-        onSuccess: data => {
-          console.log(data);
-        },
-        onError: error => {
-          console.log(error);
-        },
-      },
-    );
+    });
   };
 
   return (

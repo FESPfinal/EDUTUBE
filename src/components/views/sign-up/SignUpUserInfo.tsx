@@ -10,7 +10,7 @@ import { Step1Data } from './types';
 import useCreateUser from '@/queries/signUp/useCreateUser';
 const phoneRegExp = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
 
-const schema = yup.object().shape({
+export const schema = yup.object().shape({
   name: yup.string().min(2, '최소 2글자 이상이어야 합니다.').required('값을 입력해주세요.'),
   nickname: yup.string().min(2, '최소 2글자 이상이어야 합니다.').required('값을 입력해주세요.'),
   address: yup.string(),
@@ -39,29 +39,19 @@ const SignUpUserInfo = ({ step1Data }: Props) => {
 
   const { mutate: createUserMutate } = useCreateUser();
   const onSubmit = (data: FormData) => {
-    createUserMutate(
-      {
-        ...step1Data,
-        type: USER_TYPES.USER,
-        name: data.name,
-        address: data.address || '',
-        phone: data.phone || '',
-        extra: {
-          profileImage: imageFile,
-          major: data.major || '',
-          nickname: data.nickname,
-          contactEmail: data.contactEmail,
-        },
+    createUserMutate({
+      ...step1Data,
+      type: USER_TYPES.USER,
+      name: data.name,
+      address: data.address || '',
+      phone: data.phone || '',
+      extra: {
+        profileImage: imageFile,
+        major: data.major || '',
+        nickname: data.nickname,
+        contactEmail: data.contactEmail,
       },
-      {
-        onSuccess: data => {
-          console.log(data);
-        },
-        onError: error => {
-          console.log(error);
-        },
-      },
-    );
+    });
   };
 
   return (
