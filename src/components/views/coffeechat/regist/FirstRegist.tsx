@@ -1,7 +1,7 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import useCreateProduct from '@/queries/coffeechat/useCreateProduct';
-import axiosGet from '@/queries/coffeechat/useGetUserInfo';
+import useGetUserInfo from '@/queries/coffeechat/useGetUserInfo';
 
 
 interface RequestBody {
@@ -27,6 +27,7 @@ interface RequestBody {
 
 const FirstRegist = () => {
   const { mutate: mutateCreateProduct } = useCreateProduct();
+  const { data: userData } = useGetUserInfo('');
   const [image, setImage] = useState<string[]>([]);
   const [dates, setDates] = useState<string[]>([]);
   const [times, setTimes] = useState<string[]>([]);
@@ -38,25 +39,12 @@ const FirstRegist = () => {
   const [category, setCategory] = useState('');
   const [intro, setIntro] = useState('');
   const [person, setPerson] = useState('');
-  const [userData, setUserData] = useState('');
   const type = 'coffeechat';
   const shippingFees = 0;
   const show = true;
   const active = true;
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const userData = await axiosGet();
-        setUserData(userData);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    
-    fetchUserData();
-  }, []);  
-
+  // react-hook-form으로 변경
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -77,7 +65,7 @@ const FirstRegist = () => {
         date: dates,
         time: times,
         person: person,
-        userData: userData
+        userData: userData || ''
       },
     };
 
