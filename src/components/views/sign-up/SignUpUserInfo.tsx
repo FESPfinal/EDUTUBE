@@ -8,6 +8,7 @@ import * as yup from 'yup';
 import { USER_TYPES } from './consts';
 import { Step1Data } from './types';
 import useCreateUser from '@/queries/signUp/useCreateUser';
+import { useRouter } from 'next/navigation';
 const phoneRegExp = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
 
 export const schema = yup.object().shape({
@@ -29,6 +30,8 @@ interface Props {
 }
 
 const SignUpUserInfo = ({ step1Data }: Props) => {
+  const router = useRouter();
+
   const [imageFile, setImageFile] = useState<File>();
 
   const {
@@ -39,19 +42,27 @@ const SignUpUserInfo = ({ step1Data }: Props) => {
 
   const { mutate: createUserMutate } = useCreateUser();
   const onSubmit = (data: FormData) => {
-    createUserMutate({
-      ...step1Data,
-      type: USER_TYPES.USER,
-      name: data.name,
-      address: data.address || '',
-      phone: data.phone || '',
-      extra: {
-        profileImage: imageFile,
-        major: data.major || '',
-        nickname: data.nickname,
-        contactEmail: data.contactEmail,
+    createUserMutate(
+      {
+        ...step1Data,
+        type: USER_TYPES.USER,
+        name: data.name,
+        address: data.address || '',
+        phone: data.phone || '',
+        extra: {
+          profileImage: imageFile,
+          major: data.major || '',
+          nickname: data.nickname,
+          contactEmail: data.contactEmail,
+        },
       },
-    });
+      {
+        onSuccess: () => {
+          alert('회원가입이 완료되었습니다.');
+          router.push('/login');
+        },
+      },
+    );
   };
 
   return (
