@@ -1,13 +1,48 @@
 'use client';
 import useSelectCoffeechatInfo from '../../../../queries/coffeechat/info/useSelectCoffeechatInfo';
-import Link from 'next/link';
+import useUpdateOrder from '../../../../queries/coffeechat/order/useUpdateOrder';
+import Button from '../../../atom/Button';
+import { IOrderDataType } from '../../../../helper/types/order';
+import { useRouter } from 'next/navigation';
 
 const CoffeechatInfo = ({ _id }: { _id: string }) => {
+  const router = useRouter();
   const {
     data: coffeechatDetailData,
     loading: coffeechatDetailLoading,
     isError: coffeechatDetailIsError,
   } = useSelectCoffeechatInfo(_id);
+
+  const { mutate: mutateOrderCoffeechat } = useUpdateOrder();
+
+  const orderCoffeechat = (_id: number) => {
+    const product: IOrderDataType = {
+      products: [
+        {
+          _id: _id,
+          quantity: 1,
+        },
+      ],
+      address: {
+        name: '학교',
+        value: '서울시 강남구 역삼동 234',
+      },
+    };
+
+    mutateOrderCoffeechat(product, {
+      onSuccess: data => {
+        alert(`주문이 완료되었습니다.`);
+      },
+      onError: error => {
+        if (error.message == 'authToken is not defined') {
+          alert(`로그인 이후에 결제가 가능합니다.`);
+          router.push('/login');
+        } else {
+          alert(`주문에 실패하셨습니다. ${error.message}`);
+        }
+      },
+    });
+  };
 
   if (coffeechatDetailLoading) return <></>;
   if (coffeechatDetailIsError) {
@@ -30,6 +65,11 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
             <h3 className="text-lg font-bold mb-2">{coffeechatDetailData?.item.name}</h3>
             <p className="mb-2">{coffeechatDetailData?.item.seller_id}</p>
             {/* 셀러 id로 셀러 정보 가져와서 프로필 이미지와 이름 정보 가져오기 */}
+            <Button
+              content="결제하기"
+              size="medium"
+              onClick={() => orderCoffeechat(parseInt(_id))}
+            />
             <p className="mb-2">{coffeechatDetailData?.item.extra.category}</p>
           </div>
         </div>
