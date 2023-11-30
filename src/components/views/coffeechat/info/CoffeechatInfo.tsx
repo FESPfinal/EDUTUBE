@@ -32,7 +32,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
     mutateOrderCoffeechat(product, {
       onSuccess: data => {
         alert(`주문이 완료되었습니다.`);
-        router.push('/mypage/purchases');
+        router.push('/mypage/purchase');
       },
       onError: error => {
         if (error.message == 'authToken is not defined') {
