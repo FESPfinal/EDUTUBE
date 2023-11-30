@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie';
 import { ProductType } from './../../helper/types/order';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
@@ -6,9 +7,10 @@ const BASE_URL = process.env.NEXT_PUBLIC_EDUTUBE_API;
 const URL: string = '/seller/products';
 
 const axiosPost = async (requestBody: ProductType) => {
+  const accessToken = Cookies.get('accessToken');
   const response = await axios.post(BASE_URL + URL, requestBody, {
     headers: {
-      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjIsInR5cGUiOiJzZWxsZXIiLCJpYXQiOjE3MDEzMTY1NjYsImV4cCI6MTcwMTMyMzc2NiwiaXNzIjoiRkVTUDAxIn0.hbz9pWl3AKpOKsSDQKA9XRU8zIiUY8drsIkkzBbsXcM`
+      Authorization: `Bearer ${accessToken}`
     }
   })
   return response
