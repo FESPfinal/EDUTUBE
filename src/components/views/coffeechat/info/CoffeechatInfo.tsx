@@ -8,6 +8,8 @@ import { IOrderDataType } from '../../../../helper/types/order';
 import { useRouter } from 'next/navigation';
 import useSelectMemberInfo from '../../../../queries/member/useSelectMemberInfo';
 import Cookies from 'js-cookie';
+import useDeleteCoffeeChat from '@/queries/coffeechat/useDeleteCoffeeChat';
+import Link from 'next/link';
 
 const CoffeechatInfo = ({ _id }: { _id: string }) => {
   const router = useRouter();
@@ -15,6 +17,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
   const { data: coffeechatDetailData } = useSelectCoffeechatInfo(_id);
   const { data: memberTypeData } = useSelectMemberInfo('type');
   const { mutate: mutateOrderCoffeechat } = useUpdateOrder();
+  const { mutate: mutateDeleteCoffeeChat } = useDeleteCoffeeChat();
 
   const orderCoffeechat = (_id: number) => {
     const product: IOrderDataType = {
@@ -45,6 +48,24 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
       },
     });
   };
+
+  const deleteCoffeeChat = (_id: string) => {
+    const deleteConfirm = confirm('정말 삭제하시겠습니까?');
+  
+    if (deleteConfirm) {
+      mutateDeleteCoffeeChat({ _id }, {
+        onSuccess: data => {
+          alert('삭제되었습니다.');
+          router.push('/coffeechat');
+        },
+        onError: error => {
+          alert('삭제에 실패하였습니다. ' + error.message);
+        },
+      });
+    }
+  };
+  
+  
 
   return (
     <>
@@ -83,15 +104,16 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
             <div className="space-y-4">
               {memberTypeData?.type == 'seller' && coffeechatDetailData?.seller_id == user_id ? (
                 <>
+                <Link href={`/coffeechat/update/${_id}`}>
                   <UpdateButton
                     content="수정하기"
                     size="medium"
-                    onClick={() => orderCoffeechat(parseInt(_id))}
                   />
+                </Link>
                   <DeleteButton
                     content="삭제하기"
                     size="medium"
-                    onClick={() => orderCoffeechat(parseInt(_id))}
+                    onClick={() => deleteCoffeeChat(_id)}
                     color="bg-light-error"
                     darkColor="bg-dark-error"
                     hoverColor="hover:bg-red-700"
