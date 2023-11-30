@@ -2,30 +2,11 @@
 import { useState } from 'react';
 import useCreateProduct from '@/queries/coffeechat/useCreateProduct';
 import useGetUserInfo from '@/queries/coffeechat/useGetUserInfo';
-
-
-interface RequestBody {
-  mainImages: string[];
-  name: string;
-  content: string;
-  price: string;
-  shippingFees: number;
-  show: boolean;
-  active: boolean;
-  extra: {
-    type: string;
-    category: string;
-    intro: string;
-    online: string;
-    offline: string;
-    date: string[];
-    time: string[];
-    person: string;
-    userData: string;
-  };
-}
+import { ProductType } from '@/helper/types/product';
+import { useRouter } from 'next/navigation';
 
 const FirstRegist = () => {
+  const router = useRouter();
   const { mutate: mutateCreateProduct } = useCreateProduct();
   const { data: userData } = useGetUserInfo('');
   const [image, setImage] = useState<string[]>([]);
@@ -48,7 +29,7 @@ const FirstRegist = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const requestBody: RequestBody = {
+    const requestBody: ProductType = {
       mainImages: image,
       name: title,
       content: content,
@@ -71,10 +52,11 @@ const FirstRegist = () => {
 
     mutateCreateProduct(requestBody, {
       onSuccess: data => {
-        console.log(data);
+        alert('등록되었습니다')
+        router.push('/coffeechat')
       },
       onError: error => {
-        console.log(error);
+        alert('등록에 실패하였습니다')
       },
     });
   };
