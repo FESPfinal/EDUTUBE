@@ -5,6 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 
 const schema = yup.object().shape({
   email: yup.string().email().required('이메일 형식이 잘못되었습니다.'),
@@ -14,6 +15,8 @@ const schema = yup.object().shape({
 type FormData = yup.InferType<typeof schema>;
 
 const Login = () => {
+  const router = useRouter();
+
   const {
     handleSubmit,
     register,
@@ -31,6 +34,7 @@ const Login = () => {
         onSuccess: data => {
           Cookies.set('accessToken', data.token.accessToken);
           Cookies.set('refreshToken', data.token.refreshToken);
+          router.push('/');
         },
         onError: () => {
           alert('아이디 혹은 비밀번호가 일치하지 않습니다.');
