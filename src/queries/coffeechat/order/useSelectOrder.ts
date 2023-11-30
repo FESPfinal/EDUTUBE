@@ -1,3 +1,4 @@
+'use client';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -7,7 +8,7 @@ const URL = '/orders';
 
 const axiosGet = async () => {
   const accessToken = Cookies.get('accessToken');
-  const response = await axios.post(BASE_URL + URL, {
+  const response = await axios.get(BASE_URL + URL, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
@@ -17,3 +18,5 @@ const axiosGet = async () => {
 const useSelectOrder = () => {
   return useQuery({ queryKey: ['orderList'], queryFn: axiosGet });
 };
+
+export default useSelectOrder;
