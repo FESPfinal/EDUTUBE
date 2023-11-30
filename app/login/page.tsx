@@ -1,8 +1,10 @@
-const Login = () => {
+import Login from '@/components/views/login/Login';
+
+const LoginPage = () => {
   return (
     <>
-      <h3>로그인 페이지</h3>
+      <Login />
     </>
   );
 };
-export default Login;
+export default LoginPage;

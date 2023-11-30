@@ -5,11 +5,12 @@ interface Props {
   children: ReactNode;
   value: string;
   name: string;
+  onClick: (type: string) => void;
   defaultChecked?: boolean;
   disabled?: boolean;
 }
 
-const Radio = ({ children, value, name, defaultChecked = false, disabled }: Props) => {
+const Radio = ({ children, value, name, defaultChecked = false, disabled, onClick }: Props) => {
   return (
     <label className="flex items-center">
       <input
@@ -19,6 +20,10 @@ const Radio = ({ children, value, name, defaultChecked = false, disabled }: Prop
         defaultChecked={defaultChecked}
         disabled={disabled}
         className="w-4 h-4 text-light-main focus:ring-light-main"
+        onClick={e => {
+          const curTarget = e.target as HTMLInputElement;
+          onClick(curTarget.value);
+        }}
       />
       <span className="m-2">{children}</span>
     </label>
