@@ -12,7 +12,8 @@ const Navbar = () => {
   const token = Cookies.get('refreshToken');
 
   return (
-    pathname !== '/login' && (
+    pathname !== '/login' &&
+    pathname !== '/sign-up' && (
       <>
         <nav className="flex items-center justify-between flex-wrap bg-light-main p-6">
           <div className="flex items-center flex-shrink-0 text-white mr-6">
