@@ -6,14 +6,14 @@ import UpdateButton from '../../../atom/Button';
 import DeleteButton from '../../../atom/Button';
 import { IOrderDataType } from '../../../../helper/types/order';
 import { useRouter } from 'next/navigation';
-import useSelectMemberType from '../../../../queries/member/useSelectMemberType';
+import useSelectMemberInfo from '../../../../queries/member/useSelectMemberInfo';
 import Cookies from 'js-cookie';
 
 const CoffeechatInfo = ({ _id }: { _id: string }) => {
   const router = useRouter();
   const user_id = Cookies.get('user_id');
   const { data: coffeechatDetailData } = useSelectCoffeechatInfo(_id);
-  const { data: memberTypeData } = useSelectMemberType();
+  const { data: memberTypeData } = useSelectMemberInfo('type');
   const { mutate: mutateOrderCoffeechat } = useUpdateOrder();
 
   const orderCoffeechat = (_id: number) => {

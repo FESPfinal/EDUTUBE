@@ -4,12 +4,12 @@ import Cookies from 'js-cookie';
 
 const user_id = Cookies.get('user_id');
 const BASE_URL = process.env.NEXT_PUBLIC_EDUTUBE_API;
-const URL = `/users/${user_id}/type`;
+const URL = (property: string) => `/users/${user_id}/${property}`;
 
-const axiosGet = async () => {
+const axiosGet = async (property: string) => {
   const accessToken = Cookies.get('accessToken');
 
-  const response = await axios.get(BASE_URL + URL, {
+  const response = await axios.get(BASE_URL + URL(property), {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
@@ -17,8 +17,8 @@ const axiosGet = async () => {
   return response.data.item;
 };
 
-const useSelectMemberType = () => {
-  return useQuery({ queryKey: ['MemberType'], queryFn: axiosGet });
+const useSelectMemberInfo = (property: string) => {
+  return useQuery({ queryKey: ['MemberInfo'], queryFn: () => axiosGet(property) });
 };
 
-export default useSelectMemberType;
+export default useSelectMemberInfo;
