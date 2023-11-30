@@ -6,7 +6,7 @@ const URL = '/products';
 
 const axiosGet = async (_id: string) => {
   const response = await axios.get(BASE_URL + URL + `/${_id}`);
-  return response.data.item;
+  return response.data;
 };
 
 const useSelectCoffeechatInfo = (_id: string) => {
