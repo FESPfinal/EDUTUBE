@@ -1,9 +1,10 @@
+import ReactQueryClient from '@/helper/utils/ReactQueryClient';
+
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <form>
-      <h2>SignUp Layout</h2>
-      {children}
-    </form>
+    <>
+      <ReactQueryClient>{children}</ReactQueryClient>
+    </>
   );
 };
 

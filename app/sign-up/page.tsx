@@ -1,8 +1,10 @@
-const SignUp = () => {
+import SignUp from '@/components/views/sign-up/SignUp';
+
+const SignUpPage = () => {
   return (
     <>
-      <h3>회원가입하기</h3>
+      <SignUp />
     </>
   );
 };
-export default SignUp;
+export default SignUpPage;
