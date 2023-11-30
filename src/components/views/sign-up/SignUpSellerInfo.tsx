@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import useCreateUser from '@/queries/signUp/useCreateUser';
 import { USER_TYPES } from './consts';
+import { useRouter } from 'next/navigation';
 
 const phoneRegExp = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
 
@@ -36,6 +37,8 @@ interface Props {
   step1Data: Step1Data;
 }
 const SignUpSellerInfo = ({ step1Data }: Props) => {
+  const router = useRouter();
+
   const [imageFile, setImageFile] = useState<File>();
 
   const {
@@ -46,21 +49,29 @@ const SignUpSellerInfo = ({ step1Data }: Props) => {
 
   const { mutate: createUserMutate } = useCreateUser();
   const onSubmit = (data: FormData) => {
-    createUserMutate({
-      ...step1Data,
-      type: USER_TYPES.SELLER,
-      name: data.name,
-      address: data.address || '',
-      phone: data.phone || '',
-      extra: {
-        profileImage: imageFile,
-        major: data.major || '',
-        nickname: data.nickname,
-        contactEmail: data.contactEmail,
-        intro: data.intro,
-        sns: data.sns,
+    createUserMutate(
+      {
+        ...step1Data,
+        type: USER_TYPES.SELLER,
+        name: data.name,
+        address: data.address || '',
+        phone: data.phone || '',
+        extra: {
+          profileImage: imageFile,
+          major: data.major || '',
+          nickname: data.nickname,
+          contactEmail: data.contactEmail,
+          intro: data.intro,
+          sns: data.sns,
+        },
       },
-    });
+      {
+        onSuccess: () => {
+          alert('회원가입이 완료되었습니다.');
+          router.push('/login');
+        },
+      },
+    );
   };
 
   return (
