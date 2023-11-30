@@ -1,17 +1,24 @@
 'use client';
 import useSelectCoffeechatInfo from '../../../../queries/coffeechat/info/useSelectCoffeechatInfo';
 import useUpdateOrder from '../../../../queries/coffeechat/order/useUpdateOrder';
-import Button from '../../../atom/Button';
+import PurchaseButton from '../../../atom/Button';
+import UpdateButton from '../../../atom/Button';
+import DeleteButton from '../../../atom/Button';
 import { IOrderDataType } from '../../../../helper/types/order';
 import { useRouter } from 'next/navigation';
+import useSelectMemberType from '../../../../queries/member/useSelectMemberType';
+import Cookies from 'js-cookie';
 
 const CoffeechatInfo = ({ _id }: { _id: string }) => {
   const router = useRouter();
+  const user_id = Cookies.get('user_id');
   const {
     data: coffeechatDetailData,
     loading: coffeechatDetailLoading,
     isError: coffeechatDetailIsError,
   } = useSelectCoffeechatInfo(_id);
+
+  const { data: memberTypeData } = useSelectMemberType();
 
   const { mutate: mutateOrderCoffeechat } = useUpdateOrder();
 
@@ -80,21 +87,38 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
             <p className="mb-2">오프라인: {coffeechatDetailData?.item.extra.offline}</p>
             <p className="mb-2">날짜: {coffeechatDetailData?.item.extra.date}</p>
             <p className="mb-2">시간: {coffeechatDetailData?.item.extra.time}</p>
-            <Button
-              content="결제하기"
-              size="medium"
-              onClick={() => orderCoffeechat(parseInt(_id))}
-            />
-          </div>
-        </div>
-        <div className="flex justify-between mt-4">
-          <div>
-            <p className="text-lg font-bold">후기</p>
-            {/* 후기 내용 표시 */}
-          </div>
-          <div>
-            <p className="text-lg font-bold">가격</p>
-            <p>{coffeechatDetailData?.item.price} 포인트</p>
+            <div>
+              <p className="text-lg font-bold">가격</p>
+              <p>{coffeechatDetailData?.item.price} 포인트</p>
+            </div>
+            <div className="space-y-4">
+              {memberTypeData?.type == 'seller' &&
+              coffeechatDetailData?.item.seller_id == user_id ? (
+                <>
+                  <UpdateButton
+                    content="수정하기"
+                    size="medium"
+                    onClick={() => orderCoffeechat(parseInt(_id))}
+                  />
+                  <DeleteButton
+                    content="삭제하기"
+                    size="medium"
+                    onClick={() => orderCoffeechat(parseInt(_id))}
+                    color="bg-light-error"
+                    darkColor="bg-dark-error"
+                    hoverColor="hover:bg-red-700"
+                  />
+                </>
+              ) : (
+                <>
+                  <PurchaseButton
+                    content="결제하기"
+                    size="medium"
+                    onClick={() => orderCoffeechat(parseInt(_id))}
+                  />
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>
