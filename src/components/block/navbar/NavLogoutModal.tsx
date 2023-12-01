@@ -11,7 +11,9 @@ const NavLogoutModal = () => {
     Cookies.remove('accessToken');
     Cookies.remove('refreshToken');
     Cookies.remove('user_id');
+    Cookies.remove('user_name');
     router.refresh();
+    router.push('/');
   };
 
   return (
