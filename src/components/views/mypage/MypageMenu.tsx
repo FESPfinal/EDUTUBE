@@ -28,7 +28,7 @@ const MypageMenu = () => {
   const menuList = userType === 'seller' ? sellerMenuList : userMenuList;
 
   return (
-    <div className="flex flex-col bg-white w-42 h-screen pt-5 shadow-[8px_0_10px_-5px_rgba(0,0,0,0.3)]">
+    <div className="flex flex-col bg-white w-80 h-screen pt-5 shadow-[8px_0_10px_-5px_rgba(0,0,0,0.3)]">
       <ul>
         {menuList.map(menu => {
           return (
