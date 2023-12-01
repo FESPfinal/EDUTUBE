@@ -6,8 +6,8 @@ import UpdateButton from '../../../atom/Button';
 import DeleteButton from '../../../atom/Button';
 import { IOrderDataType } from '../../../../helper/types/order';
 import { useRouter } from 'next/navigation';
-import useSelectMemberInfo from '../../../../queries/member/useSelectMemberInfo';
 import Cookies from 'js-cookie';
+import useSelectMemberInfo from '@/queries/member/useSelectMemberInfo';
 
 const CoffeechatInfo = ({ _id }: { _id: string }) => {
   const router = useRouter();
