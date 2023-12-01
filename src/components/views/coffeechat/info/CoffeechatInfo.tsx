@@ -1,20 +1,19 @@
 'use client';
 import useSelectCoffeechatInfo from '../../../../queries/coffeechat/info/useSelectCoffeechatInfo';
 import useUpdateOrder from '../../../../queries/coffeechat/order/useUpdateOrder';
-import Button from '../../../atom/Button';
+import PurchaseButton from '../../../atom/Button';
+import UpdateButton from '../../../atom/Button';
+import DeleteButton from '../../../atom/Button';
 import { IOrderDataType } from '../../../../helper/types/order';
 import { useRouter } from 'next/navigation';
+import useSelectMemberInfo from '../../../../queries/member/useSelectMemberInfo';
 import Cookies from 'js-cookie';
-import useSelectMemberInfo from '@/queries/member/useSelectMemberInfo';
 
 const CoffeechatInfo = ({ _id }: { _id: string }) => {
   const router = useRouter();
-  const {
-    data: coffeechatDetailData,
-    loading: coffeechatDetailLoading,
-    isError: coffeechatDetailIsError,
-  } = useSelectCoffeechatInfo(_id);
-
+  const user_id = Cookies.get('user_id');
+  const { data: coffeechatDetailData } = useSelectCoffeechatInfo(_id);
+  const { data: memberTypeData } = useSelectMemberInfo('type');
   const { mutate: mutateOrderCoffeechat } = useUpdateOrder();
 
   const orderCoffeechat = (_id: number) => {
@@ -30,7 +29,6 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
         value: '',
       },
     };
-
     mutateOrderCoffeechat(product, {
       onSuccess: data => {
         alert(`주문이 완료되었습니다.`);
@@ -47,11 +45,6 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
     });
   };
 
-  if (coffeechatDetailLoading) return <></>;
-  if (coffeechatDetailIsError) {
-    return <div>Error: {coffeechatDetailIsError.message}</div>;
-  }
-
   return (
     <>
       <div className="max-w-2xl mx-auto p-4">
@@ -59,36 +52,64 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
         <div className="flex flex-col md:flex-row">
           <div className="md:w-1/2 mb-4 md:mr-4">
             <img
-              src={coffeechatDetailData?.item.mainImages[0]}
-              alt={coffeechatDetailData?.item.name}
+              src={coffeechatDetailData?.mainImages[0]}
+              alt={coffeechatDetailData?.name}
               className="w-full h-auto"
             />
           </div>
           <div className="md:w-1/2">
-            <h3 className="text-lg font-bold mb-2">{coffeechatDetailData?.item.name}</h3>
-            <p className="mb-2">{coffeechatDetailData?.item.seller_id}</p>
-            {/* 셀러 id로 셀러 정보 가져와서 프로필 이미지와 이름 정보 가져오기 */}
-            <Button
-              content="결제하기"
-              size="medium"
-              onClick={() => orderCoffeechat(parseInt(_id))}
+            <h3 className="text-lg font-bold mb-2">{coffeechatDetailData?.name}</h3>
+            {/* 상세설명 (노션에 dangerouslySetInnerHTML 설명 추가) */}
+            <p
+              className="text-md mb-2"
+              dangerouslySetInnerHTML={{ __html: coffeechatDetailData?.content }}
             />
-            <p className="mb-2">{coffeechatDetailData?.item.extra.category}</p>
-          </div>
-        </div>
-        <div className="flex justify-between mt-4">
-          <div>
-            <p className="text-lg font-bold">후기</p>
-            {/* 후기 내용 표시 */}
-          </div>
-          <div>
-            <p className="text-lg font-bold">가격</p>
-            <p>{coffeechatDetailData?.item.price} 포인트</p>
+            <p className="mb-2">카테고리: {coffeechatDetailData?.extra.category}</p>
+            <p className="mb-2">seller: {coffeechatDetailData?.seller_id}</p>
+            <p className="mb-2">person: {coffeechatDetailData?.extra.person}</p>
+            <p className="mb-2">userData: {coffeechatDetailData?.extra.userData}</p>
+            <p className="mb-2">intro: {coffeechatDetailData?.extra.intro}</p>
+            {/* 셀러 id로 셀러 정보 가져와서 프로필 이미지와 이름 정보 가져오기 */}
+            <h3 className="text-lg font-bold mb-2">커피챗 장소 및 시간 정보</h3>
+            <p className="mb-2">온라인: {coffeechatDetailData?.extra.online}</p>
+            <p className="mb-2">오프라인: {coffeechatDetailData?.extra.offline}</p>
+            <p className="mb-2">날짜: {coffeechatDetailData?.extra.date}</p>
+            <p className="mb-2">시간: {coffeechatDetailData?.extra.time}</p>
+            <div>
+              <p className="text-lg font-bold">가격</p>
+              <p>{coffeechatDetailData?.price} 포인트</p>
+            </div>
+            <div className="space-y-4">
+              {memberTypeData?.type == 'seller' && coffeechatDetailData?.seller_id == user_id ? (
+                <>
+                  <UpdateButton
+                    content="수정하기"
+                    size="medium"
+                    onClick={() => orderCoffeechat(parseInt(_id))}
+                  />
+                  <DeleteButton
+                    content="삭제하기"
+                    size="medium"
+                    onClick={() => orderCoffeechat(parseInt(_id))}
+                    color="bg-light-error"
+                    darkColor="bg-dark-error"
+                    hoverColor="hover:bg-red-700"
+                  />
+                </>
+              ) : (
+                <>
+                  <PurchaseButton
+                    content="결제하기"
+                    size="medium"
+                    onClick={() => orderCoffeechat(parseInt(_id))}
+                  />
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>
     </>
   );
 };
-
 export default CoffeechatInfo;
