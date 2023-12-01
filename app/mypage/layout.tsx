@@ -1,10 +1,12 @@
-import ReactQueryClient from '../../src/helper/utils/ReactQueryClient';
+import MypageMenu from '@/components/views/mypage/MypageMenu';
+import ReactQueryClient from '@/helper/utils/ReactQueryClient';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <form>
-      <ReactQueryClient> {children}</ReactQueryClient>
-    </form>
+    <div className="flex">
+      <MypageMenu />
+      <ReactQueryClient>{children}</ReactQueryClient>
+    </div>
   );
 };
 

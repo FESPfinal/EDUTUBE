@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import basicProfile from '../../../public/basicProfile.svg';
+import BasicProfile from '../../../public/basicProfile.svg';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faImage } from '@fortawesome/free-solid-svg-icons';
@@ -28,7 +28,7 @@ const ProfileImageUploader: React.FC<Props> = ({ onImageUpload }) => {
     <div>
       <label htmlFor="profileImage">
         {selectedImage ? (
-          <img
+          <Image
             src={URL.createObjectURL(selectedImage)}
             alt="Selected Profile"
             className="rounded-full h-20 w-20 object-cover"
@@ -36,7 +36,7 @@ const ProfileImageUploader: React.FC<Props> = ({ onImageUpload }) => {
           />
         ) : (
           <div className="h-20 w-20 relative">
-            <Image src={basicProfile} alt="BasicProfile" className="h-20 w-20" />
+            <BasicProfile width="5rem" height="5rem" />
             <button
               className="bg-light-main text-white rounded-full h-8 w-8 absolute bottom-0 right-0"
               onClick={handleLabelClick}
