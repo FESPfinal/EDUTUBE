@@ -4,6 +4,8 @@ import useUpdateOrder from '../../../../queries/coffeechat/order/useUpdateOrder'
 import Button from '../../../atom/Button';
 import { IOrderDataType } from '../../../../helper/types/order';
 import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
+import useSelectMemberInfo from '@/queries/member/useSelectMemberInfo';
 
 const CoffeechatInfo = ({ _id }: { _id: string }) => {
   const router = useRouter();
