@@ -6,18 +6,18 @@ import Link from 'next/link';
 const userMenuList = [
   { title: '찜', link: '/mypage/likes' },
   { title: '장바구니', link: '/mypage/cart' },
-  { title: '예약한 커피챗 목록', link: '/mypage/reserved' },
-  { title: '내 구입 목록', link: 'mypage/purchases' },
+  { title: '진행할 커피챗 목록', link: '/mypage/reserved' },
+  { title: '내 구입 목록(전체)', link: '/mypage/purchases' },
   { title: '내정보', link: '/mypage/info' },
 ];
 
 const sellerMenuList = [
   { title: '찜', link: '/mypage/likes' },
   { title: '장바구니', link: '/mypage/cart' },
-  { title: '예약한 커피챗 목록', link: '/mypage/reserved' },
-  { title: '내 구입 목록', link: 'mypage/purchases' },
-  { title: '내 커피챗', link: '/mypage/my-coffeechat' },
-  { title: '내 동영상', link: '/mypage/my-video' },
+  { title: '진행할 커피챗 목록', link: '/mypage/reserved' },
+  { title: '내 구입 목록(전체)', link: '/mypage/purchases' },
+  { title: '내가 등록한 커피챗', link: '/mypage/my-coffeechat' },
+  { title: '내가 등록한 동영상', link: '/mypage/my-video' },
   { title: '내정보', link: '/mypage/info' },
 ];
 
@@ -34,7 +34,7 @@ const MypageMenu = () => {
           return (
             <li key={menu.link} className="mb-2 py-1 px-3 text-gray-600 hover:bg-gray-200 ">
               <Link href={menu.link}>
-                <span className="text-xl">{menu.title}</span>
+                <span className="text-l">{menu.title}</span>
               </Link>
             </li>
           );
