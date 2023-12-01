@@ -1,12 +1,12 @@
 'use client';
 import * as yup from 'yup';
-import { Step1Data } from './types';
+import { Step1Data } from '../../../helper/types/userInfoTypes';
 import ProfileImageUploader from '@/components/atom/ProfileImageUploader';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import useCreateUser from '@/queries/signUp/useCreateUser';
-import { USER_TYPES } from './consts';
+import { USER_TYPES } from '../../../helper/constants/userConst';
 import { useRouter } from 'next/navigation';
 
 const phoneRegExp = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;

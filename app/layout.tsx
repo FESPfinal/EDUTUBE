@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import Provider from './provider';
+import ReactQueryClient from '@/helper/utils/ReactQueryClient';
+import Navbar from '@/components/block/navbar/Navbar';
 
 export const metadata: Metadata = {
   title: 'EDUTUBE',
@@ -11,7 +13,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ko" suppressHydrationWarning={true}>
       <body>
-        <Provider>{children}</Provider>
+        <div>
+          <Navbar />
+          <div className=" md:mx-8 lg:mx-16">
+            <Provider>
+              <ReactQueryClient>{children}</ReactQueryClient>
+            </Provider>
+          </div>
+        </div>
       </body>
     </html>
   );

@@ -1,8 +1,10 @@
-const MypagePurchase = () => {
+import PurchaseList from '../../../src/components/views/mypage/purchase/PurchaseList';
+
+const MypagePurchasePage = () => {
   return (
     <>
-      <p>내 커피챗 구매 목록</p>
+      <PurchaseList />
     </>
   );
 };
-export default MypagePurchase;
+export default MypagePurchasePage;

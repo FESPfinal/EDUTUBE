@@ -1,10 +1,10 @@
 import MypageInfo from '@/components/views/mypage/MypageInfo';
 
-const Mypage = () => {
+const MypageInfoPage = () => {
   return (
     <>
       <MypageInfo />
     </>
   );
 };
-export default Mypage;
+export default MypageInfoPage;
