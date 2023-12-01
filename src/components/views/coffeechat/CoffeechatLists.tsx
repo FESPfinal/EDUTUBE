@@ -1,6 +1,9 @@
 'use client';
 import useSelectCoffeechatList from '../../../queries/coffeechat/useSelectCoffeechatList';
 import Link from 'next/link';
+import ad_first from '/public/images/ad_first.png';
+import Image from 'next/image';
+
 const CoffeechatLists = () => {
   const {
     data: coffeechatListData,
@@ -13,9 +16,10 @@ const CoffeechatLists = () => {
   }
   return (
     <>
-      <div className="h-60 bg-black text-white">광고중</div>
+      <div className="h-60 bg-black text-white">
+        <Image src={ad_first} alt="광고사진" />
+      </div>
       <div className="h-10"></div>
-      <h1 className="text-xl font-bold mb-4 text-center">커피챗 전체 보기</h1>
       <div className="h-10" />
       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {coffeechatListData?.item.map(item => (
