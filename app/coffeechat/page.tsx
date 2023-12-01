@@ -2,8 +2,7 @@ import CoffeechatLists from '../../src/components/views/coffeechat/CoffeechatLis
 
 const CoffeechatListPage = () => {
   return (
-    <div className="border border-indigo-600">
-      <h3>Coffeechat 홈</h3>
+    <div className="mb-20">
       <CoffeechatLists />
     </div>
   );

@@ -26,14 +26,14 @@ const FirstRegist = () => {
   const active = true;
 
   // react-hook-form으로 변경
-  const handleSubmit = async (event) => {
+  const handleSubmit = async event => {
     event.preventDefault();
 
     const requestBody: ProductType = {
       mainImages: image,
       name: title,
       content: content,
-      price: price,
+      price: parseInt(price),
       shippingFees: shippingFees,
       show: show,
       active: active,
@@ -46,22 +46,22 @@ const FirstRegist = () => {
         date: dates,
         time: times,
         person: person,
-        userData: userData || ''
+        userData: userData || '',
       },
     };
 
     mutateCreateProduct(requestBody, {
       onSuccess: data => {
-        alert('등록되었습니다')
-        router.push('/coffeechat')
+        alert('등록되었습니다');
+        router.push('/coffeechat');
       },
       onError: error => {
-        alert('등록에 실패하였습니다')
+        alert('등록에 실패하였습니다');
       },
     });
   };
 
-  const handleImageUpload = (event) => {
+  const handleImageUpload = event => {
     const file = event.target.files[0].name;
     setImage([file]);
   };
@@ -87,24 +87,24 @@ const FirstRegist = () => {
         <div>
           <h2>이미지 등록</h2>
           <label>
-            <input type='file' onChange={handleImageUpload} />
+            <input type="file" onChange={handleImageUpload} />
           </label>
         </div>
 
         <div>
           <h2>금액</h2>
           <label>
-            <input type='text' placeholder='금액' onChange={e => setPrice(e.target.value)} />
+            <input type="text" placeholder="금액" onChange={e => setPrice(e.target.value)} />
           </label>
         </div>
 
         <div>
           <h2>제목 및 내용</h2>
           <label>
-            <input type='text' placeholder='제목' onChange={e => setTitle(e.target.value)} />
+            <input type="text" placeholder="제목" onChange={e => setTitle(e.target.value)} />
           </label>
           <label>
-            <input type='text' placeholder='내용' onChange={e => setContent(e.target.value)} />
+            <input type="text" placeholder="내용" onChange={e => setContent(e.target.value)} />
           </label>
         </div>
 
@@ -112,10 +112,10 @@ const FirstRegist = () => {
         <div>
           <h2>장소</h2>
           <label>
-            <input type='text' placeholder='온라인' onChange={e => setOnline(e.target.value)} />
+            <input type="text" placeholder="온라인" onChange={e => setOnline(e.target.value)} />
           </label>
           <label>
-            <input type='text' placeholder='오프라인' onChange={e => setOffline(e.target.value)} />
+            <input type="text" placeholder="오프라인" onChange={e => setOffline(e.target.value)} />
           </label>
         </div>
 
@@ -124,8 +124,8 @@ const FirstRegist = () => {
           <h2>카테고리</h2>
           <label>
             <input
-              type='text'
-              placeholder='카테고리를 작성해주세요'
+              type="text"
+              placeholder="카테고리를 작성해주세요"
               onChange={e => setCategory(e.target.value)}
             />
           </label>
@@ -135,15 +135,15 @@ const FirstRegist = () => {
           <h2>인원수 & 소개글</h2>
           <label>
             <input
-              type='text'
-              placeholder='인원수를 작성해주세요'
+              type="text"
+              placeholder="인원수를 작성해주세요"
               onChange={e => setPerson(e.target.value)}
             />
           </label>
           <label>
             <input
-              type='text'
-              placeholder='소개글을 작성해주세요'
+              type="text"
+              placeholder="소개글을 작성해주세요"
               onChange={e => setIntro(e.target.value)}
             />
           </label>
@@ -156,8 +156,8 @@ const FirstRegist = () => {
             <div key={index}>
               <label>
                 <input
-                  type='text'
-                  placeholder='날짜를 작성해주세요'
+                  type="text"
+                  placeholder="날짜를 작성해주세요"
                   value={dates[index] || ''}
                   onChange={e => handleDateChange(index, e.target.value)}
                 />
@@ -169,8 +169,8 @@ const FirstRegist = () => {
             <div key={index}>
               <label>
                 <input
-                  type='text'
-                  placeholder='시간을 작성해주세요'
+                  type="text"
+                  placeholder="시간을 작성해주세요"
                   value={times[index] || ''}
                   onChange={e => handleTimeChange(index, e.target.value)}
                 />
@@ -178,7 +178,7 @@ const FirstRegist = () => {
             </div>
           ))}
         </div>
-        <button type='submit'>설정 완료</button>
+        <button type="submit">설정 완료</button>
       </form>
     </>
   );

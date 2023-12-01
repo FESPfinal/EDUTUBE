@@ -7,7 +7,7 @@ const userMenuList = [
   { title: '찜', link: '/mypage/likes' },
   { title: '장바구니', link: '/mypage/cart' },
   { title: '진행할 커피챗 목록', link: '/mypage/reserved' },
-  { title: '내 구입 목록(전체)', link: '/mypage/purchases' },
+  { title: '내 구입 목록(전체)', link: '/mypage/purchase' },
   { title: '내정보', link: '/mypage/info' },
 ];
 
@@ -15,7 +15,7 @@ const sellerMenuList = [
   { title: '찜', link: '/mypage/likes' },
   { title: '장바구니', link: '/mypage/cart' },
   { title: '진행할 커피챗 목록', link: '/mypage/reserved' },
-  { title: '내 구입 목록(전체)', link: '/mypage/purchases' },
+  { title: '내 구입 목록(전체)', link: '/mypage/purchase' },
   { title: '내가 등록한 커피챗', link: '/mypage/my-coffeechat' },
   { title: '내가 등록한 동영상', link: '/mypage/my-video' },
   { title: '내정보', link: '/mypage/info' },
@@ -28,7 +28,7 @@ const MypageMenu = () => {
   const menuList = userType === 'seller' ? sellerMenuList : userMenuList;
 
   return (
-    <div className="flex flex-col bg-white w-42 h-screen pt-5 shadow-[8px_0_10px_-5px_rgba(0,0,0,0.3)]">
+    <div className="flex flex-col bg-white w-80 h-screen pt-5 shadow-[8px_0_10px_-5px_rgba(0,0,0,0.3)]">
       <ul>
         {menuList.map(menu => {
           return (
