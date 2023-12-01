@@ -2,9 +2,11 @@ import ReactQueryClient from '@/helper/utils/ReactQueryClient';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <>
-      <ReactQueryClient>{children}</ReactQueryClient>
-    </>
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="min-w-[400px]">
+        <ReactQueryClient>{children}</ReactQueryClient>
+      </div>
+    </div>
   );
 };
 

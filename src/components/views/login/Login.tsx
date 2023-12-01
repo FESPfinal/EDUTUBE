@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const schema = yup.object().shape({
   email: yup.string().email().required('이메일 형식이 잘못되었습니다.'),
@@ -82,6 +83,9 @@ const Login = () => {
           로그인{' '}
         </button>
       </form>
+      <div className="flex justify-center mt-10">
+        <Link href={'/sign-up'}>회원가입</Link>
+      </div>
     </>
   );
 };
