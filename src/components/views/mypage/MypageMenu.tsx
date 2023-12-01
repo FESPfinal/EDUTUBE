@@ -7,7 +7,7 @@ const userMenuList = [
   { title: '찜', link: '/mypage/likes' },
   { title: '장바구니', link: '/mypage/cart' },
   { title: '진행할 커피챗 목록', link: '/mypage/reserved' },
-  { title: '내 구입 목록(전체)', link: '/mypage/purchases' },
+  { title: '내 구입 목록(전체)', link: '/mypage/purchase' },
   { title: '내정보', link: '/mypage/info' },
 ];
 
@@ -15,7 +15,7 @@ const sellerMenuList = [
   { title: '찜', link: '/mypage/likes' },
   { title: '장바구니', link: '/mypage/cart' },
   { title: '진행할 커피챗 목록', link: '/mypage/reserved' },
-  { title: '내 구입 목록(전체)', link: '/mypage/purchases' },
+  { title: '내 구입 목록(전체)', link: '/mypage/purchase' },
   { title: '내가 등록한 커피챗', link: '/mypage/my-coffeechat' },
   { title: '내가 등록한 동영상', link: '/mypage/my-video' },
   { title: '내정보', link: '/mypage/info' },
