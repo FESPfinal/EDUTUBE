@@ -2,8 +2,10 @@
 
 import { useState } from 'react';
 import NavLogoutModal from './NavLogoutModal';
+import useSelectMemberInfo from '@/queries/member/useSelectMemberInfo';
 
 const NavLogout = () => {
+  const { data } = useSelectMemberInfo('name');
   const [isShow, setIsShow] = useState(false);
 
   return (
@@ -16,7 +18,7 @@ const NavLogout = () => {
             id="options-menu"
             aria-haspopup="true"
           >
-            안녕하세요, {'김에듀'}님!
+            안녕하세요, {data?.name}님!
           </button>
         </div>
         {isShow && <NavLogoutModal />}
