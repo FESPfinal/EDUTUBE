@@ -1,8 +1,8 @@
+import FirstRegist from "@/components/views/coffeechat/regist/FirstRegist";
+
 const CoffeechatRegist = () => {
   return (
-    <>
-      <p>커피챗 등록</p>
-    </>
+    <FirstRegist />
   );
 };
 export default CoffeechatRegist;
