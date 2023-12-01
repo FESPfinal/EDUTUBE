@@ -2,7 +2,7 @@ export interface ProductType {
   mainImages: string[];
   name: string;
   content: string;
-  price: string;
+  price: number;
   shippingFees: number;
   show: boolean;
   active: boolean;
