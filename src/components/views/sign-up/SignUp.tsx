@@ -3,8 +3,9 @@
 import { useState } from 'react';
 import SignUpIdPw from './SignUpIdPw';
 import SignUpUserInfo from './SignUpUserInfo';
-import { Step1Data } from './types';
-import { USER_TYPES } from './consts';
+import { Step1Data, Step2UserData } from '../../../helper/types/userInfoTypes';
+import { USER_TYPES } from '../../../helper/constants/userConst';
+import useCreateUser, { SignUpData } from '@/queries/signUp/useCreateUser';
 import SignUpSellerInfo from './SignUpSellerInfo';
 import Link from 'next/link';
 

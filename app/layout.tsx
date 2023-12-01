@@ -13,9 +13,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ko" suppressHydrationWarning={true}>
       <body>
-        <div className="border border-indigo-600">
+        <div>
           <Navbar />
-          <div className="border border-indigo-600 mx-40">
+          <div className=" md:mx-8 lg:mx-16">
             <Provider>
               <ReactQueryClient>{children}</ReactQueryClient>
             </Provider>

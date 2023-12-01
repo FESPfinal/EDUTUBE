@@ -6,8 +6,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import { USER_TYPES } from './consts';
-import { Step1Data } from './types';
+import { USER_TYPES } from '../../../helper/constants/userConst';
+import { Step1Data } from '../../../helper/types/userInfoTypes';
 import { AxiosError } from 'axios';
 
 const schema = yup.object().shape({
