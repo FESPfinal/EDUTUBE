@@ -10,7 +10,7 @@ export type Step2UserData = {
   address: string;
   phone: string;
   extra: {
-    profileImage: File | undefined;
+    profileImage: string;
     nickname: string;
     contactEmail: string;
     major: string;
