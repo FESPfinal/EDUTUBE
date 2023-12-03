@@ -28,12 +28,22 @@ const ProfileImageUploader: React.FC<Props> = ({ onImageUpload }) => {
     <div>
       <label htmlFor="profileImage">
         {selectedImage ? (
-          <Image
-            src={URL.createObjectURL(selectedImage)}
-            alt="Selected Profile"
-            className="rounded-full h-20 w-20 object-cover"
-            onClick={handleLabelClick}
-          />
+          <div className="h-20 w-20 relative">
+            <Image
+              src={URL.createObjectURL(selectedImage)}
+              alt="Selected Profile"
+              className="rounded-full h-20 w-20 object-cover"
+              onClick={handleLabelClick}
+              width={80}
+              height={80}
+            />
+            <button
+              className="bg-light-main text-white rounded-full h-8 w-8 absolute bottom-0 right-0"
+              onClick={handleLabelClick}
+            >
+              <FontAwesomeIcon icon={faImage} />
+            </button>
+          </div>
         ) : (
           <div className="h-20 w-20 relative">
             <BasicProfile width="5rem" height="5rem" />
