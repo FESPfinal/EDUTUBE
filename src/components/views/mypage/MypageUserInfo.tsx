@@ -45,14 +45,16 @@ const MypageUserInfo = () => {
   }, [setValue, userInfo]);
 
   const onSubmit = (data: FormData) => {
-    console.log(data);
     alert('수정기능 구현 중입니다.');
   };
 
   return (
     <>
       <div className="mb-10">
-        <ProfileImageUploader onImageUpload={setImageFile} />
+        <ProfileImageUploader
+          onImageUpload={setImageFile}
+          defaultImage={userInfo?.extra?.profileImage}
+        />
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <label className="block text-sm font-medium text-gray-700 ">
