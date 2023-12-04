@@ -1,6 +1,5 @@
 'use client';
 
-import useSelectMemberInfo from '@/queries/member/useSelectMemberInfo';
 import MypageSellerInfo from './MypageSellerInfo';
 import MypageUserInfo from './MypageUserInfo';
 import useUserInfo from '@/stores/userInfo';
