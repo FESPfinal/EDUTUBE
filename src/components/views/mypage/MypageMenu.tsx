@@ -1,7 +1,8 @@
 'use client';
 
-import useSelectMemberInfo from '@/queries/member/useSelectMemberInfo';
+import useUserInfo from '@/stores/userInfo';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 const userMenuList = [
   { title: '찜', link: '/mypage/likes' },
@@ -22,24 +23,33 @@ const sellerMenuList = [
 ];
 
 const MypageMenu = () => {
-  const { data: memberType } = useSelectMemberInfo('type');
-  const userType = memberType?.type;
+  const [isClient, setIsClient] = useState(false);
 
-  const menuList = userType === 'seller' ? sellerMenuList : userMenuList;
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  const { userInfo } = useUserInfo(store => store);
+
+  const menuList = userInfo?.type === 'seller' ? sellerMenuList : userMenuList;
 
   return (
     <div className="flex flex-col bg-white w-80 h-screen pt-5 shadow-[8px_0_10px_-5px_rgba(0,0,0,0.3)]">
-      <ul>
-        {menuList.map(menu => {
-          return (
-            <li key={menu.link} className="mb-2 py-1 px-3 text-gray-600 hover:bg-gray-200 ">
-              <Link href={menu.link}>
-                <span className="text-l">{menu.title}</span>
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
+      {isClient ? (
+        <ul>
+          {menuList.map(menu => {
+            return (
+              <li key={menu.link} className="mb-2 py-1 px-3 text-gray-600 hover:bg-gray-200 ">
+                <Link href={menu.link}>
+                  <span className="text-l">{menu.title}</span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      ) : (
+        <>Loading...</>
+      )}
     </div>
   );
 };

@@ -1,6 +1,6 @@
 'use client';
 import * as yup from 'yup';
-import { Step1Data } from '../../../helper/types/userInfoTypes';
+import { Step1Data } from '../../../helper/types/userInfo';
 import ProfileImageUploader from '@/components/atom/ProfileImageUploader';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
