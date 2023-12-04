@@ -1,9 +1,11 @@
 'use client';
 
 import { UserItem } from '@/helper/types/userInfo';
+import useAuth from '@/stores/auth';
 import useUserInfo from '@/stores/userInfo';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 type LoginData = {
   email: string;
@@ -15,10 +17,12 @@ const URL = '/users/login';
 
 const useLogin = () => {
   const { setUserInfo } = useUserInfo(state => state);
+  const { setAccessToken } = useAuth(store => store);
 
   const axiosPost = async (data: LoginData) => {
     const response = await axios.post(BASE_URL + URL, data);
     const item = await response.data.item;
+    setAccessToken(await item.token.accessToken);
     setUserInfo({
       _id: await item._id,
       email: await item.email,
@@ -30,6 +34,7 @@ const useLogin = () => {
       updatedAt: await item.updatedAt,
       extra: await item.extra,
     });
+    Cookies.set('refreshToken', await item.token.refreshToken);
     return (await item) as UserItem;
   };
 

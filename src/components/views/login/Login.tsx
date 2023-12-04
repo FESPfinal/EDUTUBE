@@ -34,7 +34,6 @@ const Login = () => {
       {
         onSuccess: data => {
           Cookies.set('accessToken', data.token.accessToken);
-          Cookies.set('refreshToken', data.token.refreshToken);
           Cookies.set('user_id', String(data._id));
           Cookies.set('user_name', data.name);
           router.push('/');
