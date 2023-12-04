@@ -3,7 +3,7 @@
 import ProfileImageUploader from '@/components/atom/ProfileImageUploader';
 import useSelectUserInfo from '@/queries/mypage/useSelectUserInfo';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 const phoneRegExp = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
@@ -30,9 +30,22 @@ const MypageUserInfo = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>({ resolver: yupResolver(schema) });
+    setValue,
+  } = useForm<FormData>({ resolver: yupResolver(schema), defaultValues: async () => userInfo });
+
+  useEffect(() => {
+    if (!!userInfo) {
+      setValue('name', userInfo.name);
+      setValue('nickname', userInfo.nickname);
+      setValue('address', userInfo.address);
+      setValue('phone', userInfo.phone);
+      setValue('contactEmail', userInfo.contactEmail);
+      setValue('major', userInfo.major);
+    }
+  }, [setValue, userInfo]);
 
   const onSubmit = (data: FormData) => {
+    console.log(data);
     alert('수정기능 구현 중입니다.');
   };
 
@@ -48,7 +61,6 @@ const MypageUserInfo = () => {
             <input
               type="text"
               placeholder="김에듀"
-              defaultValue={userInfo?.name}
               {...register('name', { required: true })}
               className="w-full px-5 py-3 border border-gray-400 rounded-lg outline-none focus:shadow-outline"
             />
@@ -61,7 +73,6 @@ const MypageUserInfo = () => {
             <input
               type="text"
               placeholder="nickname"
-              defaultValue={userInfo?.extra?.nickname}
               {...register('nickname', { required: true })}
               className="w-full px-5 py-3 border border-gray-400 rounded-lg outline-none focus:shadow-outline"
             />
@@ -74,7 +85,6 @@ const MypageUserInfo = () => {
             <input
               type="text"
               placeholder="010-0000-0000"
-              defaultValue={userInfo?.phone}
               {...register('phone', { required: true })}
               className="w-full px-5 py-3 border border-gray-400 rounded-lg outline-none focus:shadow-outline"
             />
@@ -87,7 +97,6 @@ const MypageUserInfo = () => {
             <input
               type="text"
               placeholder="example@email.com"
-              defaultValue={userInfo?.extra.contactEmail}
               {...register('contactEmail', { required: true })}
               className="w-full px-5 py-3 border border-gray-400 rounded-lg outline-none focus:shadow-outline"
             />
