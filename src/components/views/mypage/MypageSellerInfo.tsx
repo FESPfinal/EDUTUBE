@@ -44,13 +44,13 @@ const MypageSellerInfo = () => {
   useEffect(() => {
     if (!!userInfo) {
       setValue('name', userInfo.name);
-      setValue('nickname', userInfo.nickname);
+      setValue('nickname', userInfo.extra.nickname);
       setValue('address', userInfo.address);
       setValue('phone', userInfo.phone);
-      setValue('contactEmail', userInfo.contactEmail);
-      setValue('major', userInfo.major);
-      setValue('intro', userInfo.intro);
-      setValue('sns', userInfo.sns);
+      setValue('contactEmail', userInfo.extra.contactEmail);
+      setValue('major', userInfo.extra.major);
+      setValue('intro', userInfo.extra.intro);
+      setValue('sns', userInfo.extra.sns);
     }
   }, [setValue, userInfo]);
 
@@ -62,7 +62,10 @@ const MypageSellerInfo = () => {
   return (
     <>
       <div className="mb-10">
-        <ProfileImageUploader onImageUpload={setImageFile} />
+        <ProfileImageUploader
+          onImageUpload={setImageFile}
+          defaultImage={userInfo?.extra?.profileImage}
+        />
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <label className="block text-sm font-medium text-gray-700 ">

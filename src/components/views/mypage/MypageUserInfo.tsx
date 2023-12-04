@@ -36,11 +36,11 @@ const MypageUserInfo = () => {
   useEffect(() => {
     if (!!userInfo) {
       setValue('name', userInfo.name);
-      setValue('nickname', userInfo.nickname);
+      setValue('nickname', userInfo.extra.nickname);
       setValue('address', userInfo.address);
       setValue('phone', userInfo.phone);
-      setValue('contactEmail', userInfo.contactEmail);
-      setValue('major', userInfo.major);
+      setValue('contactEmail', userInfo.extra.contactEmail);
+      setValue('major', userInfo.extra.major);
     }
   }, [setValue, userInfo]);
 
