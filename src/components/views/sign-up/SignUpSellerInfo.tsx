@@ -83,7 +83,6 @@ const SignUpSellerInfo = ({ step1Data }: Props) => {
       formData.append('attach', imageFile);
       createUserProfileMutate(formData, {
         onSuccess: (fileName: string) => {
-          console.log(fileName);
           createUser(data, fileName);
         },
         onError: () => {

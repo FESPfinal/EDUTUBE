@@ -55,7 +55,6 @@ const MypageSellerInfo = () => {
   }, [setValue, userInfo]);
 
   const onSubmit = (data: FormData) => {
-    console.log(data);
     alert('수정 기능 구현 예정!');
   };
 
