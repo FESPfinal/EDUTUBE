@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { USER_TYPES } from '../../../helper/constants/userConst';
-import { Step1Data } from '../../../helper/types/userInfoTypes';
+import { Step1Data } from '../../../helper/types/userInfo';
 import useCreateUser from '@/queries/signUp/useCreateUser';
 import { useRouter } from 'next/navigation';
 const phoneRegExp = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
