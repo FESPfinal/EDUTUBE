@@ -54,6 +54,7 @@ const ProfileImageUploader: React.FC<Props> = ({ onImageUpload, defaultImage }) 
                 src={`${SERVER_URL}${defaultImage.path}`}
                 width={80}
                 height={80}
+                className="rounded-full h-20 w-20 object-cover"
                 alt={defaultImage.name}
                 unoptimized={true} //TODO: 2023.12.04 이미지 최적화 할 수 있는 방법 찾아야함
               />
