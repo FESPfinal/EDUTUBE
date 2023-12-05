@@ -1,186 +1,113 @@
 'use client';
+import { useForm } from 'react-hook-form';
+import BlockStepper from '@/components/block/BlockStepper';
+import Image from 'next/image';
 import { useState } from 'react';
-import useCreateProduct from '@/queries/coffeechat/useCreateProduct';
-import useGetUserInfo from '@/queries/coffeechat/useGetUserInfo';
-import { ProductType } from '@/helper/types/product';
-import { useRouter } from 'next/navigation';
 
 const FirstRegist = () => {
-  const router = useRouter();
-  const { mutate: mutateCreateProduct } = useCreateProduct();
-  const { data: userData } = useGetUserInfo('');
-  const [image, setImage] = useState<string[]>([]);
-  const [dates, setDates] = useState<string[]>([]);
-  const [times, setTimes] = useState<string[]>([]);
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [price, setPrice] = useState('');
-  const [online, setOnline] = useState('');
-  const [offline, setOffline] = useState('');
-  const [category, setCategory] = useState('');
-  const [intro, setIntro] = useState('');
-  const [person, setPerson] = useState('');
-  const type = 'coffeechat';
-  const shippingFees = 0;
-  const show = true;
-  const active = true;
+  const { register, handleSubmit, watch, formState: { errors } } = useForm();
+  const [selectedImage, setSelectedImage] = useState(null);
 
-  // react-hook-form으로 변경
-  const handleSubmit = async event => {
-    event.preventDefault();
+  const nameValue = watch('name');
+  const contentValue = watch('content');
+  const introValue = watch('intro');
 
-    const requestBody: ProductType = {
-      mainImages: image,
-      name: title,
-      content: content,
-      price: parseInt(price),
-      shippingFees: shippingFees,
-      show: show,
-      active: active,
-      extra: {
-        type: type,
-        category: category,
-        intro: intro,
-        online: online,
-        offline: offline,
-        date: dates,
-        time: times,
-        person: person,
-        userData: userData || '',
-      },
-    };
-
-    mutateCreateProduct(requestBody, {
-      onSuccess: data => {
-        alert('등록되었습니다');
-        router.push('/coffeechat');
-      },
-      onError: error => {
-        alert('등록에 실패하였습니다');
-      },
-    });
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSelectedImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
-
-  const handleImageUpload = event => {
-    const file = event.target.files[0].name;
-    setImage([file]);
-  };
-
-  // react 캘린더 적용후 삭제 에정
-  const handleDateChange = (index: number, value: string) => {
-    const newDates = [...dates];
-    newDates[index] = value;
-    setDates(newDates);
-  };
-
-  const handleTimeChange = (index: number, value: string) => {
-    const newTimes = [...times];
-    newTimes[index] = value;
-    setTimes(newTimes);
-  };
-  // react 캘린더 적용후 삭제 에정 //
 
   return (
-    <>
+    <div className='flex'>
+      < BlockStepper nameValue={nameValue} contentValue={contentValue} introValue={introValue} errors={errors}/>
+
       <h1>커피챗 내용 설정</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <h2>이미지 등록</h2>
-          <label>
-            <input type="file" onChange={handleImageUpload} />
-          </label>
-        </div>
+      <form onSubmit={handleSubmit()}>
+      <div className='flex flex-col'>
+      <h2>이미지 업로드</h2>
+      <label htmlFor="uploadImg">
+        {selectedImage ? (
+          <Image 
+            src={selectedImage}
+            alt='선택한 이미지'
+            width={793} 
+            height={369} 
+            style={{objectFit: 'cover', borderRadius: '20px'}}/>
+        ) : (
+          <Image src='/images/coffeechatImg.svg' alt='커피챗 이미지' width={793} height={369}
+          />
+        )}
+      </label>
+      <input 
+        id='uploadImg'
+        type='file'
+        style={{ display: 'none', cursor: 'pointer' }}
+        onChange={handleImageChange}
+      />
+    </div>
 
-        <div>
-          <h2>금액</h2>
-          <label>
-            <input type="text" placeholder="금액" onChange={e => setPrice(e.target.value)} />
-          </label>
-        </div>
 
-        <div>
-          <h2>제목 및 내용</h2>
-          <label>
-            <input type="text" placeholder="제목" onChange={e => setTitle(e.target.value)} />
-          </label>
-          <label>
-            <input type="text" placeholder="내용" onChange={e => setContent(e.target.value)} />
-          </label>
-        </div>
 
-        {/* checkbox로 인풋 활성화 / kakaomap api 적용 */}
-        <div>
-          <h2>장소</h2>
-          <label>
-            <input type="text" placeholder="온라인" onChange={e => setOnline(e.target.value)} />
-          </label>
-          <label>
-            <input type="text" placeholder="오프라인" onChange={e => setOffline(e.target.value)} />
-          </label>
-        </div>
+          <div>
+            <h2>카테고리</h2>
+          </div>
 
-        {/* 카테고리 버튼으로 수정 예정 */}
-        <div>
-          <h2>카테고리</h2>
-          <label>
-            <input
-              type="text"
-              placeholder="카테고리를 작성해주세요"
-              onChange={e => setCategory(e.target.value)}
-            />
-          </label>
-        </div>
 
-        <div>
-          <h2>인원수 & 소개글</h2>
-          <label>
-            <input
-              type="text"
-              placeholder="인원수를 작성해주세요"
-              onChange={e => setPerson(e.target.value)}
-            />
-          </label>
-          <label>
-            <input
-              type="text"
-              placeholder="소개글을 작성해주세요"
-              onChange={e => setIntro(e.target.value)}
-            />
-          </label>
-        </div>
+          <label htmlFor='name'>제목</label>
+          <input 
+            id='name'
+            type='text'
+            style={{ width: '100%' }}
+            {...register('name', { 
+              required: '커피챗 제목을 입력해주세요',
+              minLength: {
+                message: '10자 이상 입력해',
+                value: 10
+              }
+            })}
+          />
+          {errors.name && <strong className='text-light-error'>{errors.name.message}</strong>}
 
-        {/* react calendar로 수정예정 */}
-        <div>
-          <h2>날짜 & 시간</h2>
-          {[0, 1, 2].map(index => (
-            <div key={index}>
-              <label>
-                <input
-                  type="text"
-                  placeholder="날짜를 작성해주세요"
-                  value={dates[index] || ''}
-                  onChange={e => handleDateChange(index, e.target.value)}
-                />
-              </label>
-            </div>
-          ))}
+          <label htmlFor='content'>상세 내용</label>
+          <input 
+            id='content'
+            type='text'
+            style={{ width: '100%' }}
+            {...register('content', { 
+              required: '커피챗의 상세 내용을 입력해주세요', 
+              minLength: {
+                message: '10자 이상 입력해주세요',
+                value: 10
+              }
+            })}
+          />
+          {errors.content && <strong className='text-light-error'>{errors.content.message}</strong>}
 
-          {[0, 1, 2].map(index => (
-            <div key={index}>
-              <label>
-                <input
-                  type="text"
-                  placeholder="시간을 작성해주세요"
-                  value={times[index] || ''}
-                  onChange={e => handleTimeChange(index, e.target.value)}
-                />
-              </label>
-            </div>
-          ))}
-        </div>
-        <button type="submit">설정 완료</button>
+          <label htmlFor='intro'>소개글</label>
+          <input
+            id='intro'
+            type='text'
+            style={{ width: '100%' }}
+            {...register('intro', {
+              required: '커피챗을 간단하게 소개해 주세요',
+              minLength: {
+                message: '10자 이상 입력해주세요',
+                value: 10
+              }
+            })}
+          />
+          {errors?.intro?.message && <strong className='text-light-error'>{errors.intro.message}</strong>}
+
+          <button type='submit'>다음 설정으로</button>
       </form>
-    </>
+    </div>
   );
 };
 
