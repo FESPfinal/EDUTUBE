@@ -1,6 +1,7 @@
 'use client';
 
 import { UserItem } from '@/helper/types/userInfo';
+import useEdutubeAxios from '@/helper/utils/useEdutubeAxios';
 import useAuth from '@/stores/auth';
 import useUserInfo from '@/stores/userInfo';
 import { useMutation } from '@tanstack/react-query';
@@ -12,15 +13,16 @@ type LoginData = {
   password: string;
 };
 
-const BASE_URL = process.env.NEXT_PUBLIC_EDUTUBE_API;
 const URL = '/users/login';
 
 const useLogin = () => {
-  const { setUserInfo } = useUserInfo(state => state);
+  const { edutubeAxios } = useEdutubeAxios();
+
+  const { setUserInfo } = useUserInfo(store => store);
   const { setAccessToken } = useAuth(store => store);
 
   const axiosPost = async (data: LoginData) => {
-    const response = await axios.post(BASE_URL + URL, data);
+    const response = await edutubeAxios.post(URL, data);
     const item = await response.data.item;
     setAccessToken(await item.token.accessToken);
     setUserInfo({
