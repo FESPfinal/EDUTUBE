@@ -2,7 +2,7 @@
 import ProfileImageUploader from '@/components/atom/ProfileImageUploader';
 import useSelectUserInfo from '@/queries/mypage/useSelectUserInfo';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
@@ -38,7 +38,21 @@ const MypageSellerInfo = () => {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<FormData>({ resolver: yupResolver(schema) });
+
+  useEffect(() => {
+    if (!!userInfo) {
+      setValue('name', userInfo.name);
+      setValue('nickname', userInfo.extra.nickname);
+      setValue('address', userInfo.address);
+      setValue('phone', userInfo.phone);
+      setValue('contactEmail', userInfo.extra.contactEmail);
+      setValue('major', userInfo.extra.major);
+      setValue('intro', userInfo.extra.intro);
+      setValue('sns', userInfo.extra.sns);
+    }
+  }, [setValue, userInfo]);
 
   const onSubmit = (data: FormData) => {
     alert('수정 기능 구현 예정!');
@@ -47,7 +61,10 @@ const MypageSellerInfo = () => {
   return (
     <>
       <div className="mb-10">
-        <ProfileImageUploader onImageUpload={setImageFile} />
+        <ProfileImageUploader
+          onImageUpload={setImageFile}
+          defaultImage={userInfo?.extra?.profileImage}
+        />
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <label className="block text-sm font-medium text-gray-700 ">
@@ -56,7 +73,6 @@ const MypageSellerInfo = () => {
             <input
               type="text"
               placeholder="김에듀"
-              defaultValue={userInfo?.name}
               {...register('name', { required: true })}
               className="w-full px-5 py-3 border border-gray-400 rounded-lg outline-none focus:shadow-outline"
             />
@@ -69,7 +85,6 @@ const MypageSellerInfo = () => {
             <input
               type="text"
               placeholder="nickname"
-              defaultValue={userInfo?.extra?.nickname}
               {...register('nickname', { required: true })}
               className="w-full px-5 py-3 border border-gray-400 rounded-lg outline-none focus:shadow-outline"
             />
@@ -82,7 +97,6 @@ const MypageSellerInfo = () => {
             <input
               type="text"
               placeholder="010-0000-0000"
-              defaultValue={userInfo?.phone}
               {...register('phone', { required: true })}
               className="w-full px-5 py-3 border border-gray-400 rounded-lg outline-none focus:shadow-outline"
             />
@@ -95,7 +109,6 @@ const MypageSellerInfo = () => {
             <input
               type="text"
               placeholder="example@email.com"
-              defaultValue={userInfo?.extra.contactEmail}
               {...register('contactEmail', { required: true })}
               className="w-full px-5 py-3 border border-gray-400 rounded-lg outline-none focus:shadow-outline"
             />
@@ -134,7 +147,6 @@ const MypageSellerInfo = () => {
             <input
               type="text"
               placeholder="자신에 대한 소개글을 간단히 작성해주세요."
-              defaultValue={userInfo?.extra?.intro}
               {...register('intro', { required: true })}
               className="w-full px-5 py-3 border border-gray-400 rounded-lg outline-none focus:shadow-outline"
             />
@@ -147,7 +159,6 @@ const MypageSellerInfo = () => {
             <input
               type="text"
               placeholder="https://"
-              defaultValue={userInfo?.extra?.sns}
               {...register('sns', { required: true })}
               className="w-full px-5 py-3 border border-gray-400 rounded-lg outline-none focus:shadow-outline"
             />

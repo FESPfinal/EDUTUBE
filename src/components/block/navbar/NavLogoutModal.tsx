@@ -2,12 +2,15 @@
 
 import Link from 'next/link';
 import Cookies from 'js-cookie';
-import { useRouter, redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import useUserInfo from '@/stores/userInfo';
 
 const NavLogoutModal = () => {
+  const { deleteUserInfo } = useUserInfo(store => store);
   const router = useRouter();
 
   const handleLogout = () => {
+    deleteUserInfo();
     Cookies.remove('accessToken');
     Cookies.remove('refreshToken');
     Cookies.remove('user_id');
