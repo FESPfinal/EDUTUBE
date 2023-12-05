@@ -1,17 +1,14 @@
+import MypageMyCoffeechat from '@/components/views/mypage/myCoffechat/MypageMyCoffeechat';
 import Link from 'next/link';
 
-const MypageMyCoffeechat = () => {
+const MypageMyCoffeechatPage = () => {
   return (
     <>
-      <div className="m-5 ml-8">
+      <div className=" ml-8 w-full">
         <p className="text-3xl my-10">내 커피챗</p>
-        <section className="ml-10">
-          <div className="w-[120px] h-[50px] px-3 py-4 text-white bg-light-main rounded-md hover:bg-dark-main focus:outline-none">
-            <Link href={'/coffeechat/regist'}>커피챗 등록</Link>
-          </div>
-        </section>
+        <MypageMyCoffeechat />
       </div>
     </>
   );
 };
-export default MypageMyCoffeechat;
+export default MypageMyCoffeechatPage;
