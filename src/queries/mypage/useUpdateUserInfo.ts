@@ -1,6 +1,5 @@
 'use client';
 
-import { UserItem } from '@/helper/types/userInfo';
 import useEdutubeAxios from '@/helper/utils/useEdutubeAxios';
 import useAuth from '@/stores/auth';
 import useUserInfo, { UserNotTokenItem } from '@/stores/userInfo';
@@ -13,19 +12,18 @@ const useUpdateUserInfo = () => {
   const { userInfo, setUserInfo } = useUserInfo(store => store);
   const { setAccessToken } = useAuth();
 
+  //TODO: userData 타입 지정 필요
   const patchAxios = async (userData: {}) => {
     const response = await edutubeAxios.patch(URL(userInfo._id), userData);
-    const item = (await response.data.item) as UserItem;
-
-    setAccessToken(item.token.accessToken);
+    const item = (await response.data.updated) as UserNotTokenItem;
     setUserInfo({
-      _id: item._id,
-      email: item.email,
+      _id: userInfo._id,
+      email: userInfo.email,
       name: item.name,
       phone: item.phone,
       address: item.address,
-      type: item.type,
-      createdAt: item.createdAt,
+      type: userInfo.type,
+      createdAt: userInfo.createdAt,
       updatedAt: item.updatedAt,
       extra: item.extra,
     });
