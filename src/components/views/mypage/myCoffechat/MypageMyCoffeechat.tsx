@@ -2,8 +2,11 @@
 
 import Link from 'next/link';
 import MyCoffeechatItem from './MyCoffeechatItem';
+import useSelectMyCoffeechat from '@/queries/coffeechat/myCoffeechat/useSelectMyCoffeechat';
 
 const MypageMyCoffeechat = () => {
+  const { data: myCoffeechatList } = useSelectMyCoffeechat();
+
   return (
     <>
       <section className="w-full border-b border-gray-300">
@@ -11,7 +14,7 @@ const MypageMyCoffeechat = () => {
           <div>
             <section className="flex gap-2">
               <p>전체 커피챗 개수</p>
-              <p className="text-light-main">2</p>
+              <p className="text-light-main">{myCoffeechatList?.length}</p>
             </section>
           </div>
           <section>
@@ -23,11 +26,10 @@ const MypageMyCoffeechat = () => {
       </section>
       <section>
         <ul role="list" className="divide-y divide-gray-100">
-          <MyCoffeechatItem />
-          <MyCoffeechatItem />
-          <MyCoffeechatItem />
-          <MyCoffeechatItem />
-          <MyCoffeechatItem />
+          {/* TODO: filter((coffeechatItem) => coffeechatItem.extra.type === 'coffeechat') 추가 필요 */}
+          {myCoffeechatList?.map((coffeechatItem: {}) => {
+            return <MyCoffeechatItem data={coffeechatItem} key={coffeechatItem._id} />;
+          })}
         </ul>
       </section>
     </>
