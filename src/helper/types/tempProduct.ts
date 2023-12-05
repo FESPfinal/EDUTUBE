@@ -1,5 +1,5 @@
 export interface tempProductType {
-  mainImages?: string[];
+  mainImages?: [];
   name: string;
   content: string;
   price: number;
