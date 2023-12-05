@@ -12,9 +12,9 @@ import { useRouter } from 'next/navigation';
 import { tempProductType } from '@/helper/types/tempProduct';
 
 const schema = yup.object().shape({
-  name: yup.string().required('제목을 입력해주세요.'),
-  content: yup.string().required('내용을 입력해주세요.').min(10, '내용은 최소 10자 이상이어야 합니다.'),
-  intro: yup.string().required('소개글을 입력해주세요.'),
+  name: yup.string().required('제목을 입력해주세요.').max(30, '최대 30자까지 입력 가능합니다.'),
+  content: yup.string().required('내용을 입력해주세요.').min(10, '내용은 최소 10자 이상이어야 합니다.').max(500, '최대 500자까지 입력 가능합니다.'),
+  intro: yup.string().required('소개글을 입력해주세요.').max(50, '최대 50자까지 입력 가능합니다.'),
   datetime: yup.array().of(
     yup.object().shape({
       date: yup.date().required('날짜를 선택해주세요.'),
@@ -23,17 +23,6 @@ const schema = yup.object().shape({
   ).required('하나 이상의 날짜 및 시간을 추가해주세요.'),
   maxParticipants: yup.number().required('최대 인원 수를 입력해주세요.').min(1, '최소 1명 이상이어야 합니다.').typeError('숫자를 입력하세요.'),
   price: yup.number().required('가격을 입력해주세요.').min(0, '최소 가격은 0 이어야 합니다.').typeError('숫자를 입력하세요.'),
-  // onlinePlace: yup.string().when('placeType', {
-  //   is: PLACE_TYPES.ONLINE,
-  //   then: yup.string().required('온라인 장소를 입력해주세요.'),
-  //   otherwise: yup.string(),
-  // }),
-  // offlinePlace: yup.string().when('placeType', {
-  //   is: PLACE_TYPES.OFFLINE,
-  //   then: yup.string().required('오프라인 장소를 입력해주세요.'),
-  //   otherwise: yup.string(),
-  // }),
-  // placeType: yup.string().required('장소 유형을 선택해주세요.'),
 })
 
 type FormData = yup.InferType<typeof schema>;
@@ -61,7 +50,6 @@ const CoffeechatRegist = () => {
   }
 
   const handleRemoveDatetime = (index: number, event: React.MouseEvent) => {
-    console.log('쿨');
     event.preventDefault();
     const newDatetime = [...datetime];
     newDatetime.splice(index, 1);
@@ -69,7 +57,6 @@ const CoffeechatRegist = () => {
   }
 
   const onSubmit = (data: FormData) => {
-    console.log('submit');
     const requestBody: tempProductType = {
       mainImages: [],
       name: data.name,
@@ -249,7 +236,7 @@ const CoffeechatRegist = () => {
 
           />
         </label>
-        {errors.maxParticipants && <p className="text-red-500 text-sm">{errors.numericValue.message}</p>}
+        {errors.maxParticipants && <p className="text-red-500 text-sm">{errors.maxParticipants.message}</p>}
       </div>
       {/* 가격 */}
       <div className="mb-4">
