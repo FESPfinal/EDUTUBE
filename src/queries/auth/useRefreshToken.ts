@@ -8,3 +8,5 @@ const useRefreshToken = async () => {
   const refreshToken = Cookies.get('refreshToken');
   return await axios.get(BASE_URL + URL, { headers: { Authorization: `Bearer ${refreshToken}` } });
 };
+
+export default useRefreshToken;
