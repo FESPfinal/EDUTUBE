@@ -60,7 +60,6 @@ const MypageSellerInfo = () => {
   }, [setValue, userInfo]);
 
   const updateUserInfo = (data: UserFormData, fileName: string) => {
-    console.log('유저인포');
     const bodyData = {
       type: USER_TYPES.SELLER,
       name: data.name,
@@ -93,7 +92,6 @@ const MypageSellerInfo = () => {
       formData.append('attach', imageFile);
       createUserProfileMutate(formData, {
         onSuccess: (fileName: string) => {
-          console.log('사진 axios');
           updateUserInfo(data, fileName);
         },
         onError: () => {
