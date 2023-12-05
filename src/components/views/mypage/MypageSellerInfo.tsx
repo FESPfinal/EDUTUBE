@@ -60,36 +60,40 @@ const MypageSellerInfo = () => {
   }, [setValue, userInfo]);
 
   const updateUserInfo = (data: UserFormData, fileName: string) => {
-    updateUserInfoMutate(
-      {
-        type: USER_TYPES.SELLER,
-        name: data.name,
-        address: data.address,
-        phone: data.phone,
-        extra: {
-          profileImage: fileName,
-          major: data.major,
-          nickname: data.nickname,
-          contactEmail: data.contactEmail,
-          intro: data.intro,
-          sns: data.sns,
-        },
+    console.log('유저인포');
+    const bodyData = {
+      type: USER_TYPES.SELLER,
+      name: data.name,
+      address: data.address,
+      phone: data.phone,
+      extra: {
+        profileImage: fileName,
+        major: data.major,
+        nickname: data.nickname,
+        contactEmail: data.contactEmail,
+        intro: data.intro,
+        sns: data.sns,
       },
-      {
-        onSuccess: () => {
-          alert('프로필 수정이 완료되었습니다.');
-          userInfoRefetch();
-        },
+    };
+
+    updateUserInfoMutate(bodyData, {
+      onSuccess: data => {
+        alert('프로필 수정이 완료되었습니다.');
+        userInfoRefetch();
       },
-    );
+      onError: () => {
+        alert('프로필 수정이 실패하였습니다.');
+      },
+    });
   };
 
   const onSubmit = (data: UserFormData) => {
     const formData = new FormData();
-    if (userInfo?.extra?.profileImage && imageFile) {
+    if (imageFile) {
       formData.append('attach', imageFile);
       createUserProfileMutate(formData, {
         onSuccess: (fileName: string) => {
+          console.log('사진 axios');
           updateUserInfo(data, fileName);
         },
         onError: () => {
