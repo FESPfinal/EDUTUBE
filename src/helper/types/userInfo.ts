@@ -16,3 +16,19 @@ export type Step2UserData = {
     major: string;
   };
 };
+
+export type UserItem = {
+  _id: number;
+  email: string;
+  name: string;
+  phone: string;
+  address: string;
+  type: string;
+  createdAt: string;
+  updatedAt: string;
+  extra: {};
+  token: {
+    accessToken: string;
+    refreshToken: string;
+  };
+};

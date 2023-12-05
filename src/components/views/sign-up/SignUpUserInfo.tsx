@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { USER_TYPES } from '../../../helper/constants/userConst';
-import { Step1Data } from '../../../helper/types/userInfoTypes';
+import { Step1Data } from '../../../helper/types/userInfo';
 import useCreateUser from '@/queries/signUp/useCreateUser';
 import { useRouter } from 'next/navigation';
 import useCreateFile from '@/queries/common/useCreateFile';
