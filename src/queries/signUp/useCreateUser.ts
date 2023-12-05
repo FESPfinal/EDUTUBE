@@ -11,7 +11,7 @@ export type SignUpData = {
   address: string;
   type: string;
   extra: {
-    profileImage: File | undefined;
+    profileImage: string;
     major: string;
     nickname: string;
     contactEmail: string;
