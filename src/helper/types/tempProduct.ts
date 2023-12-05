@@ -17,6 +17,7 @@ export interface tempProductType {
     datetime?: any;
     person?: string;
     userData?: string;
-    maxParticipants?: number
+    maxParticipants?: number;
+    type?: 'coffeechat' | 'video';
   };
 }

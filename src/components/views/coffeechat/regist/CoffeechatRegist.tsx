@@ -76,7 +76,8 @@ const CoffeechatRegist = () => {
         place: placeType,
         online: data.onlinePlace,
         offline: data.offlinePlace,
-        datetime: datetime
+        datetime: datetime,
+        type: 'coffeechat',
       },
     }
     mutateCreateProduct(requestBody, {
