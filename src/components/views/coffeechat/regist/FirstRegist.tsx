@@ -1,131 +1,115 @@
 'use client';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import BlockStepper from '@/components/block/BlockStepper';
 import Image from 'next/image';
-import { useState } from 'react';
-import Category from '@/components/atom/Category';
 
 
 const FirstRegist = () => {
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImage, setSelectedImage] = React.useState(null);
 
   const nameValue = watch('name');
   const contentValue = watch('content');
   const introValue = watch('intro');
-  const imgValue = watch('uploadImg')
+  const imgValue = watch('image')
+  console.log(nameValue, imgValue)
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setSelectedImage(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
+  const handleImageUpload = async (event) => {
+    const file = event.target.files[0];
+    setSelectedImage(file);
   };
 
   return (
-    <div className='flex'>
-      < BlockStepper nameValue={nameValue} contentValue={contentValue} introValue={introValue} errors={errors}/>
+    <div style={{display: 'flex'}}>
+      < BlockStepper nameValue={nameValue} contentValue={contentValue} introValue={introValue} imgValue={imgValue} errors={errors}/>
 
-      <form onSubmit={handleSubmit()}>
-        <div className='flex flex-col'>
+      <form style={{flex: '1'}} onSubmit={handleSubmit()}>
+        <div style={{margin: '152px 0'}}>
 
-          <h1 style={{marginTop: '100px', fontSize: '45px'}}>커피챗 내용 설정</h1>
-          <h2 style={{marginTop: '46px', fontSize: '30px'}}>이미지 업로드</h2>
-        
-          <label 
-            htmlFor="uploadImg" 
-            style={{cursor: 'pointer'}}>
-          {selectedImage ? (
-            <Image 
-              src={selectedImage}
-              alt='선택한 이미지'
-              width={793} 
-              height={369} 
-              style={{objectFit: 'cover', borderRadius: '20px'}}/>
-          ) : (
-            <Image src='/images/coffeechatImg.svg' alt='커피챗 이미지' width={793} height={369}
-            />
-          )}
-          </label>
-          <input 
-          id='uploadImg'
-          type='file'
-          style={{ display: 'none' }}
-          onChange={handleImageChange}
-          />
-        </div>
-
-
-
-          <div style={{margin: '24px 0'}}>
-            <h2 style={{fontSize: '30px'}}>
-              카테고리
-            </h2>
-
+          {/* 이미지 업로드 시작 */}
+          <div style={{width: '793px', margin: '0 auto 46px'}}>
+            <h1 style={{marginBottom: '40px', fontSize: '45px'}}>커피챗 내용 설정</h1>
+            <label htmlFor="image" style={{cursor: 'pointer'}}>
+              이미지 업로드
+              {selectedImage ? (
+                <Image
+                  src={URL.createObjectURL(selectedImage)}
+                  alt='커피챗 등록 이미지'
+                  width={793}
+                  height={369}
+                  style={{objectFit: 'cover'}}
+                />
+              ) : (
+                <Image
+                  src='/images/coffeechatImg.svg'
+                  alt='커피챗 등록 이미지'
+                  width={793}
+                  height={369}
+                />
+              )}
+              <input
+                id='image'
+                type="file"
+                style={{display: 'none'}}
+                onChange={handleImageUpload}
+              />
+            </label>
           </div>
+          {/* 이미지 업로드 끝 */}
 
-          <div>
-          <label htmlFor='name'
-            style={{display: 'block', marginTop: '40px'}}>제목
-          <input 
-            id='name'
-            type='text'
-            style={{ width: '782px'}}
-            {...register('name', { 
-              required: '커피챗 제목을 입력해주세요',
-              minLength: {
-                message: '10자 이상 입력해',
-                value: 10
-              }
-            })}
-          />
-          </label>
-          {errors.name && <strong className='text-light-error'>{errors.name.message}</strong>}
+          {/* 제목, 내용, 소개글 input 시작 */}
+          <div style={{width: '793px', margin: '0 auto'}}>
+            <label htmlFor='name' style={{display: 'block'}}>제목</label>
+            <input 
+              id='name'
+              type='text'
+              style={{width: '792px', marginBottom: '76px'}}
+              {...register('name', { 
+                required: '커피챗 제목을 입력해주세요',
+                minLength: {
+                  message: '제목을 작성해 주세요',
+                  value: 1
+                }
+              })}/>
+            
 
-          <label htmlFor='content'
-          style={{display: 'block', marginTop: '40px'}}>상세 내용</label>
-          <input 
-            id='content'
-            type='text'
-            style={{ width: '782px'}}
-            {...register('content', { 
-              required: '커피챗의 상세 내용을 입력해주세요', 
-              minLength: {
-                message: '10자 이상 입력해주세요',
-                value: 10
-              }
-            })}
-          />
-          {errors.content && <strong className='text-light-error'>{errors.content.message}</strong>}
+            <label htmlFor='content' style={{display: 'block'}}>상세 내용</label>
+            <input 
+              id='content'
+              type='text'
+              style={{width: '792px', marginBottom: '76px'}}
+              {...register('content', { 
+                required: '커피챗 상세 내용을 입력해주세요',
+                minLength: {
+                  message: '상세 내용을 작성해 주세요',
+                  value: 10
+                }
+              })}/>
+            
+            
+            <label htmlFor='intro' style={{display: 'block'}}>소개글</label>
+            <input 
+              id='intro'
+              type='text'
+              className='active: outline-none'
+              style={{width: '792px', marginBottom: '76px', outline: 'none'}}
+              {...register('intro', { 
+                required: '커피챗 소개해 주세요',
+                minLength: {
+                  message: '상세 내용을 작성해 주세요',
+                  value: 1
+                }
+              })}/>
+            <button 
+              type='submit'
+              className='bg-light-main py-7 rounded text-white'
+              style={{width: '792px'}}>다음 설정으로 이동
+            </button>
+          </div>
+          {/* 제목, 내용, 소개글 input 끝 */}
 
-          <label htmlFor='intro'
-          style={{display: 'block', marginTop: '40px'}}>소개글</label>
-          <input
-            id='intro'
-            type='text'
-            style={{ width: '782px' }}
-            {...register('intro', {
-              required: '커피챗을 간단하게 소개해 주세요',
-              minLength: {
-                message: '10자 이상 입력해주세요',
-                value: 10
-              }
-            })}
-            />
-          {errors?.intro?.message && <strong className='text-light-error'>{errors.intro.message}</strong>}
-            </div>
-
-          <button type='submit'
-            style={{
-              margin: '40px 0 150px 0', backgroundColor: '##09CF83', textAlign: 'center' 
-            }}>
-              다음 설정으로 이동
-          </button>
+        </div>
       </form>
     </div>
   );
