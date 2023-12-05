@@ -11,7 +11,7 @@ import tempUseCreateProduct from '@/queries/coffeechat/tempUseCreateProduct';
 import { useRouter } from 'next/navigation';
 import { tempProductType } from '@/helper/types/tempProduct';
 import useCreateFile from '@/queries/common/useCreateFile';
-import ProfileImageUploader from '@/components/atom/ProfileImageUploader';
+import ImageUploader from '@/components/atom/ImageUploader';
 
 const schema = yup.object().shape({
   name: yup.string().required('제목을 입력해주세요.').max(30, '최대 30자까지 입력 가능합니다.'),
@@ -108,15 +108,15 @@ const CoffeechatRegist = () => {
   }
 
   return (
-    <>
+    <div className="max-w-md mx-auto my-16">
       {/* 이미지 업로드 */}
       <div className="mb-4">
         <label className="block text-gray-700">이미지 업로드
-          <ProfileImageUploader onImageUpload={setImageFile} />
+          <ImageUploader onImageUpload={setImageFile} />
         </label>
         {/* {errors.image && <p className="text-red-500 text-sm">{errors.image.message}</p>} */}
       </div >
-      <form onSubmit={handleSubmit(onSubmit)} className="max-w-md mx-auto my-16">
+      <form onSubmit={handleSubmit(onSubmit)} >
         {/* 제목 */}
         <div className="mb-4">
           <label className="block text-gray-700">제목
@@ -276,7 +276,7 @@ const CoffeechatRegist = () => {
         {/* <SubmitButton content="등록하기" /> */}
         <button type="submit" className="bg-light-main hover:bg-dark-main text-white p-2 rounded  w-full" >등록</button>
       </form>
-    </>
+    </div>
   )
 
 }
