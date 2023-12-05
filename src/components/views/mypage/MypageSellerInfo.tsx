@@ -1,6 +1,9 @@
 'use client';
 import ProfileImageUploader from '@/components/atom/ProfileImageUploader';
+import { USER_TYPES } from '@/helper/constants/userConst';
+import useCreateFile from '@/queries/common/useCreateFile';
 import useSelectUserInfo from '@/queries/mypage/useSelectUserInfo';
+import useUpdateUserInfo from '@/queries/mypage/useUpdateUserInfo';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -25,13 +28,15 @@ const schema = yup.object().shape({
     .required('주소를 입력해주세요.'),
 });
 
-type FormData = yup.InferType<typeof schema>;
+type UserFormData = yup.InferType<typeof schema>;
 
 const ADDRESS_LIST = ['지역1', '지역2', '지역3', '지역4', '지역5', '지역6', '지역7'];
 const MAJOR_LIST = ['직무1', '직무2', '직무3', '직무4', '직무5', '직무6', '직무7'];
 
 const MypageSellerInfo = () => {
-  const { data: userInfo } = useSelectUserInfo();
+  const { data: userInfo, refetch: userInfoRefetch } = useSelectUserInfo();
+  const { mutate: createUserProfileMutate } = useCreateFile();
+  const { mutate: updateUserInfoMutate } = useUpdateUserInfo();
   const [imageFile, setImageFile] = useState<File>();
 
   const {
@@ -39,7 +44,7 @@ const MypageSellerInfo = () => {
     handleSubmit,
     formState: { errors },
     setValue,
-  } = useForm<FormData>({ resolver: yupResolver(schema) });
+  } = useForm<UserFormData>({ resolver: yupResolver(schema) });
 
   useEffect(() => {
     if (!!userInfo) {
@@ -54,8 +59,46 @@ const MypageSellerInfo = () => {
     }
   }, [setValue, userInfo]);
 
-  const onSubmit = (data: FormData) => {
-    alert('수정 기능 구현 예정!');
+  const updateUserInfo = (data: UserFormData, fileName: string) => {
+    updateUserInfoMutate(
+      {
+        type: USER_TYPES.SELLER,
+        name: data.name,
+        address: data.address,
+        phone: data.phone,
+        extra: {
+          profileImage: fileName,
+          major: data.major,
+          nickname: data.nickname,
+          contactEmail: data.contactEmail,
+          intro: data.intro,
+          sns: data.sns,
+        },
+      },
+      {
+        onSuccess: () => {
+          alert('프로필 수정이 완료되었습니다.');
+          userInfoRefetch();
+        },
+      },
+    );
+  };
+
+  const onSubmit = (data: UserFormData) => {
+    const formData = new FormData();
+    if (userInfo?.extra?.profileImage && imageFile) {
+      formData.append('attach', imageFile);
+      createUserProfileMutate(formData, {
+        onSuccess: (fileName: string) => {
+          updateUserInfo(data, fileName);
+        },
+        onError: () => {
+          alert('프로필 업로드가 실패하였습니다.');
+        },
+      });
+    } else {
+      updateUserInfo(data, userInfo?.extra?.profileImage);
+    }
   };
 
   return (
