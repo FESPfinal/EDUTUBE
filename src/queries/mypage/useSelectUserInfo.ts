@@ -1,19 +1,17 @@
 'use client';
 
 import useEdutubeAxios from '@/helper/utils/useEdutubeAxios';
+import useUserInfo from '@/stores/userInfo';
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
-import Cookies from 'js-cookie';
 
-const user_id = Cookies.get('user_id');
-
-const URL = `/users/${user_id}`;
+const URL = (user_id: number) => `/users/${user_id}`;
 
 const useSelectUserInfo = () => {
   const { edutubeAxios } = useEdutubeAxios();
+  const { userInfo } = useUserInfo(store => store);
 
   const axiosGet = async () => {
-    const response = await edutubeAxios.get(URL);
+    const response = await edutubeAxios.get(URL(userInfo._id));
     return response.data.item;
   };
 

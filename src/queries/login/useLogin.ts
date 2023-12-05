@@ -5,7 +5,6 @@ import useEdutubeAxios from '@/helper/utils/useEdutubeAxios';
 import useAuth from '@/stores/auth';
 import useUserInfo from '@/stores/userInfo';
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
 import Cookies from 'js-cookie';
 
 type LoginData = {
