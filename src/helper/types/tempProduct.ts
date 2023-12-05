@@ -14,8 +14,7 @@ export interface tempProductType {
     place: string;
     online: string;
     offline: string;
-    date: string[];
-    time: string[];
+    datetime?: any;
     person?: string;
     userData?: string;
     maxParticipants?: number

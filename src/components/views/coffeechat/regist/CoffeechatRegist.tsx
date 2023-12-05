@@ -15,11 +15,25 @@ const schema = yup.object().shape({
   name: yup.string().required('제목을 입력해주세요.'),
   content: yup.string().required('내용을 입력해주세요.').min(10, '내용은 최소 10자 이상이어야 합니다.'),
   intro: yup.string().required('소개글을 입력해주세요.'),
-  // 장소입력
-  date: yup.date().required('날짜를 입력해주세요.'),
-  time: yup.date().required('시간을 입력해주세요.'),
-  maxParticipants: yup.number().required('최대 인원 수를 입력해주세요.').typeError('숫자를 입력하세요.'),
-  price: yup.number().required('가격을 입력해주세요.').typeError('숫자를 입력하세요.')
+  datetime: yup.array().of(
+    yup.object().shape({
+      date: yup.date().required('날짜를 선택해주세요.'),
+      time: yup.date().required('시간을 선택해주세요.'),
+    })
+  ).required('하나 이상의 날짜 및 시간을 추가해주세요.'),
+  maxParticipants: yup.number().required('최대 인원 수를 입력해주세요.').min(1, '최소 1명 이상이어야 합니다.').typeError('숫자를 입력하세요.'),
+  price: yup.number().required('가격을 입력해주세요.').min(0, '최소 가격은 0 이어야 합니다.').typeError('숫자를 입력하세요.'),
+  // onlinePlace: yup.string().when('placeType', {
+  //   is: PLACE_TYPES.ONLINE,
+  //   then: yup.string().required('온라인 장소를 입력해주세요.'),
+  //   otherwise: yup.string(),
+  // }),
+  // offlinePlace: yup.string().when('placeType', {
+  //   is: PLACE_TYPES.OFFLINE,
+  //   then: yup.string().required('오프라인 장소를 입력해주세요.'),
+  //   otherwise: yup.string(),
+  // }),
+  // placeType: yup.string().required('장소 유형을 선택해주세요.'),
 })
 
 type FormData = yup.InferType<typeof schema>;
@@ -33,12 +47,29 @@ const CoffeechatRegist = () => {
   const router = useRouter();
   const { mutate: mutateCreateProduct, data } = tempUseCreateProduct();
   const [placeType, setPlaceType] = useState(PLACE_TYPES.ONLINE);
-
+  const [datetime, setDatetime] = useState<{ date: Date, time: Date }[]>([]);
+  console.log('에러', errors)
+  console.log('데이트타임', datetime)
   const handlePlaceType = (type: string) => {
     setPlaceType(type);
   }
 
+  const handleAddDatetime = (event: React.MouseEvent) => {
+    console.log('쿨락')
+    event.preventDefault();
+    setDatetime([...datetime, { date: new Date(), time: new Date() }]);
+  }
+
+  const handleRemoveDatetime = (index: number, event: React.MouseEvent) => {
+    console.log('쿨');
+    event.preventDefault();
+    const newDatetime = [...datetime];
+    newDatetime.splice(index, 1);
+    setDatetime(newDatetime);
+  }
+
   const onSubmit = (data: FormData) => {
+    console.log('submit');
     const requestBody: tempProductType = {
       mainImages: [],
       name: data.name,
@@ -53,8 +84,7 @@ const CoffeechatRegist = () => {
         place: placeType,
         online: data.onlinePlace,
         offline: data.offlinePlace,
-        date: data.date,
-        time: data.time,
+        datetime: datetime
       },
     }
     console.log(`req`, requestBody)
@@ -121,7 +151,7 @@ const CoffeechatRegist = () => {
             className="mt-1 p-2 border rounded w-full"
           />
         </label>
-        {errors.image && <p className="text-red-500 text-sm">{errors.intro?.message}</p>}
+        {errors.intro && <p className="text-red-500 text-sm">{errors.intro?.message}</p>}
       </div>
       {/* 장소 등록 */}
       <div className="mb-4">
@@ -144,39 +174,63 @@ const CoffeechatRegist = () => {
               className="mt-1 p-2 border rounded w-full"
             />
           </label>}
+        {errors.onlinePlace && <p className="text-red-500 text-sm">{errors.onlinePlace.message}</p>}{
+          errors.offlinePlace && <p className="text-red-500 text-sm">{errors.offlinePlace.message}</p>
+        }
+
       </div>
-      {/* 날짜등록 */}
+      {/* 날짜 및 시간 등록 */}
       <div className="mb-4">
-        <label className="block text-gray-700">날짜 등록
-          <input
-            type="date"
-            {...register("date")}
-            className="mt-1 p-2 border rounded w-full"
-          />
-        </label>
-        {errors?.date && <p className="text-red-500 text-sm">날짜를 입력해주세요.</p>}
-      </div>
-      {/* 시간등록 */}
-      <div className="mb-4">
-        <label className="block text-gray-700">시간 등록
-          <Controller
-            name="time"
-            control={control}
-            defaultValue=""
-            render={({ field }: { field: UseFormRegisterReturn }) => (
-              <DatePicker
-                selected={field.value as Date}
-                onChange={(date) => field.onChange(date)}
-                showTimeSelect
-                showTimeSelectOnly
-                timeIntervals={15}
-                dateFormat="h:mm aa"
-                className="w-full p-2 border rounded"
-              />
-            )}
-          />
-        </label>
-        {errors.time && <p className="text-red-500 text-sm">시간을 입력해주세요</p>}
+        <label className="block text-gray-700">날짜 및 시간 등록</label>
+        {datetime.map((dt, index) => (
+          <div key={index} className="flex items-center mb-2">
+            <Controller
+              control={control}
+              name={`datetime.${index}.date`}
+              defaultValue={dt.date}
+              render={({ field }) => (
+                <DatePicker
+                  selected={dt.date}
+                  onChange={(newDate) => {
+                    const newDatetime = [...datetime];
+                    newDatetime[index].date = newDate as Date;
+                    setDatetime(newDatetime);
+                    field.onChange(newDate);
+                  }}
+                  dateFormat="yyyy-MM-dd"
+                  placeholderText="날짜를 선택하세요"
+                  className="mr-2 p-2 border rounded"
+                />
+              )}
+            />
+            <Controller
+              control={control}
+              name={`datetime.${index}.time`}
+              defaultValue={dt.time}
+              render={({ field }) => (
+                <DatePicker
+                  selected={dt.time}
+                  onChange={(newTime) => {
+                    const newDatetime = [...datetime];
+                    newDatetime[index].time = newTime as Date;
+                    setDatetime(newDatetime);
+                    field.onChange(newTime);
+                  }}
+                  showTimeSelect
+                  showTimeSelectOnly
+                  timeIntervals={15}
+                  dateFormat="h:mm aa"
+                  placeholderText="시간을 선택하세요"
+                  className="p-2 border rounded"
+                />
+              )}
+            />
+
+            <button type="button" onClick={(event: React.MouseEvent) => handleRemoveDatetime(index, event)} className="ml-2 text-red-500">삭제</button>
+          </div>
+        ))}
+        {errors.datetime && <p className="text-red-500 text-sm">{errors.datetime.message}</p>}
+        <button type="button" onClick={(event: React.MouseEvent) => handleAddDatetime(event)} className="mt-2 p-2 bg-blue-500 text-white rounded hover:bg-blue-700">날짜 및 시간 추가</button>
       </div>
       {/* 참여인원 */}
       <div className="mb-4">
