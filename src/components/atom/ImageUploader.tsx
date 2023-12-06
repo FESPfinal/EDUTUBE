@@ -19,13 +19,14 @@ const ImageUploader: React.FC<Props> = ({ onImageUpload }) => {
     }
   };
 
-  const handleLabelClick = () => {
-    document.getElementById('profileImageInput')?.click();
+  const handleLabelClick = (event: React.MouseEvent) => {
+    event.preventDefault();
+    document.getElementById('ImageInput')?.click();
   };
 
-  const handleCloseClick = () => {
+  const handleCloseClick = (event: React.MouseEvent) => {
+    event.preventDefault();
     setSelectedImage(null);
-    document.getElementById('profileImageInput')?.click();
   }
 
   return (
@@ -37,7 +38,6 @@ const ImageUploader: React.FC<Props> = ({ onImageUpload }) => {
               src={URL.createObjectURL(selectedImage)}
               alt="Selected Profile"
               className="h-80 w-full object-cover rounded-lg cursor-pointer"
-              onClick={handleLabelClick}
               width={80}
               height={80}
             />
@@ -69,7 +69,7 @@ const ImageUploader: React.FC<Props> = ({ onImageUpload }) => {
       </label >
       <input
         type="file"
-        id="profileImageInput"
+        id="ImageInput"
         accept="image/*"
         className="hidden"
         onChange={handleImageChange}
