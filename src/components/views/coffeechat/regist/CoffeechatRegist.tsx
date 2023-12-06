@@ -117,7 +117,6 @@ const CoffeechatRegist = () => {
         <label className="block text-gray-700">이미지 업로드
           <ImageUploader onImageUpload={setImageFile} />
         </label>
-        {/* {errors.image && <p className="text-red-500 text-sm">{errors.image.message}</p>} */}
       </div >
       <form onSubmit={handleSubmit(onSubmit)} >
         {/* 제목 */}
@@ -150,7 +149,7 @@ const CoffeechatRegist = () => {
         {/* 카테고리 */}
         <div className="mb-4">
           <label className="block text-gray-700">카테고리 선택</label>
-          <div className="flex space-x-2">
+          <div className="flex space-x-2 mt-2">
             {categories.map((category) => (
               <Category
                 key={category}
@@ -162,6 +161,7 @@ const CoffeechatRegist = () => {
               />
             ))}
           </div>
+          {/* [TODO] 카테고리 유효성 검사 추가 */}
         </div>
         {/* 소개글 */}
         <div className="mb-4">
@@ -251,6 +251,7 @@ const CoffeechatRegist = () => {
               <button type="button" onClick={(event: React.MouseEvent) => handleRemoveDatetime(index, event)} className="ml-2 text-red-500">삭제</button>
             </div>
           ))}
+          {/* [TODO] 날짜 시간 유효성 검사 수정 */}
           {errors.datetime && <p className="text-red-500 text-sm">{errors.datetime.message}</p>}
           <button type="button" onClick={(event: React.MouseEvent) => handleAddDatetime(event)} className="mt-2 p-2 bg-blue-500 text-white rounded hover:bg-blue-700">날짜 및 시간 추가</button>
         </div>
