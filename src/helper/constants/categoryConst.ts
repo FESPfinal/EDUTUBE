@@ -1,0 +1,1 @@
+export const categoryConst = ['프론트엔드', '백엔드', '디자인', '기획', '코딩테스트'];

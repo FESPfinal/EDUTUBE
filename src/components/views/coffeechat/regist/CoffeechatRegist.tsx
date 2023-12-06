@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation';
 import { tempProductType } from '@/helper/types/tempProduct';
 import useCreateFile from '@/queries/common/useCreateFile';
 import ImageUploader from '@/components/atom/ImageUploader';
+import { categoryConst } from '@/helper/constants/categoryConst';
 
 const schema = yup.object().shape({
   name: yup.string().required('제목을 입력해주세요.').max(30, '최대 30자까지 입력 가능합니다.'),
@@ -43,7 +44,6 @@ const CoffeechatRegist = () => {
   const [datetime, setDatetime] = useState<{ date: Date, time: Date }[]>([]);
   const [imageFile, setImageFile] = useState<File>();
   const [selectedCategory, setSelectedCategory] = useState('');
-  const categories = ['카페', '채팅', '스터디', '기타']; // 카테고리 목록
 
   const router = useRouter();
 
@@ -149,8 +149,8 @@ const CoffeechatRegist = () => {
         {/* 카테고리 */}
         <div className="mb-4">
           <label className="block text-gray-700">카테고리 선택</label>
-          <div className="flex space-x-2 mt-2">
-            {categories.map((category) => (
+          <div className="flex mt-2 flex-wrap gap-2 ">
+            {categoryConst.map((category) => (
               <Category
                 key={category}
                 name={category}
