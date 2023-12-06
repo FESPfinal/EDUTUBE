@@ -3,10 +3,12 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import BlockStepper from '@/components/block/BlockStepper';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 const FirstRegist = () => {
-  const { register, setValue, handleSubmit, watch, formState: { errors } } = useForm();
+  const { register, handleSubmit, watch, formState: { errors } } = useForm();
   const [selectedImage, setSelectedImage] = React.useState(null);
+  const router = useRouter();
 
   const nameValue = watch('name');
   const contentValue = watch('content');
@@ -15,14 +17,21 @@ const FirstRegist = () => {
 
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
-    setSelectedImage(file);
+    if (file) {
+      setSelectedImage(URL.createObjectURL(file));
+    }
   };
+
+  const onSubmit = (formData) => {
+    console.log(formData);
+    // router.push('/coffeechat');
+  }
 
   return (
     <div className='flex relative'>
       < BlockStepper nameValue={nameValue} contentValue={contentValue} introValue={introValue} imgValue={imgValue} errors={errors}/>
 
-      <form className='flex-1' onSubmit={handleSubmit()}>
+      <form className='flex-1' onSubmit={handleSubmit(onSubmit)}>
         <div style={{margin: '152px 0'}}>
 
           {/* 이미지 업로드 시작 */}
@@ -32,7 +41,7 @@ const FirstRegist = () => {
               이미지 업로드
               {selectedImage ? (
                 <Image
-                  src={URL.createObjectURL(selectedImage)}
+                  src={selectedImage}
                   alt='커피챗 등록 이미지'
                   width={793}
                   height={369}
