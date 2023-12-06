@@ -1,4 +1,4 @@
-export interface tempProductType {
+export interface tempParentsProductType {
   mainImages?: [];
   name: string;
   content: string;
@@ -19,6 +19,23 @@ export interface tempProductType {
     maxParticipants?: number;
     type?: 'coffeechat' | 'video';
     jobCategory: string;
-    regionCategory: string;
+    regionCategory?: string;
+    productType: 'parents';
+  };
+}
+
+export interface tempChildProductType {
+  mainImages?: [];
+  name: string;
+  content: any; //datetime
+  price: number;
+  shippingFees: number;
+  show: boolean;
+  active: boolean;
+  quantity: number,
+  buyQuantity?: number,
+  extra: {
+    parentsId?: number,
+    productType: 'child';
   };
 }

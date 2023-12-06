@@ -10,7 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import 'react-datepicker/dist/react-datepicker.css';
 import tempUseCreateProduct from '@/queries/coffeechat/tempUseCreateProduct';
 import { useRouter } from 'next/navigation';
-import { tempProductType } from '@/helper/types/tempProduct';
+import { tempParentsProductType, tempChildProductType } from '@/helper/types/tempProduct';
 import useCreateFile from '@/queries/common/useCreateFile';
 import ImageUploader from '@/components/atom/ImageUploader';
 import { jobCategoryConst } from '@/helper/constants/categoryConst';
@@ -65,8 +65,35 @@ const CoffeechatRegist = () => {
     setDatetime(newDatetime);
   }
 
-  const createProduct = (data: RegistFormData, fileName: string) => {
-    const requestBody: tempProductType = {
+  const createChildProduct = (data: RegistFormData, fileName: string, date) => {
+    //id 조회하는 get reactquery
+    const requestBody: tempChildProductType = {
+      mainImages: [fileName],
+      name: data.name,
+      content: date,//datetime[0]
+      price: data.price,
+      shippingFees: 0,
+      show: true,
+      active: true,
+      quantity: data.maxParticipants,
+      extra: {
+        parentsId: data._id, //[Todo] 아이디 가져오는 경로 확인하기
+        productType: 'child',
+      },
+    }
+    mutateCreateProduct(requestBody, {
+      onSuccess: () => {
+        alert('등록되었습니다');
+        router.push('/coffeechat');
+      },
+      onError: error => {
+        alert(`child 등록에 실패하였습니다${error.message}`);
+      },
+    });
+  }
+
+  const createParentsProduct = (data: RegistFormData, fileName: string) => {
+    const requestBody: tempParentsProductType = {
       mainImages: [fileName],
       name: data.name,
       content: data.content,
@@ -84,15 +111,18 @@ const CoffeechatRegist = () => {
         type: 'coffeechat',
         jobCategory: selectedJobCategory,
         regionCategory: selectedRegionCategory,
+        productType: 'parents',
       },
     }
     mutateCreateProduct(requestBody, {
       onSuccess: () => {
-        alert('등록되었습니다');
-        router.push('/coffeechat');
+        console.log(datetime)
+        datetime.map(
+          (date) =>
+            createChildProduct(data, fileName, date)); //생성된 datetime의 개수마다 createChildProduct 생성하기
       },
       onError: error => {
-        alert(`등록에 실패하였습니다${error.message}`);
+        alert(`parents 등록에 실패하였습니다${error.message}`);
       },
     });
   }
@@ -103,7 +133,7 @@ const CoffeechatRegist = () => {
       formData.append('attach', imageFile);
       createImageMutate(formData, {
         onSuccess: (fileName: { name: string, path: string }) => {
-          createProduct(data, fileName.path);
+          createParentsProduct(data, fileName.path);
         }, onError: () => {
           alert('이미지 업로드가 실패하였습니다.')
         }
