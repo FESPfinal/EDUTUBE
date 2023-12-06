@@ -80,6 +80,7 @@ const CoffeechatRegist = () => {
         offline: data.offlinePlace,
         datetime: datetime,
         type: 'coffeechat',
+        category: selectedCategory
       },
     }
     mutateCreateProduct(requestBody, {
@@ -154,18 +155,14 @@ const CoffeechatRegist = () => {
               <Category
                 key={category}
                 name={category}
-                setSelectedCategory={({ isSelected, name }) => {
-                  if (isSelected) {
-                    setSelectedCategory('');
-                  } else {
-                    setSelectedCategory(name);
-                  }
+                setSelectedCategory={({ isSelected, name }) => {//[isSelected 사용하여 로직 변경하기]
+                  setSelectedCategory(name);
                 }}
+                selectedCategory={selectedCategory}
               />
             ))}
           </div>
         </div>
-
         {/* 소개글 */}
         <div className="mb-4">
           <label className="block text-gray-700">소개글
@@ -299,7 +296,6 @@ const CoffeechatRegist = () => {
       </form>
     </div>
   )
-
 }
 
 export default CoffeechatRegist;
