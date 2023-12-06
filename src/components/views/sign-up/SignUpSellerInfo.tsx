@@ -38,18 +38,17 @@ interface Props {
   step1Data: Step1Data;
 }
 const SignUpSellerInfo = ({ step1Data }: Props) => {
-  const router = useRouter();
+  const { mutate: createUserProfileMutate } = useCreateFile();
+  const { mutate: createUserMutate } = useCreateUser();
 
   const [imageFile, setImageFile] = useState<File>();
 
+  const router = useRouter();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<UserFormData>({ resolver: yupResolver(schema) });
-
-  const { mutate: createUserProfileMutate } = useCreateFile();
-  const { mutate: createUserMutate } = useCreateUser();
 
   const createUser = (data: UserFormData, fileName: string) => {
     createUserMutate(
