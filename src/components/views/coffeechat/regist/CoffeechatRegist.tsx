@@ -3,6 +3,7 @@ import { useForm, Controller, UseFormRegisterReturn } from "react-hook-form";
 import * as yup from 'yup';
 import React, { useState } from "react";
 import Radio from '@/components/atom/Radio';
+import Category from '@/components/atom/Category';
 import { PLACE_TYPES } from '@/helper/constants/placeConst'
 import DatePicker from 'react-datepicker';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -41,7 +42,8 @@ const CoffeechatRegist = () => {
   const [placeType, setPlaceType] = useState(PLACE_TYPES.ONLINE);
   const [datetime, setDatetime] = useState<{ date: Date, time: Date }[]>([]);
   const [imageFile, setImageFile] = useState<File>();
-
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const categories = ['카페', '채팅', '스터디', '기타']; // 카테고리 목록
 
   const router = useRouter();
 
@@ -145,6 +147,25 @@ const CoffeechatRegist = () => {
           {errors.content && <p className="text-red-500 text-sm">{errors.content.message}</p>}
         </div>
         {/* 카테고리 */}
+        <div className="mb-4">
+          <label className="block text-gray-700">카테고리 선택</label>
+          <div className="flex space-x-2">
+            {categories.map((category) => (
+              <Category
+                key={category}
+                name={category}
+                setSelectedCategory={({ isSelected, name }) => {
+                  if (isSelected) {
+                    setSelectedCategory('');
+                  } else {
+                    setSelectedCategory(name);
+                  }
+                }}
+              />
+            ))}
+          </div>
+        </div>
+
         {/* 소개글 */}
         <div className="mb-4">
           <label className="block text-gray-700">소개글

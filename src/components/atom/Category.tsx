@@ -7,7 +7,7 @@ interface Props {
   setSelectedCategory: ({ isSelected, name }: { isSelected: boolean; name: string }) => void;
 }
 
-const Category: Props = ({ name, setSelectedCategory }: Props) => {
+const Category: React.FC<Props> = ({ name, setSelectedCategory }) => {
   const [isSelected, setIsSelected] = useState(false);
 
   const handleClick = () => {
