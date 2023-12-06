@@ -28,7 +28,7 @@ const useEdutubeAxios = () => {
     timeout: 1000,
   });
 
-  /** 1. 요청 전 - access토큰있는데 만료되면 refresh토큰도 헤더담아서 요청보내기 */
+  /** 1. 요청 전 - access토큰 header에 설정 */
   edutubeAxios.interceptors.request.use(
     config => {
       if (accessToken) {
@@ -59,7 +59,7 @@ const useEdutubeAxios = () => {
             });
             setAccessToken(data.accessToken);
             originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
-            return axios(originalRequest);
+            return edutubeAxios(originalRequest);
           } catch (error) {
             // 리프레시 토큰 갱신 실패 시 로그아웃 등의 처리
             logout();

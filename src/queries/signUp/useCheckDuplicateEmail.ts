@@ -1,12 +1,12 @@
+import useEdutubeAxios from '@/helper/utils/useEdutubeAxios';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 
-const BASE_URL = process.env.NEXT_PUBLIC_EDUTUBE_API;
 const URL = (email: string) => `/users/email?email=${email}`;
 
-const axiosGet = (email: string) => axios.get(BASE_URL + URL(email));
-
 const useCheckDuplicateEmail = () => {
+  const { edutubeAxios } = useEdutubeAxios();
+  const axiosGet = (email: string) => edutubeAxios.get(URL(email));
   return useMutation({ mutationFn: axiosGet });
 };
 
