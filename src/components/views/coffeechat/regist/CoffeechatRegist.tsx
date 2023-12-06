@@ -13,7 +13,8 @@ import { useRouter } from 'next/navigation';
 import { tempProductType } from '@/helper/types/tempProduct';
 import useCreateFile from '@/queries/common/useCreateFile';
 import ImageUploader from '@/components/atom/ImageUploader';
-import { categoryConst } from '@/helper/constants/categoryConst';
+import { jobCategoryConst } from '@/helper/constants/categoryConst';
+import { regionCategoryConst } from '@/helper/constants/categoryConst';
 
 const schema = yup.object().shape({
   name: yup.string().required('제목을 입력해주세요.').max(30, '최대 30자까지 입력 가능합니다.'),
@@ -43,7 +44,8 @@ const CoffeechatRegist = () => {
   const [placeType, setPlaceType] = useState(PLACE_TYPES.ONLINE);
   const [datetime, setDatetime] = useState<{ date: Date, time: Date }[]>([]);
   const [imageFile, setImageFile] = useState<File>();
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedJobCategory, setSelectedJobCategory] = useState('');
+  const [selectedRegionCategory, setSelectedRegionCategory] = useState('');
 
   const router = useRouter();
 
@@ -80,7 +82,8 @@ const CoffeechatRegist = () => {
         offline: data.offlinePlace,
         datetime: datetime,
         type: 'coffeechat',
-        category: selectedCategory
+        jobCategory: selectedJobCategory,
+        regionCategory: selectedRegionCategory,
       },
     }
     mutateCreateProduct(requestBody, {
@@ -148,16 +151,33 @@ const CoffeechatRegist = () => {
         </div>
         {/* 카테고리 */}
         <div className="mb-4">
-          <label className="block text-gray-700">카테고리 선택</label>
+          <label className="block text-gray-700">직무 카테고리 선택</label>
           <div className="flex mt-2 flex-wrap gap-2 ">
-            {categoryConst.map((category) => (
+            {jobCategoryConst.map((category) => (
               <Category
                 key={category}
                 name={category}
                 setSelectedCategory={({ name }) => {
-                  selectedCategory == name ? setSelectedCategory('') : setSelectedCategory(name);
+                  selectedJobCategory == name ? setSelectedJobCategory('') : setSelectedJobCategory(name);
                 }}
-                selectedCategory={selectedCategory}
+                selectedCategory={selectedJobCategory}
+              />
+            ))}
+          </div>
+          {/* [TODO] 카테고리 유효성 검사 추가 */}
+        </div>
+        {/* 지역 카테고리 */}
+        <div className="mb-4">
+          <label className="block text-gray-700">지역 카테고리 선택</label>
+          <div className="flex mt-2 flex-wrap gap-2 ">
+            {regionCategoryConst.map((category) => (
+              <Category
+                key={category}
+                name={category}
+                setSelectedCategory={({ name }) => {
+                  selectedRegionCategory == name ? setSelectedRegionCategory('') : setSelectedRegionCategory(name);
+                }}
+                selectedCategory={selectedRegionCategory}
               />
             ))}
           </div>

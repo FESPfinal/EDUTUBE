@@ -9,7 +9,6 @@ export interface tempProductType {
   quantity: number,
   buyQuantity?: number,
   extra: {
-    category?: string;
     intro: string;
     place: string;
     online: string;
@@ -19,5 +18,7 @@ export interface tempProductType {
     userData?: string;
     maxParticipants?: number;
     type?: 'coffeechat' | 'video';
+    jobCategory: string;
+    regionCategory: string;
   };
 }
