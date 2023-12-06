@@ -155,8 +155,8 @@ const CoffeechatRegist = () => {
               <Category
                 key={category}
                 name={category}
-                setSelectedCategory={({ isSelected, name }) => {//[isSelected 사용하여 로직 변경하기]
-                  setSelectedCategory(name);
+                setSelectedCategory={({ name }) => {
+                  selectedCategory == name ? setSelectedCategory('') : setSelectedCategory(name);
                 }}
                 selectedCategory={selectedCategory}
               />
