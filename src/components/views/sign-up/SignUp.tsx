@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import SignUpIdPw from './SignUpIdPw';
 import SignUpUserInfo from './SignUpUserInfo';
-import { Step1Data, Step2UserData } from '../../../helper/types/userInfoTypes';
+import { Step1Data } from '../../../helper/types/userInfo';
 import { USER_TYPES } from '../../../helper/constants/userConst';
 import useCreateUser, { SignUpData } from '@/queries/signUp/useCreateUser';
 import SignUpSellerInfo from './SignUpSellerInfo';
@@ -17,17 +17,6 @@ type DefaultUserData = {
   address: string;
   type: string;
 };
-
-type UserData = {
-  extra: {
-    profileImage: File | undefined;
-    major: string;
-    contactEmail: string;
-    profile: string;
-  };
-} & DefaultUserData;
-
-type SellerData = {};
 
 const STEPS = {
   STEP1: 1,

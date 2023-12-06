@@ -1,6 +1,6 @@
 'use client';
 import * as yup from 'yup';
-import { Step1Data } from '../../../helper/types/userInfoTypes';
+import { Step1Data } from '../../../helper/types/userInfo';
 import ProfileImageUploader from '@/components/atom/ProfileImageUploader';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -8,6 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import useCreateUser from '@/queries/signUp/useCreateUser';
 import { USER_TYPES } from '../../../helper/constants/userConst';
 import { useRouter } from 'next/navigation';
+import useCreateFile from '@/queries/common/useCreateFile';
 
 const phoneRegExp = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
 
@@ -28,7 +29,7 @@ const schema = yup.object().shape({
     .required('주소를 입력해주세요.'),
 });
 
-type FormData = yup.InferType<typeof schema>;
+type UserFormData = yup.InferType<typeof schema>;
 
 const ADDRESS_LIST = ['지역1', '지역2', '지역3', '지역4', '지역5', '지역6', '지역7'];
 const MAJOR_LIST = ['직무1', '직무2', '직무3', '직무4', '직무5', '직무6', '직무7'];
@@ -37,18 +38,19 @@ interface Props {
   step1Data: Step1Data;
 }
 const SignUpSellerInfo = ({ step1Data }: Props) => {
-  const router = useRouter();
+  const { mutate: createUserProfileMutate } = useCreateFile();
+  const { mutate: createUserMutate } = useCreateUser();
 
   const [imageFile, setImageFile] = useState<File>();
 
+  const router = useRouter();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>({ resolver: yupResolver(schema) });
+  } = useForm<UserFormData>({ resolver: yupResolver(schema) });
 
-  const { mutate: createUserMutate } = useCreateUser();
-  const onSubmit = (data: FormData) => {
+  const createUser = (data: UserFormData, fileName: string) => {
     createUserMutate(
       {
         ...step1Data,
@@ -57,7 +59,7 @@ const SignUpSellerInfo = ({ step1Data }: Props) => {
         address: data.address || '',
         phone: data.phone || '',
         extra: {
-          profileImage: imageFile,
+          profileImage: fileName,
           major: data.major || '',
           nickname: data.nickname,
           contactEmail: data.contactEmail,
@@ -72,6 +74,23 @@ const SignUpSellerInfo = ({ step1Data }: Props) => {
         },
       },
     );
+  };
+
+  const onSubmit = (data: UserFormData) => {
+    const formData = new FormData();
+    if (imageFile) {
+      formData.append('attach', imageFile);
+      createUserProfileMutate(formData, {
+        onSuccess: (fileName: string) => {
+          createUser(data, fileName);
+        },
+        onError: () => {
+          alert('프로필 업로드가 실패하였습니다.');
+        },
+      });
+    } else {
+      alert('프로필 사진을 등록해주세요.');
+    }
   };
 
   return (

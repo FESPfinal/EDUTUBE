@@ -1,9 +1,12 @@
 'use client';
 
 import ProfileImageUploader from '@/components/atom/ProfileImageUploader';
+import { USER_TYPES } from '@/helper/constants/userConst';
+import useCreateFile from '@/queries/common/useCreateFile';
 import useSelectUserInfo from '@/queries/mypage/useSelectUserInfo';
+import useUpdateUserInfo from '@/queries/mypage/useUpdateUserInfo';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 const phoneRegExp = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
@@ -17,29 +20,84 @@ export const schema = yup.object().shape({
   major: yup.string(),
 });
 
-type FormData = yup.InferType<typeof schema>;
+type UserFormData = yup.InferType<typeof schema>;
 
 const ADDRESS_LIST = ['지역1', '지역2', '지역3', '지역4', '지역5', '지역6', '지역7'];
 const MAJOR_LIST = ['직무1', '직무2', '직무3', '직무4', '직무5', '직무6', '직무7'];
 
 const MypageUserInfo = () => {
-  const { data: userInfo } = useSelectUserInfo();
+  const { data: userInfo, refetch: userInfoRefetch } = useSelectUserInfo();
+  const { mutate: createUserProfileMutate } = useCreateFile();
+  const { mutate: updateUserInfoMutate } = useUpdateUserInfo();
   const [imageFile, setImageFile] = useState<File>();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>({ resolver: yupResolver(schema) });
+    setValue,
+  } = useForm<UserFormData>({ resolver: yupResolver(schema), defaultValues: async () => userInfo });
 
-  const onSubmit = (data: FormData) => {
-    alert('수정기능 구현 중입니다.');
+  useEffect(() => {
+    if (!!userInfo) {
+      setValue('name', userInfo.name);
+      setValue('nickname', userInfo.extra.nickname);
+      setValue('address', userInfo.address);
+      setValue('phone', userInfo.phone);
+      setValue('contactEmail', userInfo.extra.contactEmail);
+      setValue('major', userInfo.extra.major);
+    }
+  }, [setValue, userInfo]);
+
+  const updateUserInfo = (data: UserFormData, fileName: string) => {
+    const bodyData = {
+      type: USER_TYPES.USER,
+      name: data.name,
+      address: data.address,
+      phone: data.phone,
+      extra: {
+        profileImage: fileName,
+        major: data.major,
+        nickname: data.nickname,
+        contactEmail: data.contactEmail,
+      },
+    };
+
+    updateUserInfoMutate(bodyData, {
+      onSuccess: () => {
+        alert('프로필 수정이 완료되었습니다.');
+        userInfoRefetch();
+      },
+      onError: () => {
+        alert('프로필 수정이 실패하였습니다.');
+      },
+    });
+  };
+
+  const onSubmit = (data: UserFormData) => {
+    const formData = new FormData();
+    if (imageFile) {
+      formData.append('attach', imageFile);
+      createUserProfileMutate(formData, {
+        onSuccess: (fileName: string) => {
+          updateUserInfo(data, fileName);
+        },
+        onError: () => {
+          alert('프로필 업로드가 실패하였습니다.');
+        },
+      });
+    } else {
+      updateUserInfo(data, userInfo?.extra?.profileImage);
+    }
   };
 
   return (
     <>
       <div className="mb-10">
-        <ProfileImageUploader onImageUpload={setImageFile} />
+        <ProfileImageUploader
+          onImageUpload={setImageFile}
+          defaultImage={userInfo?.extra?.profileImage}
+        />
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <label className="block text-sm font-medium text-gray-700 ">
@@ -48,7 +106,6 @@ const MypageUserInfo = () => {
             <input
               type="text"
               placeholder="김에듀"
-              defaultValue={userInfo?.name}
               {...register('name', { required: true })}
               className="w-full px-5 py-3 border border-gray-400 rounded-lg outline-none focus:shadow-outline"
             />
@@ -61,7 +118,6 @@ const MypageUserInfo = () => {
             <input
               type="text"
               placeholder="nickname"
-              defaultValue={userInfo?.extra?.nickname}
               {...register('nickname', { required: true })}
               className="w-full px-5 py-3 border border-gray-400 rounded-lg outline-none focus:shadow-outline"
             />
@@ -74,7 +130,6 @@ const MypageUserInfo = () => {
             <input
               type="text"
               placeholder="010-0000-0000"
-              defaultValue={userInfo?.phone}
               {...register('phone', { required: true })}
               className="w-full px-5 py-3 border border-gray-400 rounded-lg outline-none focus:shadow-outline"
             />
@@ -87,7 +142,6 @@ const MypageUserInfo = () => {
             <input
               type="text"
               placeholder="example@email.com"
-              defaultValue={userInfo?.extra.contactEmail}
               {...register('contactEmail', { required: true })}
               className="w-full px-5 py-3 border border-gray-400 rounded-lg outline-none focus:shadow-outline"
             />

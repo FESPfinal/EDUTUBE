@@ -1,5 +1,6 @@
 'use client';
 
+import useEdutubeAxios from '@/helper/utils/useEdutubeAxios';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 
@@ -11,7 +12,7 @@ export type SignUpData = {
   address: string;
   type: string;
   extra: {
-    profileImage: File | undefined;
+    profileImage: string;
     major: string;
     nickname: string;
     contactEmail: string;
@@ -23,12 +24,12 @@ export type SignUpData = {
 const BASE_URL = process.env.NEXT_PUBLIC_EDUTUBE_API;
 const URL = '/users';
 
-const axiosPost = async (userData: SignUpData) => {
-  const response = await axios.post(BASE_URL + URL, userData);
-  return response.data;
-};
-
 const useCreateUser = () => {
+  const { edutubeAxios } = useEdutubeAxios();
+  const axiosPost = async (userData: SignUpData) => {
+    const response = await edutubeAxios.post(URL, userData);
+    return response.data;
+  };
   return useMutation({ mutationFn: axiosPost });
 };
 export default useCreateUser;
