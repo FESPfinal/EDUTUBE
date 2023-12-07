@@ -9,7 +9,7 @@ interface Props {
 
 const MyCoffeechatItem = ({ data }: Props) => {
   return (
-    <Link href={`/coffeechat/info/${data._id}`}>
+    <Link href={`/mypage/my-coffeechat/${data._id}`}>
       <li className="flex justify-between gap-x-6 py-5">
         <div className="flex min-w-0 gap-x-4 ">
           <Image
