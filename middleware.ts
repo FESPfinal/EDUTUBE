@@ -38,8 +38,6 @@ export function middleware(request: NextRequest, res: NextResponse) {
   // @ts-ignore
   const userType = request.cookies.get('userType')?.valueOf().value;
 
-  console.log(userType);
-
   const currentPath = request.nextUrl.pathname;
   if (!refreshToken && protectedRoutes.includes(currentPath)) {
     const url = request.nextUrl.clone();
@@ -54,7 +52,6 @@ export function middleware(request: NextRequest, res: NextResponse) {
   ) {
     const url = request.nextUrl.clone();
     url.pathname = '/not-found';
-    console.log('url>>', url.pathname);
     return NextResponse.redirect(url);
   }
 
