@@ -13,7 +13,7 @@ const axiosPost = async (requestBody: tempProductType) => {
       Authorization: `Bearer ${accessToken}`
     }
   })
-  return response
+  return response.data.item
 }
 
 const useCreateProduct = () => {

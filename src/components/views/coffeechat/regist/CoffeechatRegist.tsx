@@ -10,7 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import 'react-datepicker/dist/react-datepicker.css';
 import tempUseCreateProduct from '@/queries/coffeechat/tempUseCreateProduct';
 import { useRouter } from 'next/navigation';
-import { tempParentsProductType, tempChildProductType } from '@/helper/types/tempProduct';
+import { TempParentsProductType, TempChildProductType } from '@/helper/types/tempProduct';
 import useCreateFile from '@/queries/common/useCreateFile';
 import ImageUploader from '@/components/atom/ImageUploader';
 import { jobCategoryConst } from '@/helper/constants/categoryConst';
@@ -65,19 +65,20 @@ const CoffeechatRegist = () => {
     setDatetime(newDatetime);
   }
 
-  const createChildProduct = (data: RegistFormData, fileName: string, date) => {
+  const createChildProduct = (data, formSubmitData: RegistFormData, fileName: string, date) => {
     //id 조회하는 get reactquery
-    const requestBody: tempChildProductType = {
+    console.log('childdata', data)
+    const requestBody: TempChildProductType = {
       mainImages: [fileName],
-      name: data.name,
+      name: formSubmitData.name,
       content: date,//datetime[0]
-      price: data.price,
+      price: formSubmitData.price,
       shippingFees: 0,
       show: true,
       active: true,
-      quantity: data.maxParticipants,
+      quantity: formSubmitData.maxParticipants, //date의 배열로 가져오기
       extra: {
-        parentsId: data._id, //[Todo] 아이디 가져오는 경로 확인하기
+        parentsId: data._id || 0, //[Todo] 아이디 가져오는 경로 확인하기
         productType: 'child',
       },
     }
@@ -92,21 +93,21 @@ const CoffeechatRegist = () => {
     });
   }
 
-  const createParentsProduct = (data: RegistFormData, fileName: string) => {
-    const requestBody: tempParentsProductType = {
+  const createParentsProduct = ({ formSubmitData, fileName }: { formSubmitData: RegistFormData, fileName: string }) => {
+    const requestBody: TempParentsProductType = {
       mainImages: [fileName],
-      name: data.name,
-      content: data.content,
-      price: data.price,
+      name: formSubmitData.name,
+      content: formSubmitData.content,
+      price: formSubmitData.price,
       shippingFees: 0,
       show: true,
       active: true,
-      quantity: data.maxParticipants,
+      quantity: formSubmitData.maxParticipants,
       extra: {
-        intro: data.intro,
+        intro: formSubmitData.intro,
         place: placeType,
-        online: data.onlinePlace,
-        offline: data.offlinePlace,
+        online: formSubmitData.onlinePlace,
+        offline: formSubmitData.offlinePlace,
         datetime: datetime,
         type: 'coffeechat',
         jobCategory: selectedJobCategory,
@@ -115,11 +116,11 @@ const CoffeechatRegist = () => {
       },
     }
     mutateCreateProduct(requestBody, {
-      onSuccess: () => {
-        console.log(datetime)
+      onSuccess: (data) => {
+        console.log(data)
         datetime.map(
           (date) =>
-            createChildProduct(data, fileName, date)); //생성된 datetime의 개수마다 createChildProduct 생성하기
+            createChildProduct(data, formSubmitData, fileName, date)); //생성된 datetime의 개수마다 createChildProduct 생성하기
       },
       onError: error => {
         alert(`parents 등록에 실패하였습니다${error.message}`);
@@ -133,7 +134,7 @@ const CoffeechatRegist = () => {
       formData.append('attach', imageFile);
       createImageMutate(formData, {
         onSuccess: (fileName: { name: string, path: string }) => {
-          createParentsProduct(data, fileName.path);
+          createParentsProduct({ formSubmitData: data, fileName: fileName.path });
         }, onError: () => {
           alert('이미지 업로드가 실패하였습니다.')
         }
