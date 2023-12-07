@@ -1,20 +1,26 @@
 'use client'
-import { useForm, Controller, UseFormRegisterReturn } from "react-hook-form";
-import * as yup from 'yup';
 import React, { useState } from "react";
+import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
+// component
 import Radio from '@/components/atom/Radio';
 import Category from '@/components/atom/Category';
-import { PLACE_TYPES } from '@/helper/constants/placeConst'
-import DatePicker from 'react-datepicker';
-import { yupResolver } from '@hookform/resolvers/yup';
-import 'react-datepicker/dist/react-datepicker.css';
-import tempUseCreateProduct from '@/queries/coffeechat/tempUseCreateProduct';
-import { useRouter } from 'next/navigation';
-import { TempParentsProduct, TempChildProduct } from '@/helper/types/tempProduct';
-import useCreateFile from '@/queries/common/useCreateFile';
 import ImageUploader from '@/components/atom/ImageUploader';
+// helper
+import { PLACE_TYPES } from '@/helper/constants/placeConst'
+import { TempParentsProduct, TempChildProduct } from '@/helper/types/tempProduct';
 import { jobCategoryConst } from '@/helper/constants/categoryConst';
 import { regionCategoryConst } from '@/helper/constants/categoryConst';
+// queries
+import tempUseCreateProduct from '@/queries/coffeechat/tempUseCreateProduct';
+import useCreateFile from '@/queries/common/useCreateFile';
+import useSelectMemberInfoExtra from '@/queries/member/useSelectMemberInfoExtra'
+// library
+import { useForm, Controller, UseFormRegisterReturn } from "react-hook-form";
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const schema = yup.object().shape({
   name: yup.string().required('제목을 입력해주세요.').max(30, '최대 30자까지 입력 가능합니다.'),
@@ -26,28 +32,31 @@ const schema = yup.object().shape({
       time: yup.date().required('시간을 선택해주세요.'),
     })
   ).required('하나 이상의 날짜 및 시간을 추가해주세요.'),
-  maxParticipants: yup.number().required('최대 인원 수를 입력해주세요.').min(1, '최소 1명 이상이어야 합니다.').typeError('숫자를 입력하세요.'),
   price: yup.number().required('가격을 입력해주세요.').min(0, '최소 가격은 0 이어야 합니다.').typeError('숫자를 입력하세요.'),
 })
 
 type RegistFormData = yup.InferType<typeof schema>;
+type TempUseCreateProductResponse = {
+  _id: number;
+};
+type CombinedChildType = TempUseCreateProductResponse & TempChildProduct
 
 const PLACE_TYPE = 'placeType';
 
 const CoffeechatRegist = () => {
+  const router = useRouter();
   const { register, handleSubmit, control, formState: { errors }, } = useForm<RegistFormData>({
     resolver: yupResolver(schema),
   });
   const { mutate: mutateCreateProduct } = tempUseCreateProduct();
   const { mutate: createImageMutate } = useCreateFile();
-
+  const { data: sellerImageData } = useSelectMemberInfoExtra('profileImage');
   const [placeType, setPlaceType] = useState(PLACE_TYPES.ONLINE);
   const [datetimeList, setDatetimeList] = useState<{ date: Date, time: Date }[]>([]);
   const [imageFile, setImageFile] = useState<File>();
   const [selectedJobCategory, setSelectedJobCategory] = useState<string[]>([]);
   const [selectedRegionCategory, setSelectedRegionCategory] = useState('');
-
-  const router = useRouter();
+  const sellerName = Cookies.get('user_name');
 
   const handlePlaceType = (type: string) => {
     setPlaceType(type);
@@ -65,7 +74,7 @@ const CoffeechatRegist = () => {
     setDatetimeList(newDatetime);
   }
 
-  const createChildProduct = (data, formSubmitData: RegistFormData, fileName: string, date) => {
+  const createChildProduct = (data: CombinedChildType, formSubmitData: RegistFormData, fileName: string, date: { date: Date, time: Date }) => {
     const requestBody: TempChildProduct = {
       mainImages: [fileName],
       name: formSubmitData.name,
@@ -74,14 +83,14 @@ const CoffeechatRegist = () => {
       shippingFees: 0,
       show: true,
       active: true,
-      quantity: formSubmitData.maxParticipants, //date의 배열로 가져오기
+      quantity: 1,
       extra: {
         intro: formSubmitData.intro,
         place: placeType,
         online: formSubmitData.online,
         offline: formSubmitData.online,
         datetime: date,
-        //author 추가하기
+        author: sellerName,
         jobCategory: selectedJobCategory,
         regionCategory: selectedRegionCategory,
         parentsId: data._id,
@@ -108,13 +117,15 @@ const CoffeechatRegist = () => {
       shippingFees: 0,
       show: true,
       active: true,
-      quantity: formSubmitData.maxParticipants,//datelistlength로 수정
+      quantity: datetimeList.length,
       extra: {
         intro: formSubmitData.intro,
         place: placeType,
         online: formSubmitData.onlinePlace,
         offline: formSubmitData.offlinePlace,
         datetimeList: datetimeList,
+        author: sellerName,
+        authorImage: sellerImageData.profileImage.path,
         type: 'coffeechat',
         jobCategory: selectedJobCategory,
         regionCategory: selectedRegionCategory,
@@ -122,7 +133,7 @@ const CoffeechatRegist = () => {
       },
     }
     mutateCreateProduct(requestBody, {
-      onSuccess: (data) => {
+      onSuccess: (data: CombinedChildType) => {
         datetimeList.map(
           (date) =>
             createChildProduct(data, formSubmitData, fileName, date));
@@ -307,25 +318,6 @@ const CoffeechatRegist = () => {
           {/* [TODO] 날짜 시간 유효성 검사 수정 */}
           {errors.datetimeList && <p className="text-red-500 text-sm">{errors.datetimeList.message}</p>}
           <button type="button" onClick={(event: React.MouseEvent) => handleAddDatetime(event)} className="mt-2 p-2 bg-blue-500 text-white rounded hover:bg-blue-700">날짜 및 시간 추가</button>
-        </div>
-        {/* 참여인원 */}
-        <div className="mb-4">
-          <label className="block text-gray-700">참여인원
-            <Controller
-              name="maxParticipants"
-              control={control}
-              defaultValue="1"
-              render={({ field }: { field: UseFormRegisterReturn }) => (
-                <input
-                  type="number"
-                  {...field}
-                  className="mt-1 p-2 border rounded w-full"
-                />
-              )}
-
-            />
-          </label>
-          {errors.maxParticipants && <p className="text-red-500 text-sm">{errors.maxParticipants.message}</p>}
         </div>
         {/* 가격 */}
         <div className="mb-4">
