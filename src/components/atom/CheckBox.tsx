@@ -3,6 +3,8 @@
 interface Props {
   label: string;
   size?: 'large' | 'medium' | 'small';
+  isChecked?: boolean;
+  onChange?: () => void
 }
 
 const sizes = {
@@ -11,18 +13,29 @@ const sizes = {
   large: 'w-7 h-7'
 };
 
-const CheckBox = ({ label, size = 'small', }: Props) => {
-
+const CheckBox = ({ label, size = 'small', onChange, isChecked= false }: Props) => {
   let sizeClass = sizes[size];
+  console.log(isChecked)
+
+  const handleClicked = () => {
+    if (onChange) {
+      onChange();
+    }
+  }
 
   return (
     <>
       <label className={`block flex items-center`}>
         <input
           className={`
-          accent-dark-main mr-3 ${sizeClass}
+          text-light-main
+          focus:ring-transparent
+          mr-3 
+          ${sizeClass}
           `}
           type='checkbox'
+          onChange = {handleClicked}
+          checked = {isChecked}
           />
           {label}
       </label>
