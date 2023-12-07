@@ -1,15 +1,17 @@
 'use client';
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 
 interface Props {
   options: string[];
+  setPropsOption: Dispatch<SetStateAction<string>>;
 }
 
-const FilterButtons: React.FC<Props> = ({ options }) => {
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+const FilterButtons: React.FC<Props> = ({ options, setPropsOption }) => {
+  const [selectedOption, setSelectedOption] = useState<string>(options[0]);
 
   const handleOptionClick = (option: string) => {
-    setSelectedOption(prevOption => (prevOption === option ? null : option));
+    setSelectedOption(option);
+    setPropsOption(option);
   };
 
   return (
@@ -18,13 +20,13 @@ const FilterButtons: React.FC<Props> = ({ options }) => {
         <React.Fragment key={option}>
           <button
             onClick={() => handleOptionClick(option)}
-            className={`px-4 py-2 ${
+            className={`py-2 text-sm ${
               selectedOption === option ? 'text-light-main' : 'text-gray-700'
             }`}
           >
             {option}
           </button>
-          {index !== options.length - 1 && <span className="text-gray-700"> | </span>}
+          {index !== options.length - 1 && <span className="text-gray-700 leading-8"> | </span>}
         </React.Fragment>
       ))}
     </div>
