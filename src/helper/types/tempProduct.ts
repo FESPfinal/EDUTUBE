@@ -28,7 +28,7 @@ export type TempParentsProduct = {
 }
 
 export type TempChildProduct = {
-  mainImages?: [];
+  mainImages?: string[];
   name: string;
   content: string; //datetime
   price: number;
