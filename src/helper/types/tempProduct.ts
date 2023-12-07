@@ -1,4 +1,4 @@
-export interface tempParentsProductType {
+export type TempParentsProduct = {
   mainImages?: [];
   name: string;
   content: string;
@@ -10,10 +10,10 @@ export interface tempParentsProductType {
   buyQuantity?: number,
   extra: {
     intro: string;
-    place: string;
+    place: 'online' | 'offline';
     online: string;
     offline: string;
-    datetime?: any;
+    datetime: any;
     person?: string;
     userData?: string;
     maxParticipants?: number;
@@ -24,7 +24,7 @@ export interface tempParentsProductType {
   };
 }
 
-export interface tempChildProductType {
+export type TempChildProduct = {
   mainImages?: [];
   name: string;
   content: any; //datetime
@@ -35,7 +35,7 @@ export interface tempChildProductType {
   quantity: number,
   buyQuantity?: number,
   extra: {
-    parentsId?: number,
+    parentsId: number,
     productType: 'child';
   };
 }
