@@ -15,7 +15,6 @@ const sizes = {
 
 const CheckBox = ({ label, size = 'small', onChange, isChecked= false }: Props) => {
   let sizeClass = sizes[size];
-  console.log(isChecked)
 
   const handleClicked = () => {
     if (onChange) {
