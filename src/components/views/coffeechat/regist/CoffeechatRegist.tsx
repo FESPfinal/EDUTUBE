@@ -10,7 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import 'react-datepicker/dist/react-datepicker.css';
 import tempUseCreateProduct from '@/queries/coffeechat/tempUseCreateProduct';
 import { useRouter } from 'next/navigation';
-import { TempParentsProductType, TempChildProductType } from '@/helper/types/tempProduct';
+import { TempParentsProduct, TempChildProduct } from '@/helper/types/tempProduct';
 import useCreateFile from '@/queries/common/useCreateFile';
 import ImageUploader from '@/components/atom/ImageUploader';
 import { jobCategoryConst } from '@/helper/constants/categoryConst';
@@ -20,7 +20,7 @@ const schema = yup.object().shape({
   name: yup.string().required('제목을 입력해주세요.').max(30, '최대 30자까지 입력 가능합니다.'),
   content: yup.string().required('내용을 입력해주세요.').min(10, '내용은 최소 10자 이상이어야 합니다.').max(500, '최대 500자까지 입력 가능합니다.'),
   intro: yup.string().required('소개글을 입력해주세요.').max(50, '최대 50자까지 입력 가능합니다.'),
-  datetime: yup.array().of(
+  datetimeList: yup.array().of(
     yup.object().shape({
       date: yup.date().required('날짜를 선택해주세요.'),
       time: yup.date().required('시간을 선택해주세요.'),
@@ -42,9 +42,9 @@ const CoffeechatRegist = () => {
   const { mutate: createImageMutate } = useCreateFile();
 
   const [placeType, setPlaceType] = useState(PLACE_TYPES.ONLINE);
-  const [datetime, setDatetime] = useState<{ date: Date, time: Date }[]>([]);
+  const [datetimeList, setDatetimeList] = useState<{ date: Date, time: Date }[]>([]);
   const [imageFile, setImageFile] = useState<File>();
-  const [selectedJobCategory, setSelectedJobCategory] = useState('');
+  const [selectedJobCategory, setSelectedJobCategory] = useState<string[]>([]);
   const [selectedRegionCategory, setSelectedRegionCategory] = useState('');
 
   const router = useRouter();
@@ -55,30 +55,36 @@ const CoffeechatRegist = () => {
 
   const handleAddDatetime = (event: React.MouseEvent) => {
     event.preventDefault();
-    setDatetime([...datetime, { date: new Date(), time: new Date() }]);
+    setDatetimeList([...datetimeList, { date: new Date(), time: new Date() }]);
   }
 
   const handleRemoveDatetime = (index: number, event: React.MouseEvent) => {
     event.preventDefault();
-    const newDatetime = [...datetime];
+    const newDatetime = [...datetimeList];
     newDatetime.splice(index, 1);
-    setDatetime(newDatetime);
+    setDatetimeList(newDatetime);
   }
 
   const createChildProduct = (data, formSubmitData: RegistFormData, fileName: string, date) => {
-    //id 조회하는 get reactquery
-    console.log('childdata', data)
-    const requestBody: TempChildProductType = {
+    const requestBody: TempChildProduct = {
       mainImages: [fileName],
       name: formSubmitData.name,
-      content: date,//datetime[0]
+      content: JSON.stringify(date),//datetime
       price: formSubmitData.price,
       shippingFees: 0,
       show: true,
       active: true,
       quantity: formSubmitData.maxParticipants, //date의 배열로 가져오기
       extra: {
-        parentsId: data._id || 0, //[Todo] 아이디 가져오는 경로 확인하기
+        intro: formSubmitData.intro,
+        place: placeType,
+        online: formSubmitData.online,
+        offline: formSubmitData.online,
+        datetime: date,
+        //author 추가하기
+        jobCategory: selectedJobCategory,
+        regionCategory: selectedRegionCategory,
+        parentsId: data._id,
         productType: 'child',
       },
     }
@@ -94,7 +100,7 @@ const CoffeechatRegist = () => {
   }
 
   const createParentsProduct = ({ formSubmitData, fileName }: { formSubmitData: RegistFormData, fileName: string }) => {
-    const requestBody: TempParentsProductType = {
+    const requestBody: TempParentsProduct = {
       mainImages: [fileName],
       name: formSubmitData.name,
       content: formSubmitData.content,
@@ -102,13 +108,13 @@ const CoffeechatRegist = () => {
       shippingFees: 0,
       show: true,
       active: true,
-      quantity: formSubmitData.maxParticipants,
+      quantity: formSubmitData.maxParticipants,//datelistlength로 수정
       extra: {
         intro: formSubmitData.intro,
         place: placeType,
         online: formSubmitData.onlinePlace,
         offline: formSubmitData.offlinePlace,
-        datetime: datetime,
+        datetimeList: datetimeList,
         type: 'coffeechat',
         jobCategory: selectedJobCategory,
         regionCategory: selectedRegionCategory,
@@ -117,10 +123,9 @@ const CoffeechatRegist = () => {
     }
     mutateCreateProduct(requestBody, {
       onSuccess: (data) => {
-        console.log(data)
-        datetime.map(
+        datetimeList.map(
           (date) =>
-            createChildProduct(data, formSubmitData, fileName, date)); //생성된 datetime의 개수마다 createChildProduct 생성하기
+            createChildProduct(data, formSubmitData, fileName, date));
       },
       onError: error => {
         alert(`parents 등록에 실패하였습니다${error.message}`);
@@ -189,9 +194,9 @@ const CoffeechatRegist = () => {
                 key={category}
                 name={category}
                 setSelectedCategory={({ name }) => {
-                  selectedJobCategory == name ? setSelectedJobCategory('') : setSelectedJobCategory(name);
+                  selectedJobCategory[0] == name ? setSelectedJobCategory([]) : setSelectedJobCategory([name]);
                 }}
-                selectedCategory={selectedJobCategory}
+                selectedCategory={selectedJobCategory[0]}
               />
             ))}
           </div>
@@ -255,20 +260,19 @@ const CoffeechatRegist = () => {
         {/* 날짜 및 시간 등록 */}
         <div className="mb-4">
           <label className="block text-gray-700">날짜 및 시간 등록</label>
-          {datetime.map((dt, index) => (
+          {datetimeList.map((dt, index) => (
             <div key={index} className="flex items-center mb-2">
               <Controller
                 control={control}
-                name={`datetime.${index}.date`}
+                name={`datetimeList[${index}].date`}
                 defaultValue={dt.date}
-                render={({ field }) => (
+                render={({ field }: { field: UseFormRegisterReturn }) => (
                   <DatePicker
                     selected={dt.date}
                     onChange={(newDate) => {
-                      const newDatetime = [...datetime];
+                      const newDatetime = [...datetimeList];
                       newDatetime[index].date = newDate as Date;
-                      setDatetime(newDatetime);
-                      field.onChange(newDate);
+                      setDatetimeList(newDatetime);
                     }}
                     dateFormat="yyyy-MM-dd"
                     placeholderText="날짜를 선택하세요"
@@ -278,16 +282,15 @@ const CoffeechatRegist = () => {
               />
               <Controller
                 control={control}
-                name={`datetime.${index}.time`}
+                name={`datetimeList[${index}].time`}
                 defaultValue={dt.time}
-                render={({ field }) => (
+                render={({ field }: { field: UseFormRegisterReturn }) => (
                   <DatePicker
                     selected={dt.time}
                     onChange={(newTime) => {
-                      const newDatetime = [...datetime];
+                      const newDatetime = [...datetimeList];
                       newDatetime[index].time = newTime as Date;
-                      setDatetime(newDatetime);
-                      field.onChange(newTime);
+                      setDatetimeList(newDatetime);
                     }}
                     showTimeSelect
                     showTimeSelectOnly
@@ -298,12 +301,11 @@ const CoffeechatRegist = () => {
                   />
                 )}
               />
-
               <button type="button" onClick={(event: React.MouseEvent) => handleRemoveDatetime(index, event)} className="ml-2 text-red-500">삭제</button>
             </div>
           ))}
           {/* [TODO] 날짜 시간 유효성 검사 수정 */}
-          {errors.datetime && <p className="text-red-500 text-sm">{errors.datetime.message}</p>}
+          {errors.datetimeList && <p className="text-red-500 text-sm">{errors.datetimeList.message}</p>}
           <button type="button" onClick={(event: React.MouseEvent) => handleAddDatetime(event)} className="mt-2 p-2 bg-blue-500 text-white rounded hover:bg-blue-700">날짜 및 시간 추가</button>
         </div>
         {/* 참여인원 */}

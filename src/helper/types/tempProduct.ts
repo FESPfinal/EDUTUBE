@@ -1,5 +1,5 @@
 export type TempParentsProduct = {
-  mainImages?: [];
+  mainImages: string[];
   name: string;
   content: string;
   price: number;
@@ -10,15 +10,18 @@ export type TempParentsProduct = {
   buyQuantity?: number,
   extra: {
     intro: string;
-    place: 'online' | 'offline';
+    place: string;
     online: string;
     offline: string;
-    datetime: any;
-    person?: string;
-    userData?: string;
-    maxParticipants?: number;
-    type?: 'coffeechat' | 'video';
-    jobCategory: string;
+    datetimeList:
+    {
+      date: Date,
+      time: Date
+    }[];
+    author?: string;
+    authorImage?: string[];
+    type: 'coffeechat' | 'video';
+    jobCategory: string[];
     regionCategory?: string;
     productType: 'parents';
   };
@@ -27,7 +30,7 @@ export type TempParentsProduct = {
 export type TempChildProduct = {
   mainImages?: [];
   name: string;
-  content: any; //datetime
+  content: string; //datetime
   price: number;
   shippingFees: number;
   show: boolean;
@@ -35,6 +38,17 @@ export type TempChildProduct = {
   quantity: number,
   buyQuantity?: number,
   extra: {
+    intro: string;
+    place: string;
+    online: string;
+    offline: string;
+    datetime: {
+      date: Date,
+      time: Date
+    };
+    author?: string;
+    jobCategory: string[];
+    regionCategory?: string;
     parentsId: number,
     productType: 'child';
   };
