@@ -13,7 +13,7 @@ const sizes = {
   large: 'w-7 h-7'
 };
 
-const CheckBox = ({ label, size = 'small', onChange, isChecked= false }: Props) => {
+const CheckBox = ({ label, size = 'small', onChange, isChecked }: Props) => {
   let sizeClass = sizes[size];
 
   const handleClicked = () => {
