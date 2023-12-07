@@ -36,6 +36,7 @@ const useLogin = () => {
       extra: await item.extra,
     });
     Cookies.set('refreshToken', await item.token.refreshToken);
+    Cookies.set('userType', await item.type);
     return (await item) as UserItem;
   };
 
