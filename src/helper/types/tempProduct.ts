@@ -6,26 +6,25 @@ export type TempParentsProduct = {
   shippingFees: number;
   show: boolean;
   active: boolean;
-  quantity: number,
-  buyQuantity?: number,
+  quantity: number;
+  buyQuantity?: number;
   extra: {
     intro: string;
     place: string;
     online: string;
     offline: string;
-    datetimeList:
-    {
-      date: Date,
-      time: Date
+    datetimeList: {
+      date: Date;
+      time: Date;
     }[];
     author: string;
-    authorImage?: string[];
+    authorImage?: string;
     type: 'coffeechat' | 'video';
     jobCategory: string[];
     regionCategory?: string;
     productType: 'parents';
   };
-}
+};
 
 export type TempChildProduct = {
   mainImages?: string[];
@@ -35,21 +34,21 @@ export type TempChildProduct = {
   shippingFees: number;
   show: boolean;
   active: boolean;
-  quantity: number,
-  buyQuantity?: number,
+  quantity: number;
+  buyQuantity?: number;
   extra: {
     intro: string;
     place: string;
     online: string;
     offline: string;
     datetime: {
-      date: Date,
-      time: Date
+      date: Date;
+      time: Date;
     };
     author: string;
     jobCategory: string[];
     regionCategory?: string;
-    parentsId: number,
+    parentsId: number;
     productType: 'child';
   };
-}
+};
