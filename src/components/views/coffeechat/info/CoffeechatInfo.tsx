@@ -6,15 +6,15 @@ import UpdateButton from '../../../atom/Button';
 import DeleteButton from '../../../atom/Button';
 import { IOrderDataType } from '../../../../helper/types/order';
 import { useRouter } from 'next/navigation';
-import useSelectMemberInfo from '../../../../queries/member/useSelectMemberInfo';
 import Cookies from 'js-cookie';
+import useUserInfo from '@/stores/userInfo';
 
 const CoffeechatInfo = ({ _id }: { _id: string }) => {
   const router = useRouter();
   const user_id = Cookies.get('user_id');
   const { data: coffeechatDetailData } = useSelectCoffeechatInfo(_id);
-  const { data: memberTypeData } = useSelectMemberInfo('type');
   const { mutate: mutateOrderCoffeechat } = useUpdateOrder();
+  const { userInfo } = useUserInfo(store => store);
 
   const orderCoffeechat = (_id: number) => {
     const product: IOrderDataType = {
@@ -44,7 +44,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
       },
     });
   };
-
+  console.log('userInfo', userInfo)
   console.log(coffeechatDetailData)
   console.log(coffeechatDetailData?.mainImages[0])
   console.log(coffeechatDetailData?.extra.authorImage)
@@ -71,7 +71,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
               dangerouslySetInnerHTML={{ __html: coffeechatDetailData?.content }}
             />
             {/* 커피챗 카테고리 */}
-            <p className="mb-2">카테고리: {coffeechatDetailData?.extra.category}</p>
+            <p className="mb-2">카테고리: {coffeechatDetailData?.extra.jobCategory[0]}</p>
             {/* 커피챗 판매자 */}
             <p className="mb-2">프로필 이미지: {coffeechatDetailData?.extra?.authorImage}</p>
             {/* TODO: 이미지 안불러와지는 이슈, img 태그 Image 태그로 수정 */}
@@ -92,7 +92,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
               <p>{coffeechatDetailData?.price} 포인트</p>
             </div>
             <div className="space-y-4">
-              {memberTypeData?.type == 'seller' && coffeechatDetailData?.seller_id == user_id ? (
+              {userInfo.type == 'seller' && coffeechatDetailData?.seller_id == user_id ? (
                 <>
                   <UpdateButton
                     content="수정하기"
