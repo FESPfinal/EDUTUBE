@@ -52,7 +52,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
         <div className="flex flex-col md:flex-row">
           <div className="md:w-1/2 mb-4 md:mr-4">
             <img
-              src={coffeechatDetailData?.mainImages[0]}
+              src={`https://localhost:443/${coffeechatDetailData?.mainImages[0]}`}
               alt={coffeechatDetailData?.name}
               className="w-full h-auto"
             />

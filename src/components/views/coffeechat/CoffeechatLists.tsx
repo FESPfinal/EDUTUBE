@@ -29,7 +29,7 @@ const CoffeechatLists = () => {
           >
             <Link href={`coffeechat/info/${item._id}`}>
               <img
-                src={item.mainImages}
+                src={`https://localhost:443/${item.mainImages[0]}`}
                 alt="Coffee Image"
                 className="w-full h-32 object-cover mb-4 rounded-md transform group-hover:scale-105 transition duration-300"
               />
@@ -39,13 +39,15 @@ const CoffeechatLists = () => {
               <div className="text-gray-600 mb-2 text-opacity-70 group-hover:text-opacity-100 transition duration-300">
                 판매자: {item.extra.person}
               </div>
+
+              {/*
+              TODO: init 데이터 수정후 주석 해제
               <div className="text-gray-600 mb-2 text-opacity-70 group-hover:text-opacity-100 transition duration-300">
                 카테고리:{' '}
-                {item?.extra.category.length > 1
-                  ? `${item?.extra.category[0]}` + ', ' + `${item?.extra.category[1]}`
-                  : item?.extra.category[0]}
-              </div>
-
+                {item?.extra?.category?.length > 1
+                  ? `${item?.extra?.category[0]}` + ', ' + `${item?.extra?.category[1]}`
+                  : item?.extra?.category[0]}
+              </div> */}
               <div className="absolute top-0 left-0 w-full h-full opacity-0 bg-black text-white p-4 transition duration-300 group-hover:opacity-90">
                 <p className="text-lg font-bold mb-2">상세보기</p>
                 <p className="mb-2">intro: {item?.extra.intro}</p>
