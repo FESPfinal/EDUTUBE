@@ -8,7 +8,7 @@ interface Props {
   selectedCategory: string;
 }
 
-const Category: React.FC<Props> = ({ name, setSelectedCategory, selectedCategory }) => {
+const Category = ({ name, setSelectedCategory, selectedCategory }: Props) => {
   const [isSelected, setIsSelected] = useState(false);
 
   const handleClick = () => {
