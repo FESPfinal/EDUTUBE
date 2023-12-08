@@ -8,7 +8,7 @@ interface Props {
   onImageUpload: (image: File) => void;
 }
 
-const ImageUploader: React.FC<Props> = ({ onImageUpload }) => {
+const ImageUploader = ({ onImageUpload }: Props) => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
