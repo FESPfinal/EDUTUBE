@@ -45,11 +45,16 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
     });
   };
 
+  console.log(coffeechatDetailData)
+  console.log(coffeechatDetailData?.mainImages[0])
+  console.log(coffeechatDetailData?.extra.authorImage)
+
   return (
     <>
       <div className="max-w-2xl mx-auto p-4">
         <h1 className="text-3xl font-bold mb-4">이것은 커피챗디테일</h1>
         <div className="flex flex-col md:flex-row">
+          {/* 커피챗 이미지 */}
           <div className="md:w-1/2 mb-4 md:mr-4">
             <img
               src={`https://localhost:443/${coffeechatDetailData?.mainImages[0]}`}
@@ -58,23 +63,30 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
             />
           </div>
           <div className="md:w-1/2">
+            {/* 커피챗 이름 */}
             <h3 className="text-lg font-bold mb-2">{coffeechatDetailData?.name}</h3>
-            {/* 상세설명 (노션에 dangerouslySetInnerHTML 설명 추가) */}
+            {/* 커피챗 컨텐츠 */}
             <p
               className="text-md mb-2"
               dangerouslySetInnerHTML={{ __html: coffeechatDetailData?.content }}
             />
+            {/* 커피챗 카테고리 */}
             <p className="mb-2">카테고리: {coffeechatDetailData?.extra.category}</p>
-            <p className="mb-2">seller: {coffeechatDetailData?.seller_id}</p>
-            <p className="mb-2">person: {coffeechatDetailData?.extra.person}</p>
-            <p className="mb-2">userData: {coffeechatDetailData?.extra.userData}</p>
+            {/* 커피챗 판매자 */}
+            <p className="mb-2">프로필 이미지: {coffeechatDetailData?.extra?.authorImage}</p>
+            {/* TODO: 이미지 안불러와지는 이슈, img 태그 Image 태그로 수정 */}
+            <img src={`https://localhost:443/${coffeechatDetailData?.extra.authorImage}`} width={80}
+              height={80} />
+            <p className="mb-2">커피챗 작성자 이름 {coffeechatDetailData?.extra.author}</p>
+            {/* 커피챗 인트로 */}
             <p className="mb-2">intro: {coffeechatDetailData?.extra.intro}</p>
-            {/* 셀러 id로 셀러 정보 가져와서 프로필 이미지와 이름 정보 가져오기 */}
+            {/* 커피챗 장소 및 시간 정보 */}
             <h3 className="text-lg font-bold mb-2">커피챗 장소 및 시간 정보</h3>
-            <p className="mb-2">온라인: {coffeechatDetailData?.extra.online}</p>
-            <p className="mb-2">오프라인: {coffeechatDetailData?.extra.offline}</p>
-            <p className="mb-2">날짜: {coffeechatDetailData?.extra.date}</p>
-            <p className="mb-2">시간: {coffeechatDetailData?.extra.time}</p>
+            {coffeechatDetailData?.extra.place === 'online' ? <p className="mb-2">온라인 주소: {coffeechatDetailData?.extra.online}</p> : <p className="mb-2">오프라인 주소: {coffeechatDetailData?.extra.offline}</p>}
+            {/* TODO: 날짜 시간 slice */}
+            {/* <p className="mb-2">날짜: {coffeechatDetailData?.extra.datetimeList[0].date}</p>
+            <p className="mb-2">시간: {coffeechatDetailData?.extra.datetimeList[0].time}</p> */}
+            {/* 커피챗 가격 및 포인트 */}
             <div>
               <p className="text-lg font-bold">가격</p>
               <p>{coffeechatDetailData?.price} 포인트</p>
