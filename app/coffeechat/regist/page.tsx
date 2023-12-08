@@ -1,8 +1,10 @@
 import FirstRegist from "@/components/views/coffeechat/regist/FirstRegist";
+import CoffeechatRegist from "@/components/views/coffeechat/regist/CoffeechatRegist"
 
-const CoffeechatRegist = () => {
+const CoffeechatRegistPage = () => {
   return (
-    <FirstRegist />
+    // <FirstRegist />
+    <CoffeechatRegist />
   );
 };
-export default CoffeechatRegist;
+export default CoffeechatRegistPage;
