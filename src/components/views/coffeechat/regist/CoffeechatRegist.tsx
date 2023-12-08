@@ -39,7 +39,7 @@ const PLACE_TYPE = 'placeType';
 
 const CoffeechatRegist = () => {
   const router = useRouter();
-  const { register, handleSubmit, control, formState: { errors }, } = useForm<RegistFormData>({
+  const { register, handleSubmit, control, formState: { errors } } = useForm<RegistFormData>({
     resolver: yupResolver(schema),
   });
   const { mutate: mutateCreateProduct } = tempUseCreateProduct();
