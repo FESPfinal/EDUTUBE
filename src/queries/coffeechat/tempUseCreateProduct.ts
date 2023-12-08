@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie';
-import { tempProductType } from '../../helper/types/tempProduct';
+import { TempParentsProduct, TempChildProduct } from '../../helper/types/tempProduct';
 import { useMutation } from '@tanstack/react-query';
 import useEdutubeAxios from '@/helper/utils/useEdutubeAxios';
 
@@ -43,13 +43,13 @@ export type ProductResponseData = {
 const useCreateProduct = () => {
   const { edutubeAxios } = useEdutubeAxios();
 
-  const axiosPost = async (requestBody: tempProductType) => {
+  const axiosPost = async (requestBody: TempParentsProduct | TempChildProduct) => {
     const response = await edutubeAxios.post(URL, requestBody);
     return response.data.item as ProductResponseData;
   }
 
   return useMutation({
-    mutationFn: (requestBody: tempProductType) => axiosPost(requestBody)
+    mutationFn: (requestBody: TempParentsProduct | TempChildProduct) => axiosPost(requestBody)
   })
 };
 
