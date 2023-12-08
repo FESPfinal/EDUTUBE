@@ -39,7 +39,10 @@ const CoffeechatLists = () => {
               <div className="text-gray-600 mb-2 text-opacity-70 group-hover:text-opacity-100 transition duration-300">
                 판매자: {item.extra.person}
               </div>
-              {/* <div className="text-gray-600 mb-2 text-opacity-70 group-hover:text-opacity-100 transition duration-300">
+
+              {/*
+              TODO: init 데이터 수정후 주석 해제
+              <div className="text-gray-600 mb-2 text-opacity-70 group-hover:text-opacity-100 transition duration-300">
                 카테고리:{' '}
                 {item?.extra?.category?.length > 1
                   ? `${item?.extra?.category[0]}` + ', ' + `${item?.extra?.category[1]}`
