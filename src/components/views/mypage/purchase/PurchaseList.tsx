@@ -1,13 +1,22 @@
 'use client';
+import Category from '@/components/atom/Category';
 import useSelectOrder from '../../../../queries/coffeechat/order/useSelectOrder';
+import { useEffect, useState } from 'react';
 
 const PurchaseList = () => {
   const { data: purchaseListData } = useSelectOrder();
+  // filtered child product
+  const [childProduct, setChildProduct] = useState();
 
+  // useEffect(() => {
+  //   const filteredProductData = purchaseListData?.filter();
+  //   setsetChildProduct();
+  // }, [purchaseListData]);
   return (
     <>
       <div className="m-10">
-        <h1 className="text-2xl font-bold mb-4">커피챗 구매 목록 리스트</h1>
+        <p className="text-xl font-bold mb-4">커피챗 구매 목록 리스트</p>
+        <select>{/* <Category name={} /> */}</select>
         <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {purchaseListData?.item.map(item => (
             <li key={item._id} className="bg-white p-4 rounded-md shadow-md">
