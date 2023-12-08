@@ -1,26 +1,24 @@
 'use client'
-import React, { useState } from "react";
 import { useRouter } from 'next/navigation';
-import Cookies from 'js-cookie';
+import React, { useState } from "react";
 // component
-import Radio from '@/components/atom/Radio';
 import Category from '@/components/atom/Category';
 import ImageUploader from '@/components/atom/ImageUploader';
+import Radio from '@/components/atom/Radio';
 // helper
-import { PLACE_TYPES } from '@/helper/constants/placeConst'
-import { TempParentsProduct, TempChildProduct } from '@/helper/types/tempProduct';
-import { jobCategoryConst } from '@/helper/constants/categoryConst';
-import { regionCategoryConst } from '@/helper/constants/categoryConst';
+import { jobCategoryConst, regionCategoryConst } from '@/helper/constants/categoryConst';
+import { PLACE_TYPES } from '@/helper/constants/placeConst';
+import { TempChildProduct, TempParentsProduct } from '@/helper/types/tempProduct';
 // queries
-import tempUseCreateProduct from '@/queries/coffeechat/tempUseCreateProduct';
+import tempUseCreateProduct, { ProductResponseData } from '@/queries/coffeechat/tempUseCreateProduct';
 import useCreateFile from '@/queries/common/useCreateFile';
-import useSelectMemberInfoExtra from '@/queries/member/useSelectMemberInfoExtra'
 // library
-import { useForm, Controller, UseFormRegisterReturn } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { Controller, useForm, UseFormRegisterReturn } from "react-hook-form";
+import * as yup from 'yup';
+import useUserInfo from '@/stores/userInfo';
 
 const schema = yup.object().shape({
   name: yup.string().required('제목을 입력해주세요.').max(30, '최대 30자까지 입력 가능합니다.'),
@@ -36,10 +34,6 @@ const schema = yup.object().shape({
 })
 
 type RegistFormData = yup.InferType<typeof schema>;
-type TempUseCreateProductResponse = {
-  _id: number;
-};
-type CombinedChildType = TempUseCreateProductResponse & TempChildProduct
 
 const PLACE_TYPE = 'placeType';
 
@@ -50,13 +44,12 @@ const CoffeechatRegist = () => {
   });
   const { mutate: mutateCreateProduct } = tempUseCreateProduct();
   const { mutate: createImageMutate } = useCreateFile();
-  const { data: sellerImageData } = useSelectMemberInfoExtra('profileImage');
+  const { userInfo } = useUserInfo(store => store);
   const [placeType, setPlaceType] = useState(PLACE_TYPES.ONLINE);
   const [datetimeList, setDatetimeList] = useState<{ date: Date, time: Date }[]>([]);
   const [imageFile, setImageFile] = useState<File>();
   const [selectedJobCategory, setSelectedJobCategory] = useState<string[]>([]);
   const [selectedRegionCategory, setSelectedRegionCategory] = useState('');
-  const sellerName = Cookies.get('user_name');
 
   const handlePlaceType = (type: string) => {
     setPlaceType(type);
@@ -74,7 +67,7 @@ const CoffeechatRegist = () => {
     setDatetimeList(newDatetime);
   }
 
-  const createChildProduct = (data: CombinedChildType, formSubmitData: RegistFormData, fileName: string, date: { date: Date, time: Date }) => {
+  const createChildProduct = (data: ProductResponseData, formSubmitData: RegistFormData, fileName: string, date: { date: Date, time: Date }) => {
     const requestBody: TempChildProduct = {
       mainImages: [fileName],
       name: formSubmitData.name,
@@ -90,7 +83,7 @@ const CoffeechatRegist = () => {
         online: formSubmitData.online,
         offline: formSubmitData.online,
         datetime: date,
-        author: sellerName,
+        author: userInfo.name,
         jobCategory: selectedJobCategory,
         regionCategory: selectedRegionCategory,
         parentsId: data._id,
@@ -124,8 +117,8 @@ const CoffeechatRegist = () => {
         online: formSubmitData.onlinePlace,
         offline: formSubmitData.offlinePlace,
         datetimeList: datetimeList,
-        author: sellerName,
-        authorImage: sellerImageData.profileImage.path,
+        author: userInfo.name,
+        authorImage: userInfo.extra.profileImage.path,
         type: 'coffeechat',
         jobCategory: selectedJobCategory,
         regionCategory: selectedRegionCategory,
@@ -133,7 +126,7 @@ const CoffeechatRegist = () => {
       },
     }
     mutateCreateProduct(requestBody, {
-      onSuccess: (data: CombinedChildType) => {
+      onSuccess: (data: ProductResponseData) => {
         datetimeList.map(
           (date) =>
             createChildProduct(data, formSubmitData, fileName, date));
@@ -337,7 +330,6 @@ const CoffeechatRegist = () => {
           </label>
           {errors.price && <p className="text-red-500 text-sm">{errors.price.message}</p>}
         </div>
-        {/* <SubmitButton content="등록하기" /> */}
         <button type="submit" className="bg-light-main hover:bg-dark-main text-white p-2 rounded  w-full" >등록</button>
       </form>
     </div>

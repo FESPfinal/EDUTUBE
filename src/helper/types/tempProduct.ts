@@ -18,7 +18,7 @@ export type TempParentsProduct = {
       date: Date,
       time: Date
     }[];
-    author?: string;
+    author: string;
     authorImage?: string[];
     type: 'coffeechat' | 'video';
     jobCategory: string[];
@@ -46,7 +46,7 @@ export type TempChildProduct = {
       date: Date,
       time: Date
     };
-    author?: string;
+    author: string;
     jobCategory: string[];
     regionCategory?: string;
     parentsId: number,
