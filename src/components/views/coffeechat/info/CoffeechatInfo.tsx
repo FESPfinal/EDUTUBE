@@ -1,17 +1,13 @@
 'use client';
-import useSelectCoffeechatInfo from '../../../../queries/coffeechat/info/useSelectCoffeechatInfo';
-import useUpdateOrder from '../../../../queries/coffeechat/order/useUpdateOrder';
-import PurchaseButton from '../../../atom/Button';
-import UpdateButton from '../../../atom/Button';
-import DeleteButton from '../../../atom/Button';
-import { IOrderDataType } from '../../../../helper/types/order';
-import { useRouter } from 'next/navigation';
-import Cookies from 'js-cookie';
 import useUserInfo from '@/stores/userInfo';
+import { useRouter } from 'next/navigation';
+import { IOrderDataType } from '@/helper/types/order';
+import useSelectCoffeechatInfo from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
+import useUpdateOrder from '@/queries/coffeechat/order/useUpdateOrder';
+import { default as DeleteButton, default as PurchaseButton, default as UpdateButton } from '@/components/atom/Button';
 
 const CoffeechatInfo = ({ _id }: { _id: string }) => {
   const router = useRouter();
-  const user_id = Cookies.get('user_id');
   const { data: coffeechatDetailData } = useSelectCoffeechatInfo(_id);
   const { mutate: mutateOrderCoffeechat } = useUpdateOrder();
   const { userInfo } = useUserInfo(store => store);
@@ -30,7 +26,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
       },
     };
     mutateOrderCoffeechat(product, {
-      onSuccess: data => {
+      onSuccess: () => {
         alert(`주문이 완료되었습니다.`);
         router.push('/mypage/purchase');
       },
@@ -44,10 +40,6 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
       },
     });
   };
-  console.log('userInfo', userInfo)
-  console.log(coffeechatDetailData)
-  console.log(coffeechatDetailData?.mainImages[0])
-  console.log(coffeechatDetailData?.extra.authorImage)
 
   return (
     <>
@@ -71,9 +63,8 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
               dangerouslySetInnerHTML={{ __html: coffeechatDetailData?.content }}
             />
             {/* 커피챗 카테고리 */}
-            <p className="mb-2">카테고리: {coffeechatDetailData?.extra.jobCategory[0]}</p>
+            <p className="mb-2">카테고리: {coffeechatDetailData?.extra.jobCategory[0]}, {coffeechatDetailData?.extra.regionCategory}</p>
             {/* 커피챗 판매자 */}
-            <p className="mb-2">프로필 이미지: {coffeechatDetailData?.extra?.authorImage}</p>
             {/* TODO: 이미지 안불러와지는 이슈, img 태그 Image 태그로 수정 */}
             <img src={`https://localhost:443/${coffeechatDetailData?.extra.authorImage}`} width={80}
               height={80} />
@@ -83,16 +74,21 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
             {/* 커피챗 장소 및 시간 정보 */}
             <h3 className="text-lg font-bold mb-2">커피챗 장소 및 시간 정보</h3>
             {coffeechatDetailData?.extra.place === 'online' ? <p className="mb-2">온라인 주소: {coffeechatDetailData?.extra.online}</p> : <p className="mb-2">오프라인 주소: {coffeechatDetailData?.extra.offline}</p>}
-            {/* TODO: 날짜 시간 slice */}
-            {/* <p className="mb-2">날짜: {coffeechatDetailData?.extra.datetimeList[0].date}</p>
-            <p className="mb-2">시간: {coffeechatDetailData?.extra.datetimeList[0].time}</p> */}
+            {coffeechatDetailData?.extra.datetimeList.map(
+              (item: { date: Date, time: Date }, index: number) => (
+                <li key={index}>
+                  <p className="mb-2">날짜: {JSON.stringify(item.date).slice(1, 11)}</p>
+                  <p className="mb-2">시간: {JSON.stringify(item.time).slice(12, 17)}</p>
+                </li>
+              )
+            )}
             {/* 커피챗 가격 및 포인트 */}
             <div>
               <p className="text-lg font-bold">가격</p>
               <p>{coffeechatDetailData?.price} 포인트</p>
             </div>
             <div className="space-y-4">
-              {userInfo.type == 'seller' && coffeechatDetailData?.seller_id == user_id ? (
+              {userInfo.type == 'seller' && coffeechatDetailData?.seller_id == userInfo._id ? (
                 <>
                   <UpdateButton
                     content="수정하기"
