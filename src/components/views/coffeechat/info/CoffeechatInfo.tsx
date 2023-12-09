@@ -82,16 +82,16 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
           </div>
         </div>
         {/* 색션 1-2 */}
-        <div className="md:w-1/3 p-2">
+        <div className="md:w-1/3 p-2 flex flex-col gap-3">
           <h1 className="text-2xl font-bold mb-2">{coffeechatDetailData?.name}</h1>
           <div className="flex items-center gap-3 mb-2">
             <Avatar imageUrl={`https://localhost:443/${coffeechatDetailData?.extra.authorImage}`} size={'xsmall'} />
             <p className="text-md font-bold">{coffeechatDetailData?.extra.author}</p>
           </div>
           <p className="mb-2"> {coffeechatDetailData?.extra.intro}</p>
-          <div className="flex items-center gap-3 mb-2">
-            <p className="mb-2 inline-block rounded-full px-2 py-1 text-sm font-medium tracking-wide border-solid border bg-light-main text-white">{coffeechatDetailData?.extra.jobCategory[0]}</p>
-            <p className="mb-2 inline-block rounded-full px-2 py-1 text-sm font-medium tracking-wide border-solid border bg-dark-main text-white">{coffeechatDetailData?.extra.regionCategory}</p>
+          <div className="flex items-center gap-3" style={{ marginTop: 'auto' }}>
+            <p className="inline-block rounded-full px-2 py-1 text-sm font-medium tracking-wide border-solid border bg-light-main text-white">{coffeechatDetailData?.extra.jobCategory[0]}</p>
+            <p className="inline-block rounded-full px-2 py-1 text-sm font-medium tracking-wide border-solid border bg-dark-main text-white">{coffeechatDetailData?.extra.regionCategory}</p>
           </div>
         </div>
       </div>
