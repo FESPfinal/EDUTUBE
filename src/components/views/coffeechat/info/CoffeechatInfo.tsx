@@ -45,9 +45,10 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
 
   return (
     <div className="max-w-4xl mx-auto p-4">
-      {/* 첫번째 색션 */}
-      <div className="flex flex-col md:flex-row gap-5 border-2 border-solid border-indigo-500">
-        <div className="md:w-2/3 mb-4 md:mr-4 border-2 border-solid border-blue-500">
+      {/* 색션 1*/}
+      <div className="flex flex-col md:flex-row gap-5 mb-4">
+        {/* 색션 1-1 */}
+        <div className="md:w-2/3">
           <div className="w-full h-96 aspect-w-3 aspect-h-2">
             <Image
               src={`https://localhost:443/${coffeechatDetailData?.mainImages[0]}`}
@@ -59,7 +60,8 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
             />
           </div>
         </div>
-        <div className="md:w-1/3 border-2 border-solid border-pink-500">
+        {/* 색션 1-2 */}
+        <div className="md:w-1/3 p-2">
           <h1 className="text-2xl font-bold mb-2">{coffeechatDetailData?.name}</h1>
           <div className="flex items-center gap-3 mb-2">
             <Avatar imageUrl={`https://localhost:443/${coffeechatDetailData?.extra.authorImage}`} size={'xsmall'} />
@@ -72,9 +74,17 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
           </div>
         </div>
       </div>
-      {/* 두번째 섹션 */}
-      <div className="flex flex-col md:flex-row gap-5 border-2 border-solid border-indigo-500">
-        <div className="md:w-2/3 mb-4 md:mr-4 border-2 border-solid border-blue-500">
+      {/* 중간 색션 */}
+      <div className="border-2 border-gray-200 p-2 mb-4 flex gap-12">
+        <span>내용</span>
+        <span>일정</span>
+        <span>장소</span>
+        <span>후기</span>
+      </div>
+      {/* 색션 2 */}
+      <div className="flex flex-col md:flex-row gap-5 mb-12">
+        {/* 색션 2-1 */}
+        <div className="md:w-2/3 p-3 border-2 border-gray-200">
           <div className="mb-6">
             <h3 className="text-lg font-bold mb-2">내용</h3>
             <p className="text-md mb-2" dangerouslySetInnerHTML={{ __html: coffeechatDetailData?.content }} />
@@ -93,30 +103,35 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
             {coffeechatDetailData?.extra.place === 'online' ? <p className="mb-2">온라인 주소: {coffeechatDetailData?.extra.online}</p> : <p className="mb-2">오프라인 주소: {coffeechatDetailData?.extra.offline}</p>}
           </div>
         </div>
-        <div className="md:w-1/3 border-2 border-solid border-pink-500">
-          <div>
-            <p className="text-lg font-bold">가격</p>
-            <p>{coffeechatDetailData?.price} 포인트</p>
-          </div>
-          <div className="space-y-4">
-            {userInfo.type === 'seller' && coffeechatDetailData?.seller_id === userInfo._id ? (
-              <>
-                <UpdateButton content="수정하기" size="medium" onClick={() => orderCoffeechat(parseInt(_id))} />
-                <DeleteButton
-                  content="삭제하기"
-                  size="medium"
-                  onClick={() => orderCoffeechat(parseInt(_id))}
-                  color="bg-light-error"
-                  darkColor="bg-dark-error"
-                  hoverColor="hover:bg-red-700"
-                />
-              </>
-            ) : (
-              <PurchaseButton content="결제하기" size="medium" onClick={() => orderCoffeechat(parseInt(_id))} />
-            )}
+        {/* 색션 2-2 */}
+        <div className="md:w-1/3 relative">
+          <div className="bg-white border-2 border-solid border-gray-200 rounded-sm p-4 shadow-md sticky top-12 right-0 z-10">
+            <div className="mb-2">
+              <h1 className="text-lg font-bold mb-2">{coffeechatDetailData?.name}</h1>
+            </div>
+            <div className="mb-4">
+              <span className="text-md font-medium text-gray-500 mr-2">가격</span>
+              <span className="text-lg font-bold ">{coffeechatDetailData?.price}포인트</span>
+            </div>
+            <div className="space-y-4">
+              {userInfo.type === 'seller' && coffeechatDetailData?.seller_id === userInfo._id ? (
+                <>
+                  <UpdateButton content="수정하기" size="medium" onClick={() => orderCoffeechat(parseInt(_id))} />
+                  <DeleteButton
+                    content="삭제하기"
+                    size="medium"
+                    onClick={() => orderCoffeechat(parseInt(_id))}
+                    color="bg-light-error"
+                    darkColor="bg-dark-error"
+                    hoverColor="hover:bg-red-700"
+                  />
+                </>
+              ) : (
+                <PurchaseButton content="결제하기" size="medium" onClick={() => orderCoffeechat(parseInt(_id))} />
+              )}
+            </div>
           </div>
         </div>
-
       </div>
     </div>
   );
