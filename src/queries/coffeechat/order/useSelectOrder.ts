@@ -2,7 +2,7 @@
 import useEdutubeAxios from '@/helper/utils/useEdutubeAxios';
 import { useQuery } from '@tanstack/react-query';
 
-type Product = {
+export type Product = {
   _id: number;
   seller_id: number;
   state: string;
@@ -23,7 +23,7 @@ type Product = {
   };
 };
 
-type Order = {
+export type Order = {
   _id: number;
   user_id: number;
   products: Product[];
@@ -44,7 +44,7 @@ type Order = {
   updatedAt: string;
 };
 
-type OrderList = Order[];
+export type OrderList = Order[];
 
 const URL = '/orders';
 
@@ -52,7 +52,7 @@ const useSelectOrder = () => {
   const { edutubeAxios } = useEdutubeAxios();
   const axiosGet = async () => {
     const response = await edutubeAxios.get(URL);
-    return response.data as OrderList;
+    return response.data.item as OrderList;
   };
   return useQuery({ queryKey: ['orderList'], queryFn: axiosGet });
 };
