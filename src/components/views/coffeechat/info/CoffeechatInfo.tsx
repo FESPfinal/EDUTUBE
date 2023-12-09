@@ -1,4 +1,5 @@
 'use client';
+import { useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import useUserInfo from '@/stores/userInfo';
@@ -13,6 +14,26 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
   const { data: coffeechatDetailData } = useSelectCoffeechatInfo(_id);
   const { mutate: mutateOrderCoffeechat } = useUpdateOrder();
   const { userInfo } = useUserInfo(store => store);
+
+  useEffect(() => {
+    const handleScroll = (e: Event) => {
+      e.preventDefault();
+      const targetId = (e.target as HTMLAnchorElement).getAttribute('href')?.substring(1);
+      const targetElement = document.getElementById(targetId || '');
+      targetElement?.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    const links = document.querySelectorAll('.scroll-link');
+    links.forEach((link) => {
+      link.addEventListener('click', handleScroll);
+    });
+
+    return () => {
+      links.forEach((link) => {
+        link.removeEventListener('click', handleScroll);
+      });
+    };
+  }, []);
 
   const orderCoffeechat = (_id: number) => {
     const product: IOrderDataType = {
@@ -76,20 +97,20 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
       </div>
       {/* 중간 색션 */}
       <div className="border-2 border-gray-200 p-2 mb-4 flex gap-12">
-        <span>내용</span>
-        <span>일정</span>
-        <span>장소</span>
-        <span>후기</span>
+        <a href="#content">내용</a>
+        <a href="#schedule">일정</a>
+        <a href="#place">장소</a>
+        <a href="#content">후기</a>
       </div>
       {/* 색션 2 */}
       <div className="flex flex-col md:flex-row gap-5 mb-12">
         {/* 색션 2-1 */}
         <div className="md:w-2/3 p-3 border-2 border-gray-200">
-          <div className="mb-6">
+          <div id="content" className="mb-6">
             <h3 className="text-lg font-bold mb-2">내용</h3>
             <p className="text-md mb-2" dangerouslySetInnerHTML={{ __html: coffeechatDetailData?.content }} />
           </div>
-          <div className="mb-6">
+          <div id="schedule" className="mb-6">
             <h3 className="text-lg font-bold mb-4">일정</h3>
             {coffeechatDetailData?.extra.datetimeList.map((item: { date: Date, time: Date }, index: number) => (
               <span key={index} className={`mb-2 mr-2  border-2 border-solid border-light-main rounded-lg p-2`}>
@@ -98,7 +119,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
               </span>
             ))}
           </div>
-          <div className="mb-6">
+          <div id="place" className="mb-6">
             <h3 className="text-lg font-bold mb-2">장소</h3>
             {coffeechatDetailData?.extra.place === 'online' ? <p className="mb-2">온라인 주소: {coffeechatDetailData?.extra.online}</p> : <p className="mb-2">오프라인 주소: {coffeechatDetailData?.extra.offline}</p>}
           </div>
