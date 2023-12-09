@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 import { useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -97,10 +98,18 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
       </div>
       {/* 중간 색션 */}
       <div className="border-2 border-gray-200 p-2 mb-4 flex gap-12">
-        <a href="#content">내용</a>
-        <a href="#schedule">일정</a>
-        <a href="#place">장소</a>
-        <a href="#content">후기</a>
+        <Link href="#content">
+          내용
+        </Link>
+        <Link href="#schedule">
+          일정
+        </Link>
+        <Link href="#place">
+          장소
+        </Link>
+        <Link href="#content">
+          후기
+        </Link>
       </div>
       {/* 색션 2 */}
       <div className="flex flex-col md:flex-row gap-5 mb-12">
