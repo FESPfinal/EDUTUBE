@@ -9,7 +9,13 @@ export const metadata: Metadata = {
   description: '원하는 강의만 모아서 볼 수 있어요!',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+  modal,
+}: {
+  children: React.ReactNode;
+  modal: React.ReactNode;
+}) {
   return (
     <html lang="ko" suppressHydrationWarning={true}>
       <body>
@@ -20,6 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="md:mx-8 lg:mx-16">
             <Provider>
               <ReactQueryClient>{children}</ReactQueryClient>
+              <ReactQueryClient>{modal}</ReactQueryClient>
             </Provider>
           </div>
         </div>

@@ -8,6 +8,7 @@ import { IOrderDataType } from '../../../../helper/types/order';
 import { useRouter } from 'next/navigation';
 import useSelectMemberInfo from '../../../../queries/member/useSelectMemberInfo';
 import Cookies from 'js-cookie';
+import Link from 'next/link';
 
 const CoffeechatInfo = ({ _id }: { _id: string }) => {
   const router = useRouter();
@@ -98,11 +99,14 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
                 </>
               ) : (
                 <>
-                  <PurchaseButton
+                  {/* <PurchaseButton
                     content="결제하기"
                     size="medium"
                     onClick={() => orderCoffeechat(parseInt(_id))}
-                  />
+                  /> */}
+                  <Link href={`/coffeechat/info/${_id}/reserve`}>
+                    <PurchaseButton content="결제하기" size="medium" onClick={() => {}} />
+                  </Link>
                 </>
               )}
             </div>
