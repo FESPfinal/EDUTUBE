@@ -33,13 +33,13 @@ const RegistCalendar = ({onDateChange }) => {
     const currentDate = new Date();
     const isSaturday = date.getDay() === 6;
     const isSunday = date.getDay() === 0;
-    // const isTwoDaysAgo = new Date(
-    //   currentDate.getFullYear(),
-    //   currentDate.getMonth(),
-    //   currentDate.getDate() - 1,
-    // );
+    const isPastDate = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      currentDate.getDate() - 1,
+    );
 
-    return isSaturday || isSunday //|| date <= isTwoDaysAgo;
+    return  date <= isPastDate;
   };
 
   return (
@@ -52,6 +52,9 @@ const RegistCalendar = ({onDateChange }) => {
         selectRange={true}
         formatDay={(locale, date) => moment(date).format('DD')}
       />
+      {selectedDates.map((date) => (
+        <p key={date}>{date}</p>
+      ))}
     </div>
   );
 };
