@@ -1,7 +1,9 @@
 'use client';
 import CheckBox from '@/components/atom/CheckBox';
 import KakaoMap from './SearchMap';
+import RegistCalendar from './RegistCalendar';
 import { useForm } from 'react-hook-form';
+import { useState } from 'react';
 
 
 
@@ -25,6 +27,14 @@ const CoffeechatSecondRegist = () => {
   const handleSearchClick = () => {
     setValue('searchClicked', true);
   }
+
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
+
+  const handleDateChange = (start, end) => {
+    setStartDate(start);
+    setEndDate(end);
+  };
 
   return (
     <div className='flex relative'>
@@ -71,8 +81,10 @@ const CoffeechatSecondRegist = () => {
               )}
 
 
-              <div>
-                <h2 className='text-[30px]'>날짜 등록</h2>
+              <div className='mt-[60px]'>
+                <h2 className='text-[30px] mb-[60px]'>날짜 등록</h2>
+                <RegistCalendar onDateChange={handleDateChange} />
+                <p>{startDate}</p>
               </div>
 
               <div>
