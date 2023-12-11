@@ -1,19 +1,14 @@
 'use client';
 import Avatar from "@/components/atom/Avatar";
 import { default as DeleteButton, default as PurchaseButton, default as UpdateButton } from '@/components/atom/Button';
-import { IOrderDataType } from '@/helper/types/order';
 import useSelectCoffeechatInfo from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
-import useUpdateOrder from '@/queries/coffeechat/order/useUpdateOrder';
 import useUserInfo from '@/stores/userInfo';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 const CoffeechatInfo = ({ _id }: { _id: string }) => {
-  const router = useRouter();
   const { data: coffeechatDetailData } = useSelectCoffeechatInfo(_id);
-  const { mutate: mutateOrderCoffeechat } = useUpdateOrder();
   const { userInfo } = useUserInfo(store => store);
 
   useEffect(() => {
@@ -35,35 +30,6 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
       });
     };
   }, []);
-
-  const orderCoffeechat = (_id: number) => {
-    const product: IOrderDataType = {
-      products: [
-        {
-          _id: _id,
-          quantity: 1,
-        },
-      ],
-      address: {
-        name: '',
-        value: '',
-      },
-    };
-    mutateOrderCoffeechat(product, {
-      onSuccess: () => {
-        alert(`주문이 완료되었습니다.`);
-        router.push('/mypage/purchase');
-      },
-      onError: error => {
-        if (error.message == 'authToken is not defined') {
-          alert(`로그인 이후에 결제가 가능합니다.`);
-          router.push('/login');
-        } else {
-          alert(`주문에 실패하셨습니다. ${error.message}`);
-        }
-      },
-    });
-  };
 
   return (
     <div className="max-w-4xl mx-auto p-4">
@@ -146,11 +112,11 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
             <div className="space-y-4">
               {userInfo.type === 'seller' && coffeechatDetailData?.seller_id === userInfo._id ? (
                 <>
-                  <UpdateButton content="수정하기" size="medium" onClick={() => orderCoffeechat(parseInt(_id))} />
+                  <UpdateButton content="수정하기" size="medium" onClick={() => alert('수정하기 구현해야함')} />
                   <DeleteButton
                     content="삭제하기"
                     size="medium"
-                    onClick={() => orderCoffeechat(parseInt(_id))}
+                    onClick={() => alert('삭제하기 구현해야함')}
                     color="bg-light-error"
                     darkColor="bg-dark-error"
                     hoverColor="hover:bg-red-700"
