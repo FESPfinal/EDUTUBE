@@ -8,38 +8,13 @@ import useUserInfo from '@/stores/userInfo';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import Modal from 'react-modal';
-
-const customModalStyles = {
-  content: {
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
-    zIndex: 11,
-  },
-  overlay: {
-    zIndex: 10,
-  },
-};
+import { useEffect } from 'react';
 
 const CoffeechatInfo = ({ _id }: { _id: string }) => {
   const router = useRouter();
   const { data: coffeechatDetailData } = useSelectCoffeechatInfo(_id);
   const { mutate: mutateOrderCoffeechat } = useUpdateOrder();
   const { userInfo } = useUserInfo(store => store);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
 
   useEffect(() => {
     const handleScroll = (e: Event) => {
@@ -159,17 +134,6 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
           </div>
         </div>
         {/* 색션 2-2 */}
-
-        <Modal isOpen={isModalOpen} onRequestClose={closeModal} style={customModalStyles} >
-          <h3 className="text-lg font-bold mb-4">일정</h3>
-          {coffeechatDetailData?.extra.datetimeList.map((item: { date: Date, time: Date }, index: number) => (
-            <span key={index} className={`mb-2 mr-2 border-2 border-solid border-light-main rounded-lg p-2`}>
-              <span className="text-gray-700 mr-2">{JSON.stringify(item.date).slice(1, 11)}</span>
-              <span className="text-gray-400">{JSON.stringify(item.time).slice(12, 17)}</span>
-            </span>
-          ))}
-        </Modal>
-
         <div className="md:w-1/3 relative">
           <div className="bg-white border-2 border-solid border-gray-200 rounded-sm p-4 shadow-md sticky top-12 right-0 z-10">
             <div className="mb-2">
@@ -193,8 +157,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
                   />
                 </>
               ) : (
-                // <PurchaseButton content="예약하기" size="medium" onClick={() => orderCoffeechat(parseInt(_id))} />
-                <PurchaseButton content="예약하기" size="medium" onClick={openModal} />
+                <PurchaseButton content="예약하기" size="medium" onClick={() => orderCoffeechat(parseInt(_id))} />
               )}
             </div>
           </div>
