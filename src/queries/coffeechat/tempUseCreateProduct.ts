@@ -14,6 +14,7 @@ export type ProductResponseData = {
   show: boolean;
   active: boolean;
   quantity: number,
+  buyQuantity: number,
   extra: {
     intro: string;
     place: string;
