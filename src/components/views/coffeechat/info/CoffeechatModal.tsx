@@ -30,7 +30,8 @@ const CoffeechatModal = () => {
     mutateOrderCoffeechat(product, {
       onSuccess: () => {
         alert(`주문이 완료되었습니다.`);
-        router.push('/mypage/purchase');
+        router.back();
+        // TODO: 장바구니로 갈지 현재 페이지에 머무를지 확인하는 모달
       },
       onError: error => {
         if (error.message == 'authToken is not defined') {
