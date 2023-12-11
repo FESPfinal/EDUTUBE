@@ -157,7 +157,12 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
                   />
                 </>
               ) : (
-                <PurchaseButton content="예약하기" size="medium" onClick={() => orderCoffeechat(parseInt(_id))} />
+                <>
+                  {/* <PurchaseButton content="예약하기" size="medium" onClick={() => orderCoffeechat(parseInt(_id))} /> */}
+                  <Link href={`/coffeechat/info/${_id}/reserve`}>
+                    <p>클릭</p>
+                  </Link>
+                </>
               )}
             </div>
           </div>
