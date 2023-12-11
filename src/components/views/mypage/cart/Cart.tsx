@@ -4,6 +4,7 @@ import useSelectCart from '@/queries/mypage/cart/useSelectCart';
 import CartItem from './CartItem';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import useUserInfo from '@/stores/userInfo';
 
 type ItemInfo = {
   product_id: number;
@@ -21,10 +22,12 @@ export type IsSelectedItem = {
   isChecked: boolean;
 };
 const Cart = () => {
+  const { userInfo } = useUserInfo(store => store);
   const { data: cartData } = useSelectCart();
   const [selectedItemList, setSelectedItemList] = useState<SelectedItem[]>([]);
   const [isAllProductChecked, setIsAllProductChecked] = useState(false);
-  const [selectedItemPointSum, setSelectedItemPointSum] = useState(0);
+  const [sumSelectedItemPoint, setSumSelectedItemPoint] = useState(0);
+  const [isPurchased, setIsPurchased] = useState(userInfo.extra.point > 0);
 
   /** 상품 체크박스 선택 시 구매 list로 선택/해제하기
    * - CartItem의 checkbox가 선택되면 setSelectedItemList에 추가
@@ -34,30 +37,35 @@ const Cart = () => {
   const managingCartItemList = (item: IsSelectedItem) => {
     if (item.isChecked) {
       setSelectedItemList(state => [...state, item.itemInfo]);
-      setSelectedItemPointSum(state => state + item.itemPrice);
+      setSumSelectedItemPoint(state => state + item.itemPrice);
     }
     if (!item.isChecked) {
       setSelectedItemList(state =>
         state.filter(acc => acc.product_id !== item.itemInfo.product_id),
       );
-      setSelectedItemPointSum(state => state - item.itemPrice);
+      setSumSelectedItemPoint(state => state - item.itemPrice);
     }
   };
 
   //전체 선택 시 모든 상품 구매 list로 선택/해제하기
   const selectAllProduct = () => {
-    console.log(!isAllProductChecked);
     if (!isAllProductChecked) {
-      setSelectedItemList(cartData.map(data => ({ product_id: data._id, quantity: 1 })));
+      setSelectedItemList(cartData?.map(data => ({ product_id: data._id, quantity: 1 })));
+      setSumSelectedItemPoint(
+        cartData
+          ?.map(data => data.product.price)
+          .reduce((acc, cur) => parseInt(acc) + parseInt(cur), [0]),
+      );
     }
     if (isAllProductChecked) {
       setSelectedItemList([]);
+      setSumSelectedItemPoint(0);
     }
     setIsAllProductChecked(state => !state);
   };
 
   /** 'POINT로 결제하기' 클릭 시 결제 진행하기
-   * - 보유보인트보다 구매포인트가 크면 결제 반려하기(버튼 비활성화)
+   * - 보유보인트보다 구매포인트가 크면 결제 반려하기(+ 버튼 비활성화)
    */
 
   return (
@@ -97,17 +105,21 @@ const Cart = () => {
         <div className="flex justify-between items-end mb-2 mt-2">
           <div>
             <section className="flex flex-col gap-2">
-              <p>현재 보유 포인트 {} point</p>
+              <p>현재 보유 포인트 {userInfo.extra.point || 0} point</p>
               <p className="text-lg">
-                총 결제 포인트 <span className="text-light-main">{selectedItemPointSum} point</span>
+                총 결제 포인트 <span className="text-light-main">{sumSelectedItemPoint} point</span>
               </p>
             </section>
           </div>
           <div>
             <section className="flex gap-2">
-              <div className="w-fit h-fit px-3 py-3 text-white bg-light-main rounded-md hover:bg-dark-main focus:outline-none">
-                <Link href={''}>POINT로 결제하기</Link>
-              </div>
+              <button
+                className="w-fit h-fit px-3 py-3 text-white bg-light-main rounded-md hover:bg-dark-main focus:outline-none disabled:bg-dark-disabled"
+                onClick={() => console.log('결제')}
+                disabled={!isPurchased}
+              >
+                POINT로 결제하기
+              </button>
             </section>
           </div>
         </div>

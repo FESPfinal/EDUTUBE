@@ -15,6 +15,7 @@ export type UserNotTokenItem = {
     major: string;
     nickname: string;
     contactEmail: string;
+    point: number;
     intro?: string;
     sns?: string;
   };
