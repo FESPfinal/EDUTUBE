@@ -7,7 +7,7 @@ export type TempParentsProduct = {
   show: boolean;
   active: boolean;
   quantity: number;
-  buyQuantity?: number;
+  buyQuantity: number;
   extra: {
     intro: string;
     place: string;
@@ -36,7 +36,7 @@ export type TempChildProduct = {
   show: boolean;
   active: boolean;
   quantity: number;
-  buyQuantity?: number;
+  buyQuantity: number;
   extra: {
     intro: string;
     place: string;

@@ -107,6 +107,7 @@ const CoffeechatRegist = () => {
       show: true,
       active: true,
       quantity: 1,
+      buyQuantity: 0,
       extra: {
         intro: formSubmitData.intro,
         place: placeType,
@@ -149,6 +150,7 @@ const CoffeechatRegist = () => {
       show: true,
       active: true,
       quantity: datetimeList.length,
+      buyQuantity: 0,
       extra: {
         intro: formSubmitData.intro,
         place: placeType,
