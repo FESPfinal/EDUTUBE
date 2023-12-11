@@ -1,14 +1,14 @@
-export interface ProductType {
+export type Product = {
   _id: number;
   quantity: number;
-}
+};
 
-export interface AddressType {
+export type Address = {
   name: string;
   value: string;
-}
+};
 
-export interface IOrderDataType {
-  products: ProductType[];
-  address: AddressType;
-}
+export type OrderData = {
+  products: Product[];
+  address: Address;
+};

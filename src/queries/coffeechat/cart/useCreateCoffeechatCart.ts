@@ -7,9 +7,9 @@ const URL = '/carts';
 
 const useCreateCoffeechatCart = () => {
   const { edutubeAxios } = useEdutubeAxios();
-  const postAxios = async () => {
+  const postAxios = async (_id: number) => {
     const response = await edutubeAxios.post(URL, {
-      product_id: 31,
+      product_id: _id,
       quantity: 1,
     });
     return response.data.item;
