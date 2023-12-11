@@ -12,6 +12,7 @@ export type SignUpData = {
   address: string;
   type: string;
   extra: {
+    point: number;
     profileImage: string;
     major: string;
     nickname: string;
@@ -27,7 +28,8 @@ const URL = '/users';
 const useCreateUser = () => {
   const { edutubeAxios } = useEdutubeAxios();
   const axiosPost = async (userData: SignUpData) => {
-    const response = await edutubeAxios.post(URL, userData);
+    const requestData = { ...userData, extra: { ...userData.extra, point: 10000 } };
+    const response = await edutubeAxios.post(URL, requestData);
     return response.data;
   };
   return useMutation({ mutationFn: axiosPost });

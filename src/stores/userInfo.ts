@@ -37,6 +37,7 @@ const defaultState: UserNotTokenItem = {
   createdAt: '',
   updatedAt: '',
   extra: {
+    point: 0,
     profileImage: { name: '', path: '' },
     major: '',
     nickname: '',
