@@ -1,7 +1,10 @@
-import { useRouter } from 'next/navigation';
+'use client'
+import { useParams, useRouter } from 'next/navigation';
 
 const CoffeechatModal = () => {
   const router = useRouter();
+  const params = useParams();
+  console.log(params)
   return (
     <>
       <div className="bg-white">
