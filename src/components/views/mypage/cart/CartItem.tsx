@@ -3,13 +3,34 @@
 import CheckBox from '@/components/atom/CheckBox';
 import Image from 'next/image';
 import Link from 'next/link';
+import { IsSelectedItem } from './Cart';
+import { useState } from 'react';
 
-const CartItem = ({ data }: { data: {} }) => {
-  console.log('data>>>', data);
+interface Props {
+  data: {};
+  managingCartItemList: (item: IsSelectedItem) => void;
+}
+
+const CartItem = ({ data, managingCartItemList }: Props) => {
+  const [isChecked, setIsChecked] = useState(false);
+
+  const onChange = () => {
+    managingCartItemList({
+      itemInfo: { product_id: data?._id, quantity: 1 },
+      isChecked: !isChecked,
+    });
+    setIsChecked(state => !state);
+  };
+
   return (
     <li className="flex py-5 w-full">
       <div>
-        <CheckBox label="" />
+        <CheckBox
+          label=""
+          onChange={() => {
+            onChange();
+          }}
+        />
       </div>
       <Link href={`/mypage/my-coffeechat/${data?._id}`} className="flex justify-between w-full">
         <div className="flex min-w-0 gap-x-4 ">
