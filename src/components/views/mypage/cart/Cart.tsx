@@ -1,32 +1,44 @@
 'use client';
 
-import useSelectCart from '@/queries/mypage/cart/useSelectCart';
+import useSelectCart, { CartItem } from '@/queries/mypage/cart/useSelectCart';
 import useUserInfo from '@/stores/userInfo';
-import { useState } from 'react';
-import CartItem from './CartItem';
-
-type ItemInfo = {
-  product_id: number;
-  quantity: 1;
-};
+import React, { useEffect, useState } from 'react';
+import CartItemCard from './CartItem';
+import useUpdateOrder from '@/queries/coffeechat/order/useUpdateOrder';
+import useDeleteCoffeechatCart from '@/queries/coffeechat/cart/useDeleteCoffeechatCart';
+import useUpdateUserInfo from '@/queries/mypage/useUpdateUserInfo';
 
 type SelectedItem = {
-  product_id: number;
+  _id: number;
   quantity: 1;
 };
 
 export type IsSelectedItem = {
-  itemInfo: ItemInfo;
+  itemInfo: SelectedItem;
   itemPrice: number;
   isChecked: boolean;
 };
 const Cart = () => {
   const { userInfo } = useUserInfo(store => store);
-  const { data: cartData } = useSelectCart();
+  const { data: cartData, refetch: cartRefetch } = useSelectCart();
+  const { mutate: orderMutate } = useUpdateOrder();
+  const { mutate: deleteCartItemMutate } = useDeleteCoffeechatCart();
+  const { mutate: updateUserInfoMutate } = useUpdateUserInfo();
+
   const [selectedItemList, setSelectedItemList] = useState<SelectedItem[]>([]);
   const [isAllProductChecked, setIsAllProductChecked] = useState(false);
   const [sumSelectedItemPoint, setSumSelectedItemPoint] = useState(0);
   const [isPurchased, setIsPurchased] = useState(userInfo.extra.point > 0);
+
+  //보유보인트보다 구매포인트가 크면 결제 반려하기(+ 버튼 비활성화)
+  useEffect(() => {
+    const charge = userInfo.extra.point - sumSelectedItemPoint;
+    if (charge >= 0) {
+      setIsPurchased(true);
+    } else {
+      setIsPurchased(false);
+    }
+  }, [sumSelectedItemPoint, userInfo.extra.point]);
 
   /** 상품 체크박스 선택 시 구매 list로 선택/해제하기
    * - CartItem의 checkbox가 선택되면 setSelectedItemList에 추가
@@ -39,9 +51,7 @@ const Cart = () => {
       setSumSelectedItemPoint(state => state + item.itemPrice);
     }
     if (!item.isChecked) {
-      setSelectedItemList(state =>
-        state.filter(acc => acc.product_id !== item.itemInfo.product_id),
-      );
+      setSelectedItemList(state => state.filter(acc => acc._id !== item.itemInfo._id));
       setSumSelectedItemPoint(state => state - item.itemPrice);
     }
   };
@@ -49,12 +59,16 @@ const Cart = () => {
   //전체 선택 시 모든 상품 구매 list로 선택/해제하기
   const selectAllProduct = () => {
     if (!isAllProductChecked) {
-      setSelectedItemList(cartData?.map(data => ({ product_id: data._id, quantity: 1 })));
-      setSumSelectedItemPoint(
-        cartData
-          ?.map(data => data.product.price)
-          .reduce((acc, cur) => parseInt(acc) + parseInt(cur), [0]),
-      );
+      cartData &&
+        setSelectedItemList(
+          cartData?.map((data: CartItem) => ({ _id: data.product_id, quantity: 1 })),
+        );
+      cartData &&
+        setSumSelectedItemPoint(
+          cartData
+            ?.map((data: CartItem) => data?.product?.price)
+            .reduce((acc: number, cur: number) => acc + cur, 0),
+        );
     }
     if (isAllProductChecked) {
       setSelectedItemList([]);
@@ -63,10 +77,42 @@ const Cart = () => {
     setIsAllProductChecked(state => !state);
   };
 
-  /** 'POINT로 결제하기' 클릭 시 결제 진행하기
-   * - 보유보인트보다 구매포인트가 크면 결제 반려하기(+ 버튼 비활성화)
-   */
-  const onPurchase = () => {};
+  // 'POINT로 결제하기' 클릭 시 결제 진행하기
+  const onPurchase = () => {
+    const requestData = {
+      products: selectedItemList,
+      address: { name: '', value: '' },
+    };
+
+    orderMutate(requestData, {
+      onSuccess: () => {
+        const productsIdList = selectedItemList.map(item => item._id);
+        const cartIdList = productsIdList.map(product_id => {
+          return cartData?.filter(item => item.product_id === product_id)[0]._id;
+        });
+        cartIdList.map(cartId => cartId && deleteCartItemMutate(cartId));
+        updateUserInfoMutate({ extra: { point: userInfo.extra.point - sumSelectedItemPoint } });
+        cartRefetch();
+      },
+      onError: error => {
+        //@ts-ignore
+        const errorCode = error.response.status;
+        //@ts-ignore
+        const errMsg = error.response.data.message;
+        alert(errMsg);
+
+        if (errorCode == '422') {
+          //구매 가능한 수량이 없는 물건은 cart에서 삭제
+          const productItemNum = parseInt(errMsg.slice(1, 3));
+          const cartItemNum = cartData?.filter(
+            (item: CartItem) => item.product_id === productItemNum,
+          )[0]._id;
+          cartItemNum && deleteCartItemMutate(cartItemNum);
+          cartRefetch();
+        }
+      },
+    });
+  };
 
   return (
     <>
@@ -89,8 +135,8 @@ const Cart = () => {
       </section>
       <section>
         <ul role="list" className="divide-y divide-gray-100">
-          {cartData?.map((item: {}) => (
-            <CartItem
+          {cartData?.map((item: CartItem) => (
+            <CartItemCard
               data={item}
               managingCartItemList={managingCartItemList}
               isAllProductChecked={isAllProductChecked}
