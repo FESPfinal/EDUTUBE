@@ -22,6 +22,7 @@ const CartItem = ({ data, managingCartItemList, isAllProductChecked }: Props) =>
   const onChange = () => {
     managingCartItemList({
       itemInfo: { product_id: data?._id, quantity: 1 },
+      itemPrice: data.product.price,
       isChecked: !isChecked,
     });
     setIsChecked(state => !state);

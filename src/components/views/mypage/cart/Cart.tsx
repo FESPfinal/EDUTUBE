@@ -17,26 +17,33 @@ type SelectedItem = {
 
 export type IsSelectedItem = {
   itemInfo: ItemInfo;
+  itemPrice: number;
   isChecked: boolean;
 };
 const Cart = () => {
   const { data: cartData } = useSelectCart();
   const [selectedItemList, setSelectedItemList] = useState<SelectedItem[]>([]);
   const [isAllProductChecked, setIsAllProductChecked] = useState(false);
+  const [selectedItemPointSum, setSelectedItemPointSum] = useState(0);
 
-  //상품 체크박스 선택 시 구매 list로 선택/해제하기
-  //- CartItem의 checkbox가 선택되면 setSelectedItemList에 추가
-  //- CartItem의 checkbox가 취소되면 setSelectedItemList에 제거
+  /** 상품 체크박스 선택 시 구매 list로 선택/해제하기
+   * - CartItem의 checkbox가 선택되면 setSelectedItemList에 추가
+   * - CartItem의 checkbox가 취소되면 setSelectedItemList에 제거
+   * - 선택된 item point 계산하기
+   */
   const managingCartItemList = (item: IsSelectedItem) => {
     if (item.isChecked) {
       setSelectedItemList(state => [...state, item.itemInfo]);
+      setSelectedItemPointSum(state => state + item.itemPrice);
     }
     if (!item.isChecked) {
       setSelectedItemList(state =>
         state.filter(acc => acc.product_id !== item.itemInfo.product_id),
       );
+      setSelectedItemPointSum(state => state - item.itemPrice);
     }
   };
+
   //전체 선택 시 모든 상품 구매 list로 선택/해제하기
   const selectAllProduct = () => {
     console.log(!isAllProductChecked);
@@ -49,11 +56,9 @@ const Cart = () => {
     setIsAllProductChecked(state => !state);
   };
 
-  //선택 삭제 클릭 시 장바구니에서 물건 삭제하기
-
-  //'POINT로 결제하기' 클릭 시 결제 진행하기.
-  //선택된 item point 합산하기
-  //보유보인트보다 구매포인트가 크면 결제 반려하기.
+  /** 'POINT로 결제하기' 클릭 시 결제 진행하기
+   * - 보유보인트보다 구매포인트가 크면 결제 반려하기(버튼 비활성화)
+   */
 
   return (
     <>
@@ -94,7 +99,7 @@ const Cart = () => {
             <section className="flex flex-col gap-2">
               <p>현재 보유 포인트 {} point</p>
               <p className="text-lg">
-                총 결제 포인트 <span className="text-light-main">{10000} point</span>
+                총 결제 포인트 <span className="text-light-main">{selectedItemPointSum} point</span>
               </p>
             </section>
           </div>
