@@ -13,8 +13,13 @@ const CoffeechatModal = () => {
   const { data: coffeechatDetailData } = useSelectCoffeechatInfo(_id);
   const { mutate: mutateOrderCoffeechat } = useUpdateOrder();
   const [selectedDatetimeId, setSelectedDatetimeId] = useState<number>();
+  console.log(selectedDatetimeId)
 
   const reserveCoffeechat = (_id: number) => {
+    if (!selectedDatetimeId) {
+      alert('예약 시간을 선택하세요.')
+      return;
+    }
     const product: IOrderDataType = {
       products: [
         {
