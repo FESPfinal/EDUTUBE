@@ -3,7 +3,7 @@
 import useSelectCart from '@/queries/mypage/cart/useSelectCart';
 import CartItem from './CartItem';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type ItemInfo = {
   product_id: number;
@@ -22,6 +22,7 @@ export type IsSelectedItem = {
 const Cart = () => {
   const { data: cartData } = useSelectCart();
   const [selectedItemList, setSelectedItemList] = useState<SelectedItem[]>([]);
+  const [isAllProductChecked, setIsAllProductChecked] = useState(false);
 
   //상품 체크박스 선택 시 구매 list로 선택/해제하기
   //- CartItem의 checkbox가 선택되면 setSelectedItemList에 추가
@@ -36,7 +37,18 @@ const Cart = () => {
       );
     }
   };
-  //전체 선택 시 모든 상품 구매 list로 선택하기
+  //전체 선택 시 모든 상품 구매 list로 선택/해제하기
+  const selectAllProduct = () => {
+    console.log(!isAllProductChecked);
+    if (!isAllProductChecked) {
+      setSelectedItemList(cartData.map(data => ({ product_id: data._id, quantity: 1 })));
+    }
+    if (isAllProductChecked) {
+      setSelectedItemList([]);
+    }
+    setIsAllProductChecked(state => !state);
+  };
+
   //선택 삭제 클릭 시 장바구니에서 물건 삭제하기
   //'POINT로 결제하기' 클릭 시 결제 진행하기.
   //보유보인트보다 구매포인트가 크면 결제 반려하기.
@@ -47,13 +59,15 @@ const Cart = () => {
         <div className="flex justify-between items-end">
           <div>
             <section className="flex gap-2">
-              <p>전체 커피챗 개수</p>
-              <p className="text-light-main">{cartData?.length}</p>
+              <p>선택된 커피챗 개수</p>
+              <p className="text-light-main">
+                {selectedItemList.length}/{cartData?.length}
+              </p>
             </section>
           </div>
           <div>
             <section className="flex gap-2">
-              <p>전체 선택</p>
+              <p onClick={() => selectAllProduct()}>전체 선택</p>
               <p>|</p>
               <p>선택 삭제</p>
             </section>
@@ -63,7 +77,12 @@ const Cart = () => {
       <section>
         <ul role="list" className="divide-y divide-gray-100">
           {cartData?.map((item: {}) => (
-            <CartItem data={item} managingCartItemList={managingCartItemList} key={item._id} />
+            <CartItem
+              data={item}
+              managingCartItemList={managingCartItemList}
+              isAllProductChecked={isAllProductChecked}
+              key={item._id}
+            />
           ))}
         </ul>
       </section>
