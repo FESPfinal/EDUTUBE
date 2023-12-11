@@ -1,10 +1,9 @@
 'use client';
 
 import useSelectCart from '@/queries/mypage/cart/useSelectCart';
-import CartItem from './CartItem';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
 import useUserInfo from '@/stores/userInfo';
+import { useState } from 'react';
+import CartItem from './CartItem';
 
 type ItemInfo = {
   product_id: number;
@@ -67,6 +66,7 @@ const Cart = () => {
   /** 'POINT로 결제하기' 클릭 시 결제 진행하기
    * - 보유보인트보다 구매포인트가 크면 결제 반려하기(+ 버튼 비활성화)
    */
+  const onPurchase = () => {};
 
   return (
     <>
@@ -83,8 +83,6 @@ const Cart = () => {
           <div>
             <section className="flex gap-2">
               <p onClick={() => selectAllProduct()}>전체 선택</p>
-              <p>|</p>
-              <p>선택 삭제</p>
             </section>
           </div>
         </div>
@@ -115,7 +113,7 @@ const Cart = () => {
             <section className="flex gap-2">
               <button
                 className="w-fit h-fit px-3 py-3 text-white bg-light-main rounded-md hover:bg-dark-main focus:outline-none disabled:bg-dark-disabled"
-                onClick={() => console.log('결제')}
+                onClick={onPurchase}
                 disabled={!isPurchased}
               >
                 POINT로 결제하기
