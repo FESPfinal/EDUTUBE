@@ -23,6 +23,7 @@ export type TempParentsProduct = {
     jobCategory: string[];
     regionCategory?: string;
     productType: 'parents';
+    depth: number;
   };
 };
 
@@ -46,9 +47,11 @@ export type TempChildProduct = {
       time: Date;
     };
     author: string;
+    type: 'coffeechat' | 'video';
     jobCategory: string[];
     regionCategory?: string;
-    parentsId: number;
     productType: 'child';
+    depth: number;
+    parent: number;
   };
 };

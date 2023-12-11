@@ -31,8 +31,9 @@ export type ProductResponseData = {
     authorImage: string;
     jobCategory: string[];
     regionCategory: string;
-    parentsId: number,
     productType: 'child';
+    parent: number;
+    depth: number;
   }
   seller_id: number;
   _id: number;
