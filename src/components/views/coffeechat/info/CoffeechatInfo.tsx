@@ -102,7 +102,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
               {coffeechatDetailData?.extra.datetimeList.map((item: { date: Date, time: Date }, index: number) => (
                 <p
                   key={index}
-                  className={`mb-2 mr-2 rounded-lg p-2.5 w-44 text-white ${stringifySelectedDatetimeList?.includes(JSON.stringify(item)) ? 'bg-light-main' : 'bg-gray-300 text-gray-100'
+                  className={`mb-2 mr-2 rounded-lg p-2.5 w-44 text-white ${stringifySelectedDatetimeList?.includes(JSON.stringify(item)) ? 'bg-light-main' : 'bg-light-disabled text-gray-100'
                     }`}
                 >
                   <span className=" mr-2">{JSON.stringify(item.date).slice(1, 11)}</span>
