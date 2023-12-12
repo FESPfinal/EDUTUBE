@@ -136,9 +136,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
                   />
                 </>
               ) : (
-                <>
-                  <PurchaseButton content="예약하기" size="medium" onClick={() => router.push(`/coffeechat/info/${_id}/reserve`)} />
-                </>
+                <PurchaseButton content={coffeechatDetailData?.options.length === 0 ? "예약 불가" : "예약하기"} size="medium" onClick={() => router.push(`/coffeechat/info/${_id}/reserve`)} disabled={coffeechatDetailData?.options.length === 0} />
               )}
             </div>
           </div>

@@ -30,7 +30,7 @@ const Button = ({
   let sizeClass = sizes[size];
   return (
     <button
-      className={`font-medium ${disabled == true ? `bg-light-disabled` : currentTheme === 'light' ? color : darkColor
+      className={`font-medium ${disabled == true ? `bg-light-disabled hover:bg-light-disabled` : currentTheme === 'light' ? color : darkColor
         } ${textColor} ${sizeClass} ${hoverColor}`}
       type="button"
       onClick={onClick}
