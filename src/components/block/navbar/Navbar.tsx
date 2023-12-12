@@ -1,17 +1,18 @@
 'use client';
 
-import Cookies from 'js-cookie';
+import useUserInfo from '@/stores/userInfo';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import NavLogin from './NavLogin';
 import NavLogout from './NavLogout';
 import MainLogoWhite from '/public/images/main-logo-white.svg';
-import { useEffect, useState } from 'react';
-import useUserInfo from '@/stores/userInfo';
 
 const Navbar = () => {
-  const [isClient, setIsClient] = useState(false);
   const { userInfo } = useUserInfo(store => store);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
@@ -22,8 +23,8 @@ const Navbar = () => {
 
   return (
     isShow && (
-      <>
-        <nav className="flex items-center justify-between flex-wrap bg-light-main p-6">
+      <div>
+        <nav className="z-50 fixed w-full flex items-center justify-between flex-wrap bg-light-main p-6">
           <div className="flex items-center flex-shrink-0 text-white mr-6">
             <div className="font-semibold text-xl tracking-tight">
               <Link href="/">
@@ -35,7 +36,12 @@ const Navbar = () => {
             <div className="font-semibold text-xl tracking-tight">
               {isClient ? (
                 !!userInfo._id ? (
-                  <NavLogout name={userInfo?.name} />
+                  <div className="flex gap-3 items-center">
+                    <Link href={'/mypage/my-coffeechat'}>
+                      <FontAwesomeIcon className="text-2xl" icon={faCartShopping} />
+                    </Link>
+                    <NavLogout name={userInfo?.name} />
+                  </div>
                 ) : (
                   <NavLogin />
                 )
@@ -45,7 +51,7 @@ const Navbar = () => {
             </div>
           </div>
         </nav>
-      </>
+      </div>
     )
   );
 };

@@ -1,9 +1,9 @@
 'use client';
 
-import Link from 'next/link';
-import Cookies from 'js-cookie';
-import { useRouter } from 'next/navigation';
 import useUserInfo from '@/stores/userInfo';
+import Cookies from 'js-cookie';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const NavLogoutModal = () => {
   const { deleteUserInfo } = useUserInfo(store => store);

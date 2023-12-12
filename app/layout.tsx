@@ -17,7 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ReactQueryClient>
             <Navbar />
           </ReactQueryClient>
-          <div className="md:mx-8 lg:mx-16">
+          <div className="md:mx-8 lg:mx-16 pt-[83px]">
             <Provider>
               <ReactQueryClient>{children}</ReactQueryClient>
             </Provider>
