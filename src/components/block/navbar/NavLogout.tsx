@@ -2,12 +2,8 @@
 
 import { useState } from 'react';
 import NavLogoutModal from './NavLogoutModal';
-// import useSelectMemberInfo from '@/queries/member/useSelectMemberInfo';
-import Cookies from 'js-cookie';
 
-const NavLogout = () => {
-  // const { data } = useSelectMemberInfo('name');
-  const name = Cookies.get('user_name');
+const NavLogout = ({ name }: { name: string }) => {
   const [isShow, setIsShow] = useState(false);
 
   return (
