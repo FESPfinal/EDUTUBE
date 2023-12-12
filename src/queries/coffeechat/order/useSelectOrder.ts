@@ -2,9 +2,28 @@
 import useEdutubeAxios from '@/helper/utils/useEdutubeAxios';
 import { useQuery } from '@tanstack/react-query';
 
+type Extra = {
+  intro: string;
+  place: string;
+  online: string;
+  offline: string;
+  datetime: {
+    date: string;
+    time: string;
+  };
+  author: string;
+  type: string;
+  jobCategory: string[];
+  regionCategory: string;
+  productType: string;
+  depth: number;
+  parent: number;
+};
+
 export type Product = {
   _id: number;
   seller_id: number;
+  extra: Extra;
   state: string;
   name: string;
   image: string;
