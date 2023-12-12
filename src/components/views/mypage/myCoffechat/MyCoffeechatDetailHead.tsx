@@ -4,12 +4,8 @@ import { formatDate } from '@/helper/utils/datetime';
 import useSelectCoffeechatInfo from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
 
-const MyCoffeechatDetailHead = () => {
-  const params = useParams();
-  const _id = params._id as string;
-
+const MyCoffeechatDetailHead = ({ _id }: { _id: string }) => {
   const { data: coffeechatInfoData } = useSelectCoffeechatInfo(_id);
 
   const datetimeList = coffeechatInfoData?.extra.datetimeList;
@@ -45,8 +41,11 @@ const MyCoffeechatDetailHead = () => {
           진행기간 | {firstDate} ~ {lastDate}
         </p>
         <p className="text-m leading-6 text-gray-900">
-          예약 인원 | <span className="text-light-main">{coffeechatInfoData?.buyQuantity}</span>/
-          {coffeechatInfoData?.quantity}
+          예약 인원 |{' '}
+          <span className="text-light-main">
+            {(coffeechatInfoData?.quantity || 0) - (coffeechatInfoData?.options?.length || 0)}
+          </span>
+          /{coffeechatInfoData?.quantity}
         </p>
         <p className="text-m  leading-6 text-gray-900">{coffeechatInfoData?.extra.place}</p>
       </section>

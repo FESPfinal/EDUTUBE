@@ -1,6 +1,9 @@
 'use client';
 
 import FilterButtons from '@/components/atom/FilterButtons';
+import { formatDate, formatTime } from '@/helper/utils/datetime';
+import useSelectCoffeechatInfo from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
+import useSelectSellerOrders, { Order } from '@/queries/mypage/myCoffeechat/useSelectSellerOrders';
 import { useEffect, useState } from 'react';
 
 const MY_COFFECHAT_OPTIONS = {
@@ -14,53 +17,87 @@ const mypageCoffecatDetailFilter = [
   MY_COFFECHAT_OPTIONS.UNRESERVED,
 ];
 
-const mockup = [
-  {
-    _id: 1,
-    date: '2023/10/22',
-    time: '10:00',
-    name: '미노이',
-    qna: 'contentscontentscontentscontentscontentscontent',
-    point: 1000,
-    isSoldOut: true,
-  },
-  {
-    _id: 2,
-    date: '2023/11/02',
-    time: '11:00',
-    name: '',
-    qna: '',
-    point: 1000,
-    isSoldOut: false,
-  },
-  {
-    _id: 3,
-    date: '2023/11/09',
-    time: '10:00',
-    name: '지락',
-    qna: 'contentscontentscontentscontentscontentscontents',
-    point: 1000,
-    isSoldOut: true,
-  },
-];
+type ReservedState = {
+  isReserved: false;
+  itemInfo: { date: ''; time: ''; userName: ''; price: '' };
+};
 
-const MyCoffeechatDetailBody = () => {
+type OrderFormat = {
+  _id: number;
+  quantity: number;
+  seller_id: number;
+  name: string;
+  image: string;
+  price: number;
+  extra: {
+    intro: string;
+    place: string;
+    online: string;
+    offline: string;
+    datetime: {
+      date: string;
+      time: string;
+    };
+    author: string;
+    type: string;
+    jobCategory: string[];
+    regionCategory: string;
+    productType: string;
+    depth: number;
+    parent: number;
+  };
+};
+
+const MyCoffeechatDetailBody = ({ _id }: { _id: string }) => {
+  const { data: parentsOrderData } = useSelectCoffeechatInfo(_id);
+  const { data: sellerOrdersData } = useSelectSellerOrders();
+  //parents option list / datetime list
+  //options에 있는 값은 아직 예약이 안된 내역, datetime list는 애초에 등록한 시간 -> extra에 datetime이랑 비교를 해야하나?
+  const [reservedStateList, setReservedStateList] = useState<ReservedState[]>();
+  //parents _id인 값을 filter해서 저장
+  const [filteredOrders, setFilteredOrders] = useState<Order[]>();
   const [selectedOption, setSelectedOption] = useState(MY_COFFECHAT_OPTIONS.TOTAL);
-  const [data, setData] = useState(mockup);
 
   useEffect(() => {
-    if (selectedOption === MY_COFFECHAT_OPTIONS.TOTAL) {
-      return setData(mockup);
-    }
-    if (selectedOption === MY_COFFECHAT_OPTIONS.RESERVED) {
-      const filteredData = mockup.filter(item => item.isSoldOut);
-      return setData(filteredData);
-    }
-    if (selectedOption === MY_COFFECHAT_OPTIONS.UNRESERVED) {
-      const filteredData = mockup.filter(item => !item.isSoldOut);
-      return setData(filteredData);
-    }
-  }, [selectedOption]);
+    const childOfParents = sellerOrdersData?.filter(
+      orders => orders.products.filter(order => order.extra?.parent === parseInt(_id)).length > 0,
+    );
+    setFilteredOrders(childOfParents);
+  }, [_id, sellerOrdersData]);
+
+  useEffect(() => {
+    //options는 예약 가능한 목록
+    //orders는 예약 된 목록(불가능한 목록)
+    const options = parentsOrderData?.options;
+    const optionsFormatList =
+      options?.map(option => ({
+        isReserved: false,
+        itemInfo: {
+          date: option.extra.datetime.date,
+          time: option.extra.datetime.time,
+          userName: '',
+          price: option.price,
+        },
+      })) || [];
+
+    let ordersFormatList = new Array();
+    filteredOrders?.map(order =>
+      order.products.forEach(item => {
+        ordersFormatList.push({ item: item, userName: order.address.name });
+      }),
+    );
+    ordersFormatList = ordersFormatList.map((order: { item: OrderFormat; userName: string }) => ({
+      isReserved: true,
+      itemInfo: {
+        date: order.item.extra.datetime.date,
+        time: order.item.extra.datetime.time,
+        userName: order.userName,
+        price: order.item.price,
+      },
+    }));
+
+    setReservedStateList([...optionsFormatList, ...ordersFormatList]);
+  }, [filteredOrders, parentsOrderData]);
 
   return (
     <>
@@ -79,55 +116,56 @@ const MyCoffeechatDetailBody = () => {
                   <tr>
                     <th
                       scope="col"
-                      className={`w-[10%] px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider`}
+                      className={`px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider`}
                     >
                       예약일
                     </th>
                     <th
                       scope="col"
-                      className="w-[10%] px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
+                      className=" px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
                     >
                       예약 시간
                     </th>
                     <th
                       scope="col"
-                      className="w-[10%] px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
+                      className=" px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
                     >
                       예약자 명
                     </th>
-                    <th
+                    {/* <th
                       scope="col"
                       className="w-60 px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
                     >
                       Q&A
-                    </th>
+                    </th> */}
                     <th
                       scope="col"
-                      className="w-[10%] px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
+                      className=" px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
                     >
                       POINT
                     </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200 w-full">
-                  {data.map(item => (
-                    <tr key={item._id} className="w-full">
+                  {reservedStateList?.map((item, i) => (
+                    <tr key={i} className="w-full">
                       <td
                         className={`${
-                          item.isSoldOut ? 'text-light-main' : ''
+                          item.isReserved ? 'text-light-main' : ''
                         } px-4 py-4 whitespace-nowrap`}
                       >
-                        {item.date}
+                        {formatDate(item.itemInfo.date)}
                       </td>
-                      <td className="px-4 py-4 whitespace-nowrap">{item.time}</td>
-                      <td className="px-4 py-4 whitespace-nowrap">{item.name}</td>
-                      <td className="px-4 py-4 w-60 truncate">
-                        {/* 모달로 상세 내용 보여주기 */}
+                      <td className="px-4 py-4 whitespace-nowrap">
+                        {formatTime(item.itemInfo.time)}
+                      </td>
+                      <td className="px-4 py-4 whitespace-nowrap">{item.itemInfo.userName}</td>
+                      {/* <td className="px-4 py-4 w-60 truncate">
                         <p className="xs:max-w-[5%] sm:max-w-[10%] md:max-w-[30%] lg:max-w-[60%] truncate">
                           {item.qna}
                         </p>
-                      </td>
-                      <td className="px-4 py-4 whitespace-nowrap">{item.point}</td>
+                      </td> */}
+                      <td className="px-4 py-4 whitespace-nowrap">{item.itemInfo.price}</td>
                     </tr>
                   ))}
                 </tbody>
