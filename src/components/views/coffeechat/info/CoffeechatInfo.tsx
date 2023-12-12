@@ -5,14 +5,14 @@ import useSelectCoffeechatInfo from '@/queries/coffeechat/info/useSelectCoffeech
 import useUserInfo from '@/stores/userInfo';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 const CoffeechatInfo = ({ _id }: { _id: string }) => {
+  const router = useRouter();
   const { data: coffeechatDetailData } = useSelectCoffeechatInfo(_id);
   const { userInfo } = useUserInfo(store => store);
-
   const [selectedDatetimeList, setSelectedDateTimeList] = useState([]);
-
   const stringifySelectedDatetimeList = selectedDatetimeList?.map(item => JSON.stringify(item))
 
   useEffect(() => { setSelectedDateTimeList(coffeechatDetailData?.options?.map((item) => (item.extra.datetime))) }, [coffeechatDetailData])
@@ -91,15 +91,21 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
             <h3 className="text-lg font-bold mb-2">내용</h3>
             <p className="text-md mb-2" dangerouslySetInnerHTML={{ __html: coffeechatDetailData?.content }} />
           </div>
-          <div id="schedule" className="mb-6">
+          <div id="schedule" className="mb-6 ">
             <h3 className="text-lg font-bold mb-4">일정</h3>
-            {coffeechatDetailData?.extra.datetimeList.map((item: { date: Date, time: Date }, index: number) => (
-              <span key={index} className={`mb-2 mr-2 border-2 border-solid border-light-main rounded-lg p-2 ${stringifySelectedDatetimeList.includes(JSON.stringify(item)) ? 'bg-red-500' : 'bg-gray-500'
-                }`}>
-                <span className="text-gray-700 mr-2">{JSON.stringify(item.date).slice(1, 11)}</span>
-                <span className="text-gray-400">{JSON.stringify(item.time).slice(12, 17)}</span>
-              </span>
-            ))}
+            <div className="flex flex-wrap">
+              {coffeechatDetailData?.extra.datetimeList.map((item: { date: Date, time: Date }, index: number) => (
+                <p
+                  key={index}
+                  className={`mb-2 mr-2 rounded-lg p-2.5 w-44 text-white ${stringifySelectedDatetimeList?.includes(JSON.stringify(item)) ? 'bg-light-main' : 'bg-gray-300 text-gray-100'
+                    }`}
+                >
+                  <span className=" mr-2">{JSON.stringify(item.date).slice(1, 11)}</span>
+                  <span className=" mr-2">|</span>
+                  <span >{JSON.stringify(item.time).slice(12, 17)}</span>
+                </p>
+              ))}
+            </div>
           </div>
           <div id="place" className="mb-6">
             <h3 className="text-lg font-bold mb-2">장소</h3>
@@ -131,10 +137,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
                 </>
               ) : (
                 <>
-                  {/* <PurchaseButton content="예약하기" size="medium" onClick={() => orderCoffeechat(parseInt(_id))} /> */}
-                  <Link href={`/coffeechat/info/${_id}/reserve`}>
-                    <p>클릭</p>
-                  </Link>
+                  <PurchaseButton content="예약하기" size="medium" onClick={() => router.push(`/coffeechat/info/${_id}/reserve`)} />
                 </>
               )}
             </div>
