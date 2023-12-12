@@ -11,7 +11,7 @@ import { useState } from 'react';
 const CoffeechatModal = () => {
   const router = useRouter();
   const params = useParams();
-  const _id = params?._id;
+  const _id = params?._id as string;
   const { data: coffeechatDetailData, refetch: coffeechatRefetch } = useSelectCoffeechatInfo(_id);
   const { mutate: mutateOrderCoffeechat } = useUpdateOrder();
   const [selectedDatetimeId, setSelectedDatetimeId] = useState<number>();
@@ -75,7 +75,7 @@ const CoffeechatModal = () => {
             </p>
           ))}
         </div>
-        <Button content="예약하기" size="medium" onClick={() => reserveCoffeechat(selectedDatetimeId)} />
+        <Button content="예약하기" size="medium" onClick={() => selectedDatetimeId && reserveCoffeechat(selectedDatetimeId)} />
       </div>
     </>
   )
