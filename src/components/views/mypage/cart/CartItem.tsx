@@ -56,7 +56,7 @@ const CartItem = ({ data, managingCartItemList, isAllProductChecked }: Props) =>
         />
       </div>
       <Link
-        href={`/coffeechat/info/${data?.product.extra.parent}`}
+        href={`/coffeechat/info/${data?.product?.extra?.parent}`}
         className="flex justify-between w-full"
       >
         <div className="flex min-w-0 gap-x-4 ">

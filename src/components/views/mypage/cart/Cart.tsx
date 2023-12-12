@@ -40,6 +40,13 @@ const Cart = () => {
     }
   }, [sumSelectedItemPoint, userInfo.extra.point]);
 
+  //api 통신 후 모든 state reset
+  const resetData = () => {
+    setSelectedItemList([]);
+    setSumSelectedItemPoint(0);
+    cartRefetch();
+  };
+
   /** 상품 체크박스 선택 시 구매 list로 선택/해제하기
    * - CartItem의 checkbox가 선택되면 setSelectedItemList에 추가
    * - CartItem의 checkbox가 취소되면 setSelectedItemList에 제거
@@ -92,13 +99,14 @@ const Cart = () => {
         });
         cartIdList.map(cartId => cartId && deleteCartItemMutate(cartId));
         updateUserInfoMutate({ extra: { point: userInfo.extra.point - sumSelectedItemPoint } });
-        cartRefetch();
+        resetData();
       },
       onError: error => {
         //@ts-ignore
         const errorCode = error.response.status;
         //@ts-ignore
         const errMsg = error.response.data.message;
+
         alert(errMsg);
 
         if (errorCode == '422') {
@@ -108,8 +116,8 @@ const Cart = () => {
             (item: CartItem) => item.product_id === productItemNum,
           )[0]._id;
           cartItemNum && deleteCartItemMutate(cartItemNum);
-          cartRefetch();
         }
+        resetData();
       },
     });
   };
