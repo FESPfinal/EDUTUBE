@@ -10,3 +10,8 @@ export const formatDate = (date: string) => {
   const day = String(d.getDate()).padStart(2, '0');
   return `${year}/${month}/${day}`;
 };
+
+export const formatTime = (date: string) => {
+  const t = new Date(date);
+  return t.toLocaleTimeString();
+};
