@@ -10,7 +10,14 @@ export type UserNotTokenItem = {
   type: string;
   createdAt: string;
   updatedAt: string;
-  extra: {};
+  extra: {
+    profileImage: { name: string; path: string };
+    major: string;
+    nickname: string;
+    contactEmail: string;
+    intro?: string;
+    sns?: string;
+  };
 };
 
 export type UserInfo = {
@@ -28,7 +35,12 @@ const defaultState: UserNotTokenItem = {
   type: '',
   createdAt: '',
   updatedAt: '',
-  extra: {},
+  extra: {
+    profileImage: { name: '', path: '' },
+    major: '',
+    nickname: '',
+    contactEmail: '',
+  },
 };
 
 /**
