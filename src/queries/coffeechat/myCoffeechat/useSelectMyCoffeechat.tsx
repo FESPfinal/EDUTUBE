@@ -14,6 +14,10 @@ type Extra = {
     date: string;
     time: string;
   };
+  datetimeList: {
+    date: string;
+    time: string;
+  }[];
   author: string;
   type: string;
   jobCategory: string[];
