@@ -12,7 +12,7 @@ const CoffeechatModal = () => {
   const router = useRouter();
   const params = useParams();
   const _id = params?._id;
-  const { data: coffeechatDetailData } = useSelectCoffeechatInfo(_id);
+  const { data: coffeechatDetailData, refetch: coffeechatRefetch } = useSelectCoffeechatInfo(_id);
   const { mutate: mutateOrderCoffeechat } = useUpdateOrder();
   const [selectedDatetimeId, setSelectedDatetimeId] = useState<number>();
 
@@ -45,6 +45,7 @@ const CoffeechatModal = () => {
       onSuccess: () => {
         alert(`주문이 완료되었습니다.`);
         router.back();
+        coffeechatRefetch();
       },
       onError: error => {
         if (error.message == 'authToken is not defined') {
@@ -61,8 +62,8 @@ const CoffeechatModal = () => {
     <>
       <div className="bg-white p-4 rounded-lg ">
         <div className="flex justify-between items-center mb-6">
-          <h3 className="text-lg font-bold  border-2">일정 선택하기</h3>
-          <div onClick={() => router.back()} className="cursor-pointer text-light-main border-2"><FontAwesomeIcon icon={faCircleXmark} size="xl" /></div>
+          <h3 className="text-lg font-bold ">일정 선택하기</h3>
+          <div onClick={() => router.back()} className="cursor-pointer text-light-main"><FontAwesomeIcon icon={faCircleXmark} size="xl" /></div>
         </div>
         {/* TODO: item type 설정하기 */}
         <div className="flex gap-2 flex-wrap mb-6 justify-center">
