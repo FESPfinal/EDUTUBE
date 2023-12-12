@@ -55,7 +55,7 @@ const MyCoffeechatDetailHead = ({ _id }: { _id: string }) => {
       </section>
       <section className="flex-none">
         <div className="shrink-0 w-fit h-fit px-3 py-3 text-white bg-light-main rounded-md hover:bg-dark-main focus:outline-none">
-          <Link href={'/coffeechat/regist'}>수정</Link>
+          <Link href={'/coffeechat/update'}>수정</Link>
         </div>
       </section>
     </div>
