@@ -90,36 +90,39 @@ const Cart = () => {
       products: selectedItemList,
       address: { name: '', value: '' },
     };
+    if (isPurchased) {
+      orderMutate(requestData, {
+        onSuccess: () => {
+          const productsIdList = selectedItemList.map(item => item._id);
+          const cartIdList = productsIdList.map(product_id => {
+            return cartData?.filter(item => item.product_id === product_id)[0]._id;
+          });
+          cartIdList.map(cartId => cartId && deleteCartItemMutate(cartId));
+          updateUserInfoMutate({ extra: { point: userInfo.extra.point - sumSelectedItemPoint } });
+          resetData();
+        },
+        onError: error => {
+          //@ts-ignore
+          const errorCode = error.response.status;
+          //@ts-ignore
+          const errMsg = error.response.data.message;
 
-    orderMutate(requestData, {
-      onSuccess: () => {
-        const productsIdList = selectedItemList.map(item => item._id);
-        const cartIdList = productsIdList.map(product_id => {
-          return cartData?.filter(item => item.product_id === product_id)[0]._id;
-        });
-        cartIdList.map(cartId => cartId && deleteCartItemMutate(cartId));
-        updateUserInfoMutate({ extra: { point: userInfo.extra.point - sumSelectedItemPoint } });
-        resetData();
-      },
-      onError: error => {
-        //@ts-ignore
-        const errorCode = error.response.status;
-        //@ts-ignore
-        const errMsg = error.response.data.message;
+          alert(errMsg);
 
-        alert(errMsg);
-
-        if (errorCode == '422') {
-          //구매 가능한 수량이 없는 물건은 cart에서 삭제
-          const productItemNum = parseInt(errMsg.slice(1, 3));
-          const cartItemNum = cartData?.filter(
-            (item: CartItem) => item.product_id === productItemNum,
-          )[0]._id;
-          cartItemNum && deleteCartItemMutate(cartItemNum);
-        }
-        resetData();
-      },
-    });
+          if (errorCode == '422') {
+            //구매 가능한 수량이 없는 물건은 cart에서 삭제
+            const productItemNum = parseInt(errMsg.slice(1, 3));
+            const cartItemNum = cartData?.filter(
+              (item: CartItem) => item.product_id === productItemNum,
+            )[0]._id;
+            cartItemNum && deleteCartItemMutate(cartItemNum);
+          }
+          resetData();
+        },
+      });
+    } else {
+      alert('구매 가능한 포인트가 없습니다.');
+    }
   };
 
   return (
