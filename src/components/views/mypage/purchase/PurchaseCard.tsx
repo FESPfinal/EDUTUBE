@@ -4,12 +4,17 @@ import { Order } from '@/queries/coffeechat/order/useSelectOrder';
 import Image from 'next/image';
 import Link from 'next/link';
 
+const PLACE_LIST = {
+  ONLINE: 'online',
+  OFFLINE: 'offline',
+};
+
 const PurchaseCard = ({ data }: { data: Order }) => {
   return (
     <li className="bg-white p-4 rounded-md shadow-md flex flex-col gap-1">
-      <Link href={`/coffeechat/info/${data.products[0]._id}`}>
+      <Link href={`/coffeechat/info/${data.products[0].extra.parent}`}>
         <Image
-          src={data?.products[0]?.image}
+          src={`https://localhost:443${data?.products[0]?.image}`}
           alt={data?.products[0]?.name}
           className="w-full h-32 object-cover mb-4 rounded-md"
           width={80}
@@ -17,23 +22,30 @@ const PurchaseCard = ({ data }: { data: Order }) => {
           unoptimized={true}
         />
       </Link>
-      <section>
+      <section className="flex gap-1">
+        <div className="text-xs font-semibold border border-solid border-light-main text-light-main w-fit px-2 py-1 rounded-xl">
+          {data.products[0].extra.place}
+        </div>
         <div className="text-xs font-semibold bg-light-main text-white w-fit px-2 py-1 rounded-xl">
-          온라인
+          {data.products[0].extra.jobCategory}
         </div>
       </section>
       <section>
         <p className="text-lg font-bold truncate">{data?.products[0].name}</p>
-        <p className="text-sm leading-6 text-gray-900 truncate">
-          introintrointrointrointrointrointrointro
-        </p>
-        <p className="text-sm leading-6 text-gray-900">강의자</p>
-        <p className="text-sm leading-6 text-gray-900">일시 | 2023.10.25</p>
+        <p className="text-sm leading-6 text-gray-900 truncate">{data.products[0].extra.intro}</p>
+        <p className="text-sm leading-6 text-gray-900">진행자: {data.products[0].extra.author}</p>
         <p className="text-sm leading-6 text-gray-900">
-          장소(오프라인 시) | 2023.10.25 <br /> 줌링크(온라인 시) | fsadgshggfsa
+          일시 | {new Date(data.products[0].extra?.datetime?.date).toLocaleDateString()} /{' '}
+          {new Date(data.products[0].extra?.datetime?.time).toLocaleTimeString()}
         </p>
-        {/* 클릭 시 모달로 상세내용 보여줌 */}
-        <p className="text-sm leading-6 text-gray-900">내가 작성한 Q&A</p>
+        {PLACE_LIST.OFFLINE === data.products[0].extra.place && (
+          <p className="text-sm leading-6 text-gray-900">장소 | {data.products[0].extra.offline}</p>
+        )}
+        {PLACE_LIST.ONLINE === data.products[0].extra.place && (
+          <p className="text-sm leading-6 text-gray-900">
+            채팅링크(온라인 시) | {data.products[0].extra.online}
+          </p>
+        )}
       </section>
     </li>
   );
