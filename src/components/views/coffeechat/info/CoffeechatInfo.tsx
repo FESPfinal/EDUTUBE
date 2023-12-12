@@ -13,6 +13,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
   const { data: coffeechatDetailData } = useSelectCoffeechatInfo(_id);
   const { userInfo } = useUserInfo(store => store);
   const [selectedDatetimeList, setSelectedDateTimeList] = useState([]);
+  const [isReservationEnabled, setIsReservationEnabled] = useState(true);
   const stringifySelectedDatetimeList = selectedDatetimeList?.map(item => JSON.stringify(item))
 
   useEffect(() => { setSelectedDateTimeList(coffeechatDetailData?.options?.map((item) => (item.extra.datetime))) }, [coffeechatDetailData])
@@ -36,6 +37,10 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
       });
     };
   }, []);
+
+  useEffect(() => {
+    setIsReservationEnabled(coffeechatDetailData?.options.length !== 0);
+  }, [coffeechatDetailData]);
 
   return (
     <div className="max-w-4xl mx-auto p-4">
@@ -136,7 +141,14 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
                   />
                 </>
               ) : (
-                <PurchaseButton content={coffeechatDetailData?.options.length === 0 ? "예약 불가" : "예약하기"} size="medium" onClick={() => router.push(`/coffeechat/info/${_id}/reserve`)} disabled={coffeechatDetailData?.options.length === 0} />
+                <PurchaseButton
+                  content={isReservationEnabled ? "예약하기" : "예약 불가"}
+                  size="medium"
+                  onClick={() => {
+                    router.push(`/coffeechat/info/${_id}/reserve`);
+                  }}
+                  disabled={!isReservationEnabled}
+                />
               )}
             </div>
           </div>
