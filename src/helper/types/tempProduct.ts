@@ -7,7 +7,7 @@ export type TempParentsProduct = {
   show: boolean;
   active: boolean;
   quantity: number;
-  buyQuantity?: number;
+  buyQuantity: number;
   extra: {
     intro: string;
     place: string;
@@ -23,6 +23,7 @@ export type TempParentsProduct = {
     jobCategory: string[];
     regionCategory?: string;
     productType: 'parents';
+    depth: number;
   };
 };
 
@@ -35,7 +36,7 @@ export type TempChildProduct = {
   show: boolean;
   active: boolean;
   quantity: number;
-  buyQuantity?: number;
+  buyQuantity: number;
   extra: {
     intro: string;
     place: string;
@@ -46,9 +47,11 @@ export type TempChildProduct = {
       time: Date;
     };
     author: string;
+    type: 'coffeechat' | 'video';
     jobCategory: string[];
     regionCategory?: string;
-    parentsId: number;
     productType: 'child';
+    depth: number;
+    parent: number;
   };
 };

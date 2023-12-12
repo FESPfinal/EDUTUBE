@@ -7,13 +7,8 @@ import Image from 'next/image';
 const CoffeechatLists = () => {
   const {
     data: coffeechatListData,
-    loading: coffeechatListLoading,
-    isError: coffeechatListIsError,
   } = useSelectCoffeechatList();
-  if (coffeechatListLoading) return <></>;
-  if (coffeechatListIsError) {
-    return <div>Error: {coffeechatListIsError.message}</div>;
-  }
+
   return (
     <>
       <div className="h-60 bg-black text-white">

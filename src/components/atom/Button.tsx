@@ -12,7 +12,7 @@ interface Props {
 }
 const sizes = {
   small: ' px-2 py-2 rounded-lg text-base w-content',
-  medium: 'px-4 py-4 rounded-lg text-base min-h-12 w-full',
+  medium: 'px-4 py-3 rounded-lg text-base min-h-12 w-full',
   large: 'px-5 py-5 rounded-lg text-lg min-h-14 min-w-24 w-full',
 };
 const Button = ({
@@ -30,9 +30,8 @@ const Button = ({
   let sizeClass = sizes[size];
   return (
     <button
-      className={`font-medium ${
-        disabled == true ? `bg-light-disabled` : currentTheme === 'light' ? color : darkColor
-      } ${textColor} ${sizeClass} ${hoverColor}`}
+      className={`font-medium ${disabled == true ? `bg-light-disabled` : currentTheme === 'light' ? color : darkColor
+        } ${textColor} ${sizeClass} ${hoverColor}`}
       type="button"
       onClick={onClick}
       disabled={disabled}

@@ -107,17 +107,20 @@ const CoffeechatRegist = () => {
       show: true,
       active: true,
       quantity: 1,
+      buyQuantity: 0,
       extra: {
         intro: formSubmitData.intro,
         place: placeType,
         online: formSubmitData.online || '',
         offline: formSubmitData.offline || '',
         datetime: date,
-        author: userInfo.name,
+        author: userInfo.extra.nickname,
+        type: 'coffeechat',
         jobCategory: selectedJobCategory,
         regionCategory: selectedRegionCategory,
-        parentsId: data._id,
         productType: 'child',
+        depth: 2,
+        parent: data._id,
       },
     };
     mutateCreateProduct(requestBody, {
@@ -147,18 +150,20 @@ const CoffeechatRegist = () => {
       show: true,
       active: true,
       quantity: datetimeList.length,
+      buyQuantity: 0,
       extra: {
         intro: formSubmitData.intro,
         place: placeType,
         online: formSubmitData.onlinePlace || '',
         offline: formSubmitData.offlinePlace || '',
         datetimeList: datetimeList,
-        author: userInfo.name,
+        author: userInfo.extra.nickname,
         authorImage: userInfo.extra.profileImage.path,
         type: 'coffeechat',
         jobCategory: selectedJobCategory,
         regionCategory: selectedRegionCategory,
         productType: 'parents',
+        depth: 1
       },
     };
     mutateCreateProduct(requestBody, {
