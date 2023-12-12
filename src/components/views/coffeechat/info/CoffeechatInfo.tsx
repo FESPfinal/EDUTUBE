@@ -5,11 +5,17 @@ import useSelectCoffeechatInfo from '@/queries/coffeechat/info/useSelectCoffeech
 import useUserInfo from '@/stores/userInfo';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const CoffeechatInfo = ({ _id }: { _id: string }) => {
   const { data: coffeechatDetailData } = useSelectCoffeechatInfo(_id);
   const { userInfo } = useUserInfo(store => store);
+
+  const [selectedDatetimeList, setSelectedDateTimeList] = useState([]);
+
+  const stringifySelectedDatetimeList = selectedDatetimeList?.map(item => JSON.stringify(item))
+
+  useEffect(() => { setSelectedDateTimeList(coffeechatDetailData?.options?.map((item) => (item.extra.datetime))) }, [coffeechatDetailData])
 
   useEffect(() => {
     const handleScroll = (e: Event) => {
@@ -88,7 +94,8 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
           <div id="schedule" className="mb-6">
             <h3 className="text-lg font-bold mb-4">일정</h3>
             {coffeechatDetailData?.extra.datetimeList.map((item: { date: Date, time: Date }, index: number) => (
-              <span key={index} className={`mb-2 mr-2  border-2 border-solid border-light-main rounded-lg p-2`}>
+              <span key={index} className={`mb-2 mr-2 border-2 border-solid border-light-main rounded-lg p-2 ${stringifySelectedDatetimeList.includes(JSON.stringify(item)) ? 'bg-red-500' : 'bg-gray-500'
+                }`}>
                 <span className="text-gray-700 mr-2">{JSON.stringify(item.date).slice(1, 11)}</span>
                 <span className="text-gray-400">{JSON.stringify(item.time).slice(12, 17)}</span>
               </span>
