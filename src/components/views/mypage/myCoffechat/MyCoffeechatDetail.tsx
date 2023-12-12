@@ -1,8 +1,8 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import MyCoffeechatDetailBody from './MyCoffeechatDetailBody';
 import MyCoffeechatDetailHead from './MyCoffeechatDetailHead';
+import MyCoffeechatDetailBody from './MyCoffeechatDetailBody';
 
 const MyCoffeechatDetail = () => {
   const params = useParams();

@@ -1,57 +1,21 @@
 'use client';
-
 import FilterButtons from '@/components/atom/FilterButtons';
 import { formatDate, formatTime } from '@/helper/utils/datetime';
 import useSelectCoffeechatInfo from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
 import useSelectSellerOrders, { Order } from '@/queries/mypage/myCoffeechat/useSelectSellerOrders';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import {
+  ReservedState,
+  MY_COFFECHAT_OPTIONS,
+  OrderFormat,
+  mypageCoffecatDetailFilter,
+} from './MyCoffeechatDetailBody';
 
-const MY_COFFECHAT_OPTIONS = {
-  TOTAL: '전체',
-  RESERVED: '예약된 내역',
-  UNRESERVED: '예약안된 내역',
-};
-const mypageCoffecatDetailFilter = [
-  MY_COFFECHAT_OPTIONS.TOTAL,
-  MY_COFFECHAT_OPTIONS.RESERVED,
-  MY_COFFECHAT_OPTIONS.UNRESERVED,
-];
-
-type ReservedState = {
-  isReserved: false;
-  itemInfo: { date: ''; time: ''; userName: ''; price: '' };
-};
-
-type OrderFormat = {
-  _id: number;
-  quantity: number;
-  seller_id: number;
-  name: string;
-  image: string;
-  price: number;
-  extra: {
-    intro: string;
-    place: string;
-    online: string;
-    offline: string;
-    datetime: {
-      date: string;
-      time: string;
-    };
-    author: string;
-    type: string;
-    jobCategory: string[];
-    regionCategory: string;
-    productType: string;
-    depth: number;
-    parent: number;
-  };
-};
-
-const MyCoffeechatDetailBody = ({ _id }: { _id: string }) => {
+export const MyCoffeechatDetailBody = ({ _id }: { _id: string }) => {
   const { data: parentsOrderData } = useSelectCoffeechatInfo(_id);
   const { data: sellerOrdersData } = useSelectSellerOrders();
-  //parents option list + order list
+  //parents option list / datetime list
+  //options에 있는 값은 아직 예약이 안된 내역, datetime list는 애초에 등록한 시간 -> extra에 datetime이랑 비교를 해야하나?
   const [reservedStateList, setReservedStateList] = useState<ReservedState[]>();
   //parents _id인 값을 filter해서 저장
   const [filteredOrders, setFilteredOrders] = useState<Order[]>();
@@ -111,13 +75,13 @@ const MyCoffeechatDetailBody = ({ _id }: { _id: string }) => {
     if (selectedOption === MY_COFFECHAT_OPTIONS.UNRESERVED) {
       setShowOptionList(reservedStateList?.filter(data => !data.isReserved));
     }
-  }, [reservedStateList, selectedOption]);
+  }, []);
 
   return (
     <>
       <section className="flex justify-between w-full">
         <p className="text-sm leading-8">
-          전체 커피챗 수 <span className="text-light-main">{reservedStateList?.length}</span>
+          전체 커피챗 수 <span className="text-light-main">2</span>
         </p>
         <FilterButtons options={mypageCoffecatDetailFilter} setPropsOption={setSelectedOption} />
       </section>
@@ -130,31 +94,31 @@ const MyCoffeechatDetailBody = ({ _id }: { _id: string }) => {
                   <tr>
                     <th
                       scope="col"
-                      className={`w-[25%] px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider`}
+                      className={`px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider`}
                     >
                       예약일
                     </th>
                     <th
                       scope="col"
-                      className="w-[25%] px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
+                      className=" px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
                     >
                       예약 시간
                     </th>
                     <th
                       scope="col"
-                      className="w-[25%] px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
+                      className=" px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
                     >
                       예약자 명
                     </th>
                     {/* <th
-                      scope="col"
-                      className="w-60 px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
-                    >
-                      Q&A
-                    </th> */}
+              scope="col"
+              className="w-60 px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
+            >
+              Q&A
+            </th> */}
                     <th
                       scope="col"
-                      className="w-[10%] px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
+                      className=" px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
                     >
                       POINT
                     </th>
@@ -175,10 +139,10 @@ const MyCoffeechatDetailBody = ({ _id }: { _id: string }) => {
                       </td>
                       <td className="px-4 py-4 whitespace-nowrap">{item.itemInfo.userName}</td>
                       {/* <td className="px-4 py-4 w-60 truncate">
-                        <p className="xs:max-w-[5%] sm:max-w-[10%] md:max-w-[30%] lg:max-w-[60%] truncate">
-                          {item.qna}
-                        </p>
-                      </td> */}
+                      <p className="xs:max-w-[5%] sm:max-w-[10%] md:max-w-[30%] lg:max-w-[60%] truncate">
+                        {item.qna}
+                      </p>
+                    </td> */}
                       <td className="px-4 py-4 whitespace-nowrap">{item.itemInfo.price}</td>
                     </tr>
                   ))}
@@ -191,5 +155,3 @@ const MyCoffeechatDetailBody = ({ _id }: { _id: string }) => {
     </>
   );
 };
-
-export default MyCoffeechatDetailBody;
