@@ -1,14 +1,17 @@
 'use client';
 
-import Cookies from 'js-cookie';
+import useUserInfo from '@/stores/userInfo';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import NavLogin from './NavLogin';
 import NavLogout from './NavLogout';
 import MainLogoWhite from '/public/images/main-logo-white.svg';
-import { useEffect, useState } from 'react';
 
 const Navbar = () => {
+  const { userInfo } = useUserInfo(store => store);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -16,14 +19,12 @@ const Navbar = () => {
   }, []);
 
   const pathname = usePathname();
-  const token = Cookies.get('refreshToken');
-
   const isShow = pathname !== '/login' && pathname !== '/sign-up';
 
   return (
     isShow && (
-      <>
-        <nav className="flex items-center justify-between flex-wrap bg-light-main p-6">
+      <div>
+        <nav className="z-50 fixed w-full flex items-center justify-between flex-wrap bg-light-main p-6">
           <div className="flex items-center flex-shrink-0 text-white mr-6">
             <div className="font-semibold text-xl tracking-tight">
               <Link href="/">
@@ -33,11 +34,24 @@ const Navbar = () => {
           </div>
           <div className="flex items-center flex-shrink-0 text-white mr-6">
             <div className="font-semibold text-xl tracking-tight">
-              {isClient ? !!token ? <NavLogout /> : <NavLogin /> : <div>Loading...</div>}
+              {isClient ? (
+                !!userInfo._id ? (
+                  <div className="flex gap-3 items-center">
+                    <Link href={'/mypage/my-coffeechat'}>
+                      <FontAwesomeIcon className="text-2xl" icon={faCartShopping} />
+                    </Link>
+                    <NavLogout name={userInfo?.name} />
+                  </div>
+                ) : (
+                  <NavLogin />
+                )
+              ) : (
+                <div>Loading...</div>
+              )}
             </div>
           </div>
         </nav>
-      </>
+      </div>
     )
   );
 };
