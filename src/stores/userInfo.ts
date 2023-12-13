@@ -15,6 +15,7 @@ export type UserNotTokenItem = {
     major: string;
     nickname: string;
     contactEmail: string;
+    point: number;
     intro?: string;
     sns?: string;
   };
@@ -36,6 +37,7 @@ const defaultState: UserNotTokenItem = {
   createdAt: '',
   updatedAt: '',
   extra: {
+    point: 0,
     profileImage: { name: '', path: '' },
     major: '',
     nickname: '',

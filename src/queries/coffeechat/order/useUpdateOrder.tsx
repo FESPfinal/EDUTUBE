@@ -1,23 +1,17 @@
+import useEdutubeAxios from '@/helper/utils/useEdutubeAxios';
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
-import { IOrderDataType } from '../../../helper/types/order';
-import Cookies from 'js-cookie';
+import { OrderData } from '../../../helper/types/order';
 
-const BASE_URL = process.env.NEXT_PUBLIC_EDUTUBE_API;
 const URL = '/orders';
 
-const axiosPost = async (orderData: IOrderDataType) => {
-  const accessToken = Cookies.get('accessToken');
-  const response = await axios.post(BASE_URL + URL, orderData, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-  return response.data;
-};
 const useUpdateOrder = () => {
+  const { edutubeAxios } = useEdutubeAxios();
+  const axiosPost = async (orderData: OrderData) => {
+    const response = await edutubeAxios.post(URL, orderData);
+    return response.data;
+  };
   return useMutation({
-    mutationFn: (orderData: IOrderDataType) => axiosPost(orderData),
+    mutationFn: (orderData: OrderData) => axiosPost(orderData),
   });
 };
 export default useUpdateOrder;

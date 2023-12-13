@@ -1,20 +1,22 @@
 'use client';
 import Avatar from "@/components/atom/Avatar";
 import { default as DeleteButton, default as PurchaseButton, default as UpdateButton } from '@/components/atom/Button';
-import { IOrderDataType } from '@/helper/types/order';
 import useSelectCoffeechatInfo from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
-import useUpdateOrder from '@/queries/coffeechat/order/useUpdateOrder';
 import useUserInfo from '@/stores/userInfo';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const CoffeechatInfo = ({ _id }: { _id: string }) => {
   const router = useRouter();
   const { data: coffeechatDetailData } = useSelectCoffeechatInfo(_id);
-  const { mutate: mutateOrderCoffeechat } = useUpdateOrder();
   const { userInfo } = useUserInfo(store => store);
+  const [selectedDatetimeList, setSelectedDateTimeList] = useState([]);
+  const [isReservationEnabled, setIsReservationEnabled] = useState(true);
+  const stringifySelectedDatetimeList = selectedDatetimeList?.map(item => JSON.stringify(item))
+
+  useEffect(() => { setSelectedDateTimeList(coffeechatDetailData?.options?.map((item) => (item.extra.datetime))) }, [coffeechatDetailData])
 
   useEffect(() => {
     const handleScroll = (e: Event) => {
@@ -36,34 +38,9 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
     };
   }, []);
 
-  const orderCoffeechat = (_id: number) => {
-    const product: IOrderDataType = {
-      products: [
-        {
-          _id: _id,
-          quantity: 1,
-        },
-      ],
-      address: {
-        name: '',
-        value: '',
-      },
-    };
-    mutateOrderCoffeechat(product, {
-      onSuccess: () => {
-        alert(`주문이 완료되었습니다.`);
-        router.push('/mypage/purchase');
-      },
-      onError: error => {
-        if (error.message == 'authToken is not defined') {
-          alert(`로그인 이후에 결제가 가능합니다.`);
-          router.push('/login');
-        } else {
-          alert(`주문에 실패하셨습니다. ${error.message}`);
-        }
-      },
-    });
-  };
+  useEffect(() => {
+    setIsReservationEnabled(coffeechatDetailData?.options.length !== 0);
+  }, [coffeechatDetailData]);
 
   return (
     <div className="max-w-4xl mx-auto p-4">
@@ -119,14 +96,21 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
             <h3 className="text-lg font-bold mb-2">내용</h3>
             <p className="text-md mb-2" dangerouslySetInnerHTML={{ __html: coffeechatDetailData?.content }} />
           </div>
-          <div id="schedule" className="mb-6">
+          <div id="schedule" className="mb-6 ">
             <h3 className="text-lg font-bold mb-4">일정</h3>
-            {coffeechatDetailData?.extra.datetimeList.map((item: { date: Date, time: Date }, index: number) => (
-              <span key={index} className={`mb-2 mr-2  border-2 border-solid border-light-main rounded-lg p-2`}>
-                <span className="text-gray-700 mr-2">{JSON.stringify(item.date).slice(1, 11)}</span>
-                <span className="text-gray-400">{JSON.stringify(item.time).slice(12, 17)}</span>
-              </span>
-            ))}
+            <div className="flex flex-wrap">
+              {coffeechatDetailData?.extra.datetimeList.map((item: { date: Date, time: Date }, index: number) => (
+                <p
+                  key={index}
+                  className={`mb-2 mr-2 rounded-lg p-2.5 w-44 text-white ${stringifySelectedDatetimeList?.includes(JSON.stringify(item)) ? 'bg-light-main' : 'bg-light-disabled text-gray-100'
+                    }`}
+                >
+                  <span className=" mr-2">{JSON.stringify(item.date).slice(1, 11)}</span>
+                  <span className=" mr-2">|</span>
+                  <span >{JSON.stringify(item.time).slice(12, 17)}</span>
+                </p>
+              ))}
+            </div>
           </div>
           <div id="place" className="mb-6">
             <h3 className="text-lg font-bold mb-2">장소</h3>
@@ -146,18 +130,25 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
             <div className="space-y-4">
               {userInfo.type === 'seller' && coffeechatDetailData?.seller_id === userInfo._id ? (
                 <>
-                  <UpdateButton content="수정하기" size="medium" onClick={() => orderCoffeechat(parseInt(_id))} />
+                  <UpdateButton content="수정하기" size="medium" onClick={() => alert('수정하기 구현해야함')} />
                   <DeleteButton
                     content="삭제하기"
                     size="medium"
-                    onClick={() => orderCoffeechat(parseInt(_id))}
+                    onClick={() => alert('삭제하기 구현해야함')}
                     color="bg-light-error"
                     darkColor="bg-dark-error"
                     hoverColor="hover:bg-red-700"
                   />
                 </>
               ) : (
-                <PurchaseButton content="예약하기" size="medium" onClick={() => orderCoffeechat(parseInt(_id))} />
+                <PurchaseButton
+                  content={isReservationEnabled ? "예약하기" : "예약 불가"}
+                  size="medium"
+                  onClick={() => {
+                    router.push(`/coffeechat/info/${_id}/reserve`);
+                  }}
+                  disabled={!isReservationEnabled}
+                />
               )}
             </div>
           </div>
