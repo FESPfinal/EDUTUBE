@@ -1,11 +1,11 @@
 'use client';
 
-import Link from 'next/link';
-import MyCoffeechatItem from './MyCoffeechatItem';
 import useSelectMyCoffeechat, {
   MyCoffeechat,
-} from '@/queries/coffeechat/myCoffeechat/useSelectMyCoffeechat';
+} from '@/queries/mypage/myCoffeechat/useSelectMyCoffeechat';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import MyCoffeechatItem from './MyCoffeechatItem';
 
 const PRODUCT_TYPE = {
   PARENTS: 'parents',
