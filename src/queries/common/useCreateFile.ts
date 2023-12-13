@@ -10,7 +10,7 @@ const useCreateFile = () => {
   const axiosPost = async (file: FormData) => {
     const response = await edutubeAxios.post(URL, file);
     console.log(response.data.file);
-    return response.data.file as { name: string; path: string };
+    return response.data.file;
   };
 
   return useMutation({ mutationFn: (file: FormData) => axiosPost(file) });

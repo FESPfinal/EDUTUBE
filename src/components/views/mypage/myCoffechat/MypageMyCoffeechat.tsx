@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import MyCoffeechatItem from './MyCoffeechatItem';
-import useSelectMyCoffeechat from '@/queries/coffeechat/myCoffeechat/useSelectMyCoffeechat';
+import useSelectMyCoffeechat from '@/queries/mypage/myCoffeechat/useSelectMyCoffeechat';
 
 const MypageMyCoffeechat = () => {
   const { data: myCoffeechatList } = useSelectMyCoffeechat();
