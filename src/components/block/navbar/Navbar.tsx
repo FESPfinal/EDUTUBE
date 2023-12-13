@@ -9,9 +9,11 @@ import { useEffect, useState } from 'react';
 import NavLogin from './NavLogin';
 import NavLogout from './NavLogout';
 import MainLogoWhite from '/public/images/main-logo-white.svg';
+import useUserCartInfo from '@/stores/cart';
 
 const Navbar = () => {
   const { userInfo } = useUserInfo(store => store);
+  const { userCartCount } = useUserCartInfo(store => store);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -37,9 +39,16 @@ const Navbar = () => {
               {isClient ? (
                 !!userInfo._id ? (
                   <div className="flex gap-3 items-center">
-                    <Link href={'/mypage/my-coffeechat'}>
-                      <FontAwesomeIcon className="text-2xl" icon={faCartShopping} />
-                    </Link>
+                    <div className="relative">
+                      <Link href={'/mypage/cart'}>
+                        <FontAwesomeIcon className="text-2xl" icon={faCartShopping} />
+                      </Link>
+                      {userCartCount > 0 && (
+                        <span className="absolute top-0 right-0 -mt-1 -mr-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">
+                          {userCartCount}
+                        </span>
+                      )}
+                    </div>
                     <NavLogout name={userInfo?.name} />
                   </div>
                 ) : (
