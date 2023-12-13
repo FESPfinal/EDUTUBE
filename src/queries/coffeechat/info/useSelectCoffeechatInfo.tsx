@@ -86,6 +86,6 @@ const useSelectCoffeechatInfo = (_id: string) => {
     return response.data.item as ProductItem;
   };
 
-  return useQuery({ queryKey: ['coffeechatDetail'], queryFn: () => axiosGet(_id) });
+  return useQuery({ queryKey: ['coffeechatDetail', _id], queryFn: () => axiosGet(_id) });
 };
 export default useSelectCoffeechatInfo;

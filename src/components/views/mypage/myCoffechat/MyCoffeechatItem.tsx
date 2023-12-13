@@ -1,6 +1,7 @@
 'use client';
 
 import { formatDate } from '@/helper/utils/datetime';
+import useSelectCoffeechatInfo from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
 import { MyCoffeechat } from '@/queries/coffeechat/myCoffeechat/useSelectMyCoffeechat';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -10,6 +11,8 @@ interface Props {
 }
 
 const MyCoffeechatItem = ({ data }: Props) => {
+  const { data: parentsData } = useSelectCoffeechatInfo(String(data._id));
+
   const datetimeList = data.extra.datetimeList;
   datetimeList.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
@@ -45,7 +48,11 @@ const MyCoffeechatItem = ({ data }: Props) => {
             <span className="font-semibold">{data.price}</span> point
           </p>
           <p className="text-sm font-semibold leading-6 text-gray-900">
-            예약 인원 | <span className="text-light-main">{data.buyQuantity}</span> /{data.quantity}
+            예약 인원 |{' '}
+            <span className="text-light-main">
+              {data.quantity - (parentsData?.options.length || 0)}
+            </span>{' '}
+            /{data.quantity}
           </p>
         </div>
       </li>
