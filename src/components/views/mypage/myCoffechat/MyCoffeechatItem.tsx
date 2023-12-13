@@ -1,9 +1,9 @@
 'use client';
 
+import NextImage from '@/components/atom/NextImge';
 import { formatDate } from '@/helper/utils/datetime';
 import useSelectCoffeechatInfo from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
-import { MyCoffeechat } from '@/queries/coffeechat/myCoffeechat/useSelectMyCoffeechat';
-import Image from 'next/image';
+import { MyCoffeechat } from '@/queries/mypage/myCoffeechat/useSelectMyCoffeechat';
 import Link from 'next/link';
 
 interface Props {
@@ -23,14 +23,7 @@ const MyCoffeechatItem = ({ data }: Props) => {
     <Link href={`/mypage/my-coffeechat/${data._id}`}>
       <li className="flex justify-between gap-x-6 py-5 border-b border-solid">
         <div className="flex min-w-0 gap-x-4 ">
-          <Image
-            className="h-28 w-40 flex-none rounded-md bg-cover"
-            src={`https://localhost:443${data.mainImages[0]}`}
-            alt=""
-            width={80}
-            height={80}
-            unoptimized={true}
-          />
+          <NextImage className="h-28 w-40 flex-none rounded-md bg-cover" src={data.mainImages[0]} />
           <div className="min-w-0 flex flex-col justify-between">
             <div>
               <div className="text-xs font-semibold bg-light-main text-white w-fit px-2 py-1 rounded-xl">

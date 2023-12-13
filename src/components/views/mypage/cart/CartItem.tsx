@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import useDeleteCoffeechatCart from '@/queries/coffeechat/cart/useDeleteCoffeechatCart';
 import useSelectCart, { CartItem } from '@/queries/mypage/cart/useSelectCart';
 import { IMAGE_ROUTE } from '@/helper/constants/commons';
+import NextImage from '@/components/atom/NextImge';
 
 interface Props {
   data: CartItem;
@@ -60,13 +61,10 @@ const CartItem = ({ data, managingCartItemList, isAllProductChecked }: Props) =>
         className="flex justify-between w-full"
       >
         <div className="flex min-w-0 gap-x-4 ">
-          <Image
+          <NextImage
             className="h-28 w-40 flex-none rounded-md bg-cover"
-            src={IMAGE_ROUTE + data?.product?.image}
+            src={data?.product?.image}
             alt=""
-            width={80}
-            height={80}
-            unoptimized={true}
           />
           <div className="min-w-0 flex flex-col justify-between">
             <div>
