@@ -1,18 +1,17 @@
-import { useMutation } from '@tanstack/react-query';
 import useEdutubeAxios from '@/helper/utils/useEdutubeAxios';
-import { IOrderDataType } from '../../../helper/types/order';
+import { useMutation } from '@tanstack/react-query';
+import { OrderData } from '../../../helper/types/order';
 
 const URL = '/orders';
 
 const useUpdateOrder = () => {
   const { edutubeAxios } = useEdutubeAxios();
-  const axiosPost = async (orderData: IOrderDataType) => {
-
+  const axiosPost = async (orderData: OrderData) => {
     const response = await edutubeAxios.post(URL, orderData);
     return response.data;
   };
   return useMutation({
-    mutationFn: (orderData: IOrderDataType) => axiosPost(orderData),
+    mutationFn: (orderData: OrderData) => axiosPost(orderData),
   });
 };
 export default useUpdateOrder;
