@@ -7,12 +7,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import CoffeechatReplyCreate from '@/components/views/coffeechat/info/CoffeechatReplyCreate';
 
 const CoffeechatInfo = ({ _id }: { _id: string }) => {
   const router = useRouter();
   const { data: coffeechatDetailData } = useSelectCoffeechatInfo(_id);
   const { userInfo } = useUserInfo(store => store);
-  const [selectedDatetimeList, setSelectedDateTimeList] = useState([]);
+  const [selectedDatetimeList, setSelectedDateTimeList] = useState<{ date: string; time: string; }[] | undefined>([]);
   const [isReservationEnabled, setIsReservationEnabled] = useState(true);
   const stringifySelectedDatetimeList = selectedDatetimeList?.map(item => JSON.stringify(item))
 
@@ -51,7 +52,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
           <div className="w-full h-96 aspect-w-3 aspect-h-2">
             <Image
               src={`https://localhost:443/${coffeechatDetailData?.mainImages[0]}`}
-              alt={coffeechatDetailData?.name}
+              alt={coffeechatDetailData?.name || '커피챗 이미지 사진'}
               className="w-full h-full object-cover"
               unoptimized={true}
               width={80}
@@ -94,12 +95,12 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
         <div className="md:w-2/3 p-3 border-2 border-gray-200">
           <div id="content" className="mb-6">
             <h3 className="text-lg font-bold mb-2">내용</h3>
-            <p className="text-md mb-2" dangerouslySetInnerHTML={{ __html: coffeechatDetailData?.content }} />
+            <p className="text-md mb-2" dangerouslySetInnerHTML={{ __html: coffeechatDetailData?.content || '' }} />
           </div>
           <div id="schedule" className="mb-6 ">
             <h3 className="text-lg font-bold mb-4">일정</h3>
             <div className="flex flex-wrap">
-              {coffeechatDetailData?.extra.datetimeList.map((item: { date: Date, time: Date }, index: number) => (
+              {coffeechatDetailData?.extra.datetimeList.map((item: { date: string, time: string }, index: number) => (
                 <p
                   key={index}
                   className={`mb-2 mr-2 rounded-lg p-2.5 w-44 text-white ${stringifySelectedDatetimeList?.includes(JSON.stringify(item)) ? 'bg-light-main' : 'bg-light-disabled text-gray-100'
@@ -115,6 +116,10 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
           <div id="place" className="mb-6">
             <h3 className="text-lg font-bold mb-2">장소</h3>
             {coffeechatDetailData?.extra.place === 'online' ? <p className="mb-2">온라인 주소: {coffeechatDetailData?.extra.online}</p> : <p className="mb-2">오프라인 주소: {coffeechatDetailData?.extra.offline}</p>}
+          </div>
+          <div id="review" className="mb-6">
+            <h3 className="text-lg font-bold mb-2">후기</h3>
+            <CoffeechatReplyCreate />
           </div>
         </div>
         {/* 색션 2-2 */}
