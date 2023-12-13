@@ -1,8 +1,10 @@
-const MypageCart = () => {
+import Cart from '@/components/views/mypage/cart/Cart';
+
+const MypageCartPage = () => {
   return (
     <>
-      <p>장바구니</p>
+      <Cart />
     </>
   );
 };
-export default MypageCart;
+export default MypageCartPage;
