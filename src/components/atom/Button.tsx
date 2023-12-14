@@ -12,7 +12,7 @@ interface Props {
   type?: 'button' | 'submit';
 }
 const sizes = {
-  small: ' px-2 py-2 rounded-lg text-base w-content',
+  small: ' px-2 py-2 rounded-lg text-sm w-content w-full',
   medium: 'px-4 py-3 rounded-lg text-base min-h-12 w-full',
   large: 'px-5 py-5 rounded-lg text-lg min-h-14 min-w-24 w-full',
 };

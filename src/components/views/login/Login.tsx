@@ -1,12 +1,14 @@
 'use client';
 
 import useLogin from '@/queries/login/useLogin';
+import useSelectCartMutate from '@/queries/login/useSelectCartMutate';
+import useUserCartInfo from '@/stores/cart';
 import { yupResolver } from '@hookform/resolvers/yup';
+import Cookies from 'js-cookie';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import Cookies from 'js-cookie';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 
 const schema = yup.object().shape({
   email: yup.string().email().required('이메일 형식이 잘못되었습니다.'),
@@ -24,7 +26,9 @@ const Login = () => {
     formState: { errors },
   } = useForm<FormData>({ resolver: yupResolver(schema) });
 
-  const { mutate: loginMutate, data: loginData } = useLogin();
+  const { setUserCartCount } = useUserCartInfo(store => store);
+  const { mutate: loginMutate } = useLogin();
+  const { mutate: cartMutate } = useSelectCartMutate();
   const onSubmit = (data: FormData) => {
     loginMutate(
       {
@@ -37,6 +41,11 @@ const Login = () => {
           Cookies.set('user_id', String(data._id));
           Cookies.set('user_name', data.name);
           router.push('/');
+          cartMutate(undefined, {
+            onSuccess: cartInfo => {
+              setUserCartCount(cartInfo.length);
+            },
+          });
         },
         onError: () => {
           alert('아이디 혹은 비밀번호가 일치하지 않습니다.');
