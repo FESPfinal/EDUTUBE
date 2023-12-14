@@ -2,9 +2,9 @@
 import { useTheme } from 'next-themes';
 
 interface Props {
-  width: number,
-  height: number,
-  round: number
+  width: string;
+  height: string;
+  round: number;
 }
 
 const Skeleton = ({ width, height, round }: Props) => {
@@ -12,12 +12,11 @@ const Skeleton = ({ width, height, round }: Props) => {
   const currentTheme = theme === 'system' ? systemTheme : theme;
 
   return (
-    <div 
-      style={{ width: `${width}px`, height: `${height}px`, borderRadius: `${round}px`}}
+    <div
+      style={{ width: `${width}`, height: `${height}`, borderRadius: `${round}px` }}
       className={`
-        ${currentTheme === 'dark' ? 'bg-dark-disabled' : 'bg-light-disabled'}`
-      }>
-    </div>
+        ${currentTheme === 'dark' ? 'bg-dark-disabled' : 'bg-light-disabled'}`}
+    ></div>
   );
 };
 

@@ -1,13 +1,12 @@
 'use client';
 
 import CheckBox from '@/components/atom/CheckBox';
-import Image from 'next/image';
-import Link from 'next/link';
-import { IsSelectedItem } from './Cart';
-import { useEffect, useState } from 'react';
+import NextImage from '@/components/atom/NextImge';
 import useDeleteCoffeechatCart from '@/queries/coffeechat/cart/useDeleteCoffeechatCart';
 import useSelectCart, { CartItem } from '@/queries/mypage/cart/useSelectCart';
-import { IMAGE_ROUTE } from '@/helper/constants/commons';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { IsSelectedItem } from './Cart';
 
 interface Props {
   data: CartItem;
@@ -59,16 +58,15 @@ const CartItem = ({ data, managingCartItemList, isAllProductChecked }: Props) =>
         href={`/coffeechat/info/${data?.product?.extra?.parent}`}
         className="flex justify-between w-full"
       >
-        <div className="flex min-w-0 gap-x-4 ">
-          <Image
-            className="h-28 w-40 flex-none rounded-md bg-cover"
-            src={IMAGE_ROUTE + data?.product?.image}
-            alt=""
-            width={80}
-            height={80}
-            unoptimized={true}
-          />
-          <div className="min-w-0 flex flex-col justify-between">
+        <div className="flex min-w-0 gap-x-4 w-full">
+          <div className="w-[300px]">
+            <NextImage
+              className="h-28 w-40 flex-none rounded-md bg-cover"
+              src={data?.product?.image}
+              alt=""
+            />
+          </div>
+          <div className="min-w-0 flex flex-col justify-between w-full">
             <div>
               {data?.product?.extra?.jobCategory?.map((item: string) => (
                 <div

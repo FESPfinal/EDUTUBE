@@ -1,11 +1,25 @@
 'use client';
 import Category from '@/components/atom/Category';
 import React, { useEffect, useState } from 'react';
-import useSelectOrder from '../../../../queries/coffeechat/order/useSelectOrder';
+import useSelectOrder, { Product } from '../../../../queries/coffeechat/order/useSelectOrder';
 import PurchaseCard from './PurchaseCard';
 
 //임시 카테고리
 const TOTAL = '전체';
+
+export type ShowPurchaseList = {
+  _id: '';
+  parent: '';
+  image: '';
+  name: '';
+  place: '';
+  jobCategory: [];
+  intro: '';
+  author: '';
+  datetime: { date: ''; time: '' };
+  offline: '';
+  online: '';
+};
 
 const PurchaseList = () => {
   const { data: purchaseListData } = useSelectOrder();
@@ -15,6 +29,7 @@ const PurchaseList = () => {
     name: TOTAL,
   });
   const [selectedList, setSelectedList] = useState(purchaseListData);
+  const [showPurchaseList, setShowPurchaseList] = useState<ShowPurchaseList[]>();
 
   useEffect(() => {
     if (purchaseListData) {
@@ -25,8 +40,6 @@ const PurchaseList = () => {
       );
       const arrCategoryList = Array.from(filteredCategoryList).filter(el => !!el);
       setCategoryList(arrCategoryList);
-      // const filteredProductData = purchaseListData?.filter(()=>);
-      // setChildProduct(filteredProductData);
     }
   }, [purchaseListData]);
 
@@ -35,11 +48,33 @@ const PurchaseList = () => {
       setSelectedList(purchaseListData);
     } else {
       const filteredPurchaseList = purchaseListData?.filter(
-        data => data.products[0].extra.jobCategory?.[0] === selectedCategory.name,
+        data => data.products[0]?.extra?.jobCategory?.[0] === selectedCategory.name,
       );
       setSelectedList(filteredPurchaseList);
     }
   }, [purchaseListData, selectedCategory]);
+
+  useEffect(() => {
+    const formattingData = (item: Product) => ({
+      _id: item._id,
+      parent: item.extra?.parent,
+      image: item.image,
+      name: item.name,
+      place: item.extra?.place,
+      jobCategory: item.extra?.jobCategory,
+      intro: item.extra?.intro,
+      author: item.extra?.author,
+      datetime: item.extra?.datetime,
+      offline: item.extra?.offline,
+      online: item.extra?.online,
+    });
+
+    let showDataList = new Array();
+    selectedList?.forEach(list =>
+      list.products?.forEach(item => showDataList.push(formattingData(item))),
+    );
+    setShowPurchaseList(showDataList);
+  }, [selectedList]);
 
   return (
     <>
@@ -62,7 +97,7 @@ const PurchaseList = () => {
           ))}
         </section>
         <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {selectedList?.map(item => (
+          {showPurchaseList?.map(item => (
             <React.Fragment key={item._id}>
               <PurchaseCard data={item} />
             </React.Fragment>
