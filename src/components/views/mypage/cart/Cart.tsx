@@ -88,7 +88,7 @@ const Cart = () => {
   const onPurchase = () => {
     const requestData = {
       products: selectedItemList,
-      address: { name: '', value: '' },
+      address: { name: userInfo.extra.nickname, value: '' },
     };
     if (isPurchased) {
       orderMutate(requestData, {

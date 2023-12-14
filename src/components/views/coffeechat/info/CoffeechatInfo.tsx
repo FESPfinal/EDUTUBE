@@ -1,6 +1,10 @@
 'use client';
-import Avatar from "@/components/atom/Avatar";
-import { default as DeleteButton, default as PurchaseButton, default as UpdateButton } from '@/components/atom/Button';
+import Avatar from '@/components/atom/Avatar';
+import {
+  default as DeleteButton,
+  default as PurchaseButton,
+  default as UpdateButton,
+} from '@/components/atom/Button';
 import useSelectCoffeechatInfo from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
 import useUserInfo from '@/stores/userInfo';
 import Image from 'next/image';
@@ -9,15 +13,22 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import CoffeechatReplyCreate from '@/components/views/coffeechat/info/CoffeechatReplyCreate';
 
+type Datetime = {
+  date: string;
+  time: string;
+};
+
 const CoffeechatInfo = ({ _id }: { _id: string }) => {
   const router = useRouter();
   const { data: coffeechatDetailData } = useSelectCoffeechatInfo(_id);
   const { userInfo } = useUserInfo(store => store);
-  const [selectedDatetimeList, setSelectedDateTimeList] = useState<{ date: string; time: string; }[] | undefined>([]);
+  const [selectedDatetimeList, setSelectedDateTimeList] = useState<Datetime[]>();
   const [isReservationEnabled, setIsReservationEnabled] = useState(true);
-  const stringifySelectedDatetimeList = selectedDatetimeList?.map(item => JSON.stringify(item))
+  const stringifySelectedDatetimeList = selectedDatetimeList?.map(item => JSON.stringify(item));
 
-  useEffect(() => { setSelectedDateTimeList(coffeechatDetailData?.options?.map((item) => (item.extra.datetime))) }, [coffeechatDetailData])
+  useEffect(() => {
+    setSelectedDateTimeList(coffeechatDetailData?.options?.map(item => item.extra.datetime));
+  }, [coffeechatDetailData]);
 
   useEffect(() => {
     const handleScroll = (e: Event) => {
@@ -28,12 +39,12 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
     };
 
     const links = document.querySelectorAll('.scroll-link');
-    links.forEach((link) => {
+    links.forEach(link => {
       link.addEventListener('click', handleScroll);
     });
 
     return () => {
-      links.forEach((link) => {
+      links.forEach(link => {
         link.removeEventListener('click', handleScroll);
       });
     };
@@ -52,7 +63,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
           <div className="w-full h-96 aspect-w-3 aspect-h-2">
             <Image
               src={`https://localhost:443/${coffeechatDetailData?.mainImages[0]}`}
-              alt={coffeechatDetailData?.name || '커피챗 이미지 사진'}
+              alt={`${coffeechatDetailData?.name}`}
               className="w-full h-full object-cover"
               unoptimized={true}
               width={80}
@@ -64,30 +75,29 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
         <div className="md:w-1/3 p-2 flex flex-col gap-3">
           <h1 className="text-2xl font-bold mb-2">{coffeechatDetailData?.name}</h1>
           <div className="flex items-center gap-3 mb-2">
-            <Avatar imageUrl={`https://localhost:443/${coffeechatDetailData?.extra.authorImage}`} size={'xsmall'} />
+            <Avatar
+              imageUrl={`https://localhost:443/${coffeechatDetailData?.extra.authorImage}`}
+              size={'xsmall'}
+            />
             <p className="text-md font-bold">{coffeechatDetailData?.extra.author}</p>
           </div>
           <p className="mb-2"> {coffeechatDetailData?.extra.intro}</p>
           <div className="flex items-center gap-3" style={{ marginTop: 'auto' }}>
-            <p className="inline-block rounded-full px-2 py-1 text-sm font-medium tracking-wide border-solid border bg-light-main text-white">{coffeechatDetailData?.extra.jobCategory[0]}</p>
-            <p className="inline-block rounded-full px-2 py-1 text-sm font-medium tracking-wide border-solid border bg-dark-main text-white">{coffeechatDetailData?.extra.regionCategory}</p>
+            <p className="inline-block rounded-full px-2 py-1 text-sm font-medium tracking-wide border-solid border bg-light-main text-white">
+              {coffeechatDetailData?.extra.jobCategory[0]}
+            </p>
+            <p className="inline-block rounded-full px-2 py-1 text-sm font-medium tracking-wide border-solid border bg-dark-main text-white">
+              {coffeechatDetailData?.extra.regionCategory}
+            </p>
           </div>
         </div>
       </div>
       {/* 중간 색션 */}
       <div className="border-2 border-gray-200 p-2 mb-4 flex gap-12">
-        <Link href="#content">
-          내용
-        </Link>
-        <Link href="#schedule">
-          일정
-        </Link>
-        <Link href="#place">
-          장소
-        </Link>
-        <Link href="#content">
-          후기
-        </Link>
+        <Link href="#content">내용</Link>
+        <Link href="#schedule">일정</Link>
+        <Link href="#place">장소</Link>
+        <Link href="#content">후기</Link>
       </div>
       {/* 색션 2 */}
       <div className="flex flex-col md:flex-row gap-5 mb-12">
@@ -95,27 +105,37 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
         <div className="md:w-2/3 p-3 border-2 border-gray-200">
           <div id="content" className="mb-6">
             <h3 className="text-lg font-bold mb-2">내용</h3>
-            <p className="text-md mb-2" dangerouslySetInnerHTML={{ __html: coffeechatDetailData?.content || '' }} />
+            <p
+              className="text-md mb-2"
+              dangerouslySetInnerHTML={{ __html: coffeechatDetailData?.content || '' }}
+            />
           </div>
           <div id="schedule" className="mb-6 ">
             <h3 className="text-lg font-bold mb-4">일정</h3>
             <div className="flex flex-wrap">
-              {coffeechatDetailData?.extra.datetimeList.map((item: { date: string, time: string }, index: number) => (
+              {coffeechatDetailData?.extra.datetimeList.map((item: Datetime, index: number) => (
                 <p
                   key={index}
-                  className={`mb-2 mr-2 rounded-lg p-2.5 w-44 text-white ${stringifySelectedDatetimeList?.includes(JSON.stringify(item)) ? 'bg-light-main' : 'bg-light-disabled text-gray-100'
-                    }`}
+                  className={`mb-2 mr-2 rounded-lg p-2.5 w-44 text-white ${
+                    stringifySelectedDatetimeList?.includes(JSON.stringify(item))
+                      ? 'bg-light-main'
+                      : 'bg-light-disabled text-gray-100'
+                  }`}
                 >
                   <span className=" mr-2">{JSON.stringify(item.date).slice(1, 11)}</span>
                   <span className=" mr-2">|</span>
-                  <span >{JSON.stringify(item.time).slice(12, 17)}</span>
+                  <span>{JSON.stringify(item.time).slice(12, 17)}</span>
                 </p>
               ))}
             </div>
           </div>
           <div id="place" className="mb-6">
             <h3 className="text-lg font-bold mb-2">장소</h3>
-            {coffeechatDetailData?.extra.place === 'online' ? <p className="mb-2">온라인 주소: {coffeechatDetailData?.extra.online}</p> : <p className="mb-2">오프라인 주소: {coffeechatDetailData?.extra.offline}</p>}
+            {coffeechatDetailData?.extra.place === 'online' ? (
+              <p className="mb-2">온라인 주소: {coffeechatDetailData?.extra.online}</p>
+            ) : (
+              <p className="mb-2">오프라인 주소: {coffeechatDetailData?.extra.offline}</p>
+            )}
           </div>
           <div id="review" className="mb-6">
             <h3 className="text-lg font-bold mb-2">후기</h3>
@@ -135,7 +155,11 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
             <div className="space-y-4">
               {userInfo.type === 'seller' && coffeechatDetailData?.seller_id === userInfo._id ? (
                 <>
-                  <UpdateButton content="수정하기" size="medium" onClick={() => alert('수정하기 구현해야함')} />
+                  <UpdateButton
+                    content="수정하기"
+                    size="medium"
+                    onClick={() => alert('수정하기 구현해야함')}
+                  />
                   <DeleteButton
                     content="삭제하기"
                     size="medium"
@@ -147,7 +171,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
                 </>
               ) : (
                 <PurchaseButton
-                  content={isReservationEnabled ? "예약하기" : "예약 불가"}
+                  content={isReservationEnabled ? '예약하기' : '예약 불가'}
                   size="medium"
                   onClick={() => {
                     router.push(`/coffeechat/info/${_id}/reserve`);
@@ -159,7 +183,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
           </div>
         </div>
       </div>
-    </div >
+    </div>
   );
 };
 export default CoffeechatInfo;

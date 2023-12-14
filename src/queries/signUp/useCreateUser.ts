@@ -12,11 +12,11 @@ export type SignUpData = {
   address: string;
   type: string;
   extra: {
-    point: number;
     profileImage: string;
     major: string;
     nickname: string;
     contactEmail: string;
+    point?: number;
     intro?: string;
     sns?: string;
   };
