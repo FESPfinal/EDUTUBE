@@ -48,15 +48,15 @@ const FirstRegist = () => {
       },
     };
 
-    mutateCreateProduct(requestBody, {
-      onSuccess: data => {
-        alert('등록되었습니다');
-        router.push('/coffeechat');
-      },
-      onError: error => {
-        alert('등록에 실패하였습니다');
-      },
-    });
+    // mutateCreateProduct(requestBody, {
+    //   onSuccess: data => {
+    //     alert('등록되었습니다');
+    //     router.push('/coffeechat');
+    //   },
+    //   onError: error => {
+    //     alert('등록에 실패하였습니다');
+    //   },
+    // });
   };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
