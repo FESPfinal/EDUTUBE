@@ -55,6 +55,8 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
     setIsReservationEnabled(coffeechatDetailData?.options.length !== 0);
   }, [coffeechatDetailData]);
 
+  console.log(replyListData)
+
   return (
     <div className="max-w-4xl mx-auto p-4">
       {/* 색션 1*/}
@@ -139,10 +141,12 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
           </div>
           <div id="review" className="mb-6">
             <h3 className="text-lg font-bold mb-2">후기</h3>
-            {replyListData?.map((item, index) => (
-              <ReplyItemCard key={index} rating={item.rating} content={item.content} />
-            ))
-            }
+            <div className="flex flex-col gap-5">
+              {replyListData?.map((item, index) => (
+                <ReplyItemCard key={index} rating={item.rating} content={item.content} userName={item.user.name} createdAt={item.createdAt} />
+              ))
+              }
+            </div>
           </div>
         </div>
         {/* 색션 2-2 */}
