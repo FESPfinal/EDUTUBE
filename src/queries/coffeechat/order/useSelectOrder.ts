@@ -69,10 +69,12 @@ const URL = '/orders';
 
 const useSelectOrder = () => {
   const { edutubeAxios } = useEdutubeAxios();
+
   const axiosGet = async () => {
     const response = await edutubeAxios.get(URL);
     return response.data.item as OrderList;
   };
+
   return useQuery({ queryKey: ['orderList'], queryFn: axiosGet });
 };
 

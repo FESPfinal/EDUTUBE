@@ -5,9 +5,13 @@ import Link from 'next/link';
 const NavLogin = () => {
   return (
     <Link href="/login">
-      <span className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4">
-        Login
-      </span>
+      <div
+        className="font-bold inline-flex justify-center w-full rounded-md px-4 py-2 bg-white text-sm text-light-main hover:bg-gray-50 focus:outline-none"
+        id="options-menu"
+        aria-haspopup="true"
+      >
+        LOGIN
+      </div>
     </Link>
   );
 };

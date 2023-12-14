@@ -70,7 +70,7 @@ const CartItem = ({ data, managingCartItemList, isAllProductChecked }: Props) =>
           />
           <div className="min-w-0 flex flex-col justify-between">
             <div>
-              {data?.product?.extra?.jobCategory.map((item: string) => (
+              {data?.product?.extra?.jobCategory?.map((item: string) => (
                 <div
                   className="text-xs font-semibold bg-light-main text-white w-fit px-2 py-1 rounded-xl"
                   key={item}
