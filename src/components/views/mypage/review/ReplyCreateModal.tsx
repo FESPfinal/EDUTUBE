@@ -1,12 +1,15 @@
 'use client'
-import { useForm, SubmitHandler, Controller } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
+import RegistButton from '@/components/atom/Button';
 import RatingStarGroup from '@/components/atom/RatingStarGroup';
-import { useState, useEffect } from 'react';
-import useCreateReply from '@/queries/coffeechat/review/useCreateReply'
-import { replyData } from '@/helper/types/reply'
-import { useRouter } from 'next/navigation';
+import { replyData } from '@/helper/types/reply';
+import useCreateReply from '@/queries/coffeechat/review/useCreateReply';
+import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useParams, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import * as yup from 'yup';
 
 const schema = yup.object().shape({
   rating: yup.number().required('별점을 선택해주세요').min(1, '별점을 선택해주세요').max(5, '별점을 선택해주세요'),
@@ -17,43 +20,46 @@ type FormData = yup.InferType<typeof schema>;
 
 const ReplyCreateModal = () => {
   const router = useRouter();
+  const params = useParams();
+  const productId = parseInt(params?.parents_id as string);
+  const orderId = parseInt(params?.order_id as string);
   const { control, handleSubmit, formState: { errors }, setValue } = useForm<FormData>({ resolver: yupResolver(schema) });
 
   const { mutate: mutateCreateReply } = useCreateReply();
 
-  const [selectedRate, setSelectedRate] = useState<number>(3);
+  const [selectedRate, setSelectedRate] = useState<number>(0);
 
   useEffect(() => {
-    // rating이 변경될 때 setValue를 사용하여 값을 설정
     setValue('rating', selectedRate);
   }, [selectedRate, setValue]);
 
   const onSubmit = (data: FormData) => {
     const requestBody: replyData = {
-      order_id: 29, //주문번호
-      product_id: 116, //product번호
+      order_id: orderId, //주문번호
+      product_id: productId, //product번호
       rating: data.rating,
       content: data.content,
     }
-    console.log(requestBody)
     mutateCreateReply(requestBody, {
       onSuccess: () => {
         alert('리뷰가 성공적으로 등록되었습니다.');
         router.back();
       },
       onError: error => {
-        console.log('error>>>>', error);
+        //@ts-ignore
         alert('리뷰 등록이 실패하였습니다.');
       },
     });
   };
 
   return (
-    <div className="bg-white p-4 rounded-lg ">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
+    <div className="bg-white p-4 rounded-lg">
+      <div className=" flex justify-end items-center" ><FontAwesomeIcon onClick={() => router.back()} icon={faCircleXmark} size="xl" className="cursor-pointer text-light-main " /></div>
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5 text-center">
+        <h2 className="font-bold text-xl mb-6">리뷰를 남겨주세요</h2>
+        <div className="flex justify-start gap-4">
           <label>
-            <RatingStarGroup isReadOnly={false} defaultRate={3} setSelectedRate={setSelectedRate} />
+            <RatingStarGroup isReadOnly={false} defaultRate={0} setSelectedRate={setSelectedRate} />
             <Controller
               control={control}
               name="rating"
@@ -62,21 +68,22 @@ const ReplyCreateModal = () => {
               )}
             />
           </label>
-          {errors.rating && <p>{errors.rating.message}</p>}
+          {errors.rating && <p className="text-light-error text-sm leading-6">{errors.rating.message}</p>}
         </div>
-        <div>
+        <div className="text-left">
           <label>
             <Controller
               control={control}
               name="content"
               render={({ field }) => (
-                <textarea {...field} />
+                <textarea className="w-full rounded-lg h-20" {...field}
+                  placeholder="여기에 후기를 작성해주세요." />
               )}
             />
           </label>
-          {errors.content && <p>{errors.content.message}</p>}
+          {errors.content && <p className="text-light-error text-sm">{errors.content.message}</p>}
         </div>
-        <button type="submit">등록</button>
+        <RegistButton content="후기 등록하기" size="medium" type="submit" />
       </form>
     </div>
   )
