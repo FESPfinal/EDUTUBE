@@ -1,9 +1,9 @@
+// regist폴더 안
 'use client';
 import CheckBox from '@/components/atom/CheckBox';
-import KakaoMap from './SearchMap';
-import RegistCalendar from './RegistCalendar';
+import KakaoMap from '../../../../helper/utils/kakaoMap/SearchMap';
+import RegistCalendar from './ReactCalendar/RegistCalendar';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
 
 
 
@@ -27,14 +27,6 @@ const CoffeechatSecondRegist = () => {
   const handleSearchClick = () => {
     setValue('searchClicked', true);
   }
-
-  const [startDate, setStartDate] = useState();
-  const [endDate, setEndDate] = useState();
-
-  const handleDateChange = (start, end) => {
-    setStartDate(start);
-    setEndDate(end);
-  };
 
   return (
     <div className='flex relative'>
@@ -80,15 +72,13 @@ const CoffeechatSecondRegist = () => {
                 <KakaoMap offlineAddress={offlineAddress} />
               )}
 
-
-              <div className='mt-[60px]'>
-                <h2 className='text-[30px] mb-[60px]'>날짜 등록</h2>
-                <RegistCalendar onDateChange={handleDateChange} />
-                <p>{startDate}</p>
+              <div className="mt-[60px] relative">
+                <h2 className="text-[30px] mb-[60px]">날짜 & 시간 등록</h2>
+                <strong className='text-light-error font-normal absolute top-[100px] right-[150px]'>※단일로 시간을 등록하세요</strong>
+                <RegistCalendar />
               </div>
 
-              <div>
-                <h2 className='text-[30px]'>시간 등록</h2>
+              <div className='mt-[60px]'>
               </div>
 
               <div className='flex gap-[20px]'>
