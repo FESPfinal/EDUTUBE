@@ -11,6 +11,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import CoffeechatReplyCreate from '@/components/views/coffeechat/info/CoffeechatReplyCreate';
 
 type Datetime = {
   date: string;
@@ -135,6 +136,10 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
             ) : (
               <p className="mb-2">오프라인 주소: {coffeechatDetailData?.extra.offline}</p>
             )}
+          </div>
+          <div id="review" className="mb-6">
+            <h3 className="text-lg font-bold mb-2">후기</h3>
+            <CoffeechatReplyCreate />
           </div>
         </div>
         {/* 색션 2-2 */}
