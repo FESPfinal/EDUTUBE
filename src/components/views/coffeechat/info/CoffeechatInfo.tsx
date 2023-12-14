@@ -3,9 +3,11 @@ import Avatar from '@/components/atom/Avatar';
 import {
   default as DeleteButton,
   default as PurchaseButton,
-  default as UpdateButton,
+  default as UpdateButton
 } from '@/components/atom/Button';
+import ReplyItemCard from '@/components/views/coffeechat/review/ReplyItem';
 import useSelectCoffeechatInfo from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
+import useSelectReply from '@/queries/coffeechat/review/useSelectReply';
 import useUserInfo from '@/stores/userInfo';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -20,11 +22,11 @@ type Datetime = {
 const CoffeechatInfo = ({ _id }: { _id: string }) => {
   const router = useRouter();
   const { data: coffeechatDetailData } = useSelectCoffeechatInfo(_id);
+  const { data: replyListData } = useSelectReply(_id);
   const { userInfo } = useUserInfo(store => store);
   const [selectedDatetimeList, setSelectedDateTimeList] = useState<Datetime[]>();
   const [isReservationEnabled, setIsReservationEnabled] = useState(true);
   const stringifySelectedDatetimeList = selectedDatetimeList?.map(item => JSON.stringify(item));
-
   useEffect(() => {
     setSelectedDateTimeList(coffeechatDetailData?.options?.map(item => item.extra.datetime));
   }, [coffeechatDetailData]);
@@ -115,11 +117,10 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
               {coffeechatDetailData?.extra.datetimeList.map((item: Datetime, index: number) => (
                 <p
                   key={index}
-                  className={`mb-2 mr-2 rounded-lg p-2.5 w-44 text-white ${
-                    stringifySelectedDatetimeList?.includes(JSON.stringify(item))
-                      ? 'bg-light-main'
-                      : 'bg-light-disabled text-gray-100'
-                  }`}
+                  className={`mb-2 mr-2 rounded-lg p-2.5 w-44 text-white ${stringifySelectedDatetimeList?.includes(JSON.stringify(item))
+                    ? 'bg-light-main'
+                    : 'bg-light-disabled text-gray-100'
+                    }`}
                 >
                   <span className=" mr-2">{JSON.stringify(item.date).slice(1, 11)}</span>
                   <span className=" mr-2">|</span>
@@ -138,6 +139,10 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
           </div>
           <div id="review" className="mb-6">
             <h3 className="text-lg font-bold mb-2">후기</h3>
+            {replyListData?.map((item, index) => (
+              <ReplyItemCard key={index} rating={item.rating} content={item.content} />
+            ))
+            }
           </div>
         </div>
         {/* 색션 2-2 */}
