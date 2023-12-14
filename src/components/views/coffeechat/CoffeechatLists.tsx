@@ -3,11 +3,10 @@ import useSelectCoffeechatList from '../../../queries/coffeechat/useSelectCoffee
 import Link from 'next/link';
 import ad_first from '/public/images/ad_first.png';
 import Image from 'next/image';
+import NextImage from '@/components/atom/NextImge';
 
 const CoffeechatLists = () => {
-  const {
-    data: coffeechatListData,
-  } = useSelectCoffeechatList();
+  const { data: coffeechatListData } = useSelectCoffeechatList();
 
   return (
     <>
@@ -17,14 +16,14 @@ const CoffeechatLists = () => {
       <div className="h-10"></div>
       <div className="h-10" />
       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {coffeechatListData?.item.map(item => (
+        {coffeechatListData?.map(item => (
           <li
             key={item._id}
             className="relative group bg-white p-4 rounded-lg shadow-md overflow-hidden transition duration-300 hover:opacity-80"
           >
             <Link href={`coffeechat/info/${item._id}`}>
-              <img
-                src={`https://localhost:443/${item.mainImages[0]}`}
+              <NextImage
+                src={item.mainImages[0]}
                 alt="Coffee Image"
                 className="w-full h-32 object-cover mb-4 rounded-md transform group-hover:scale-105 transition duration-300"
               />
@@ -32,7 +31,7 @@ const CoffeechatLists = () => {
                 제목: {item.name}
               </div>
               <div className="text-gray-600 mb-2 text-opacity-70 group-hover:text-opacity-100 transition duration-300">
-                판매자: {item.extra.person}
+                판매자: {item.extra.author}
               </div>
 
               {/*
