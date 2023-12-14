@@ -3,11 +3,10 @@ import useSelectCoffeechatList from '../../../queries/coffeechat/useSelectCoffee
 import Link from 'next/link';
 import ad_first from '/public/images/ad_first.png';
 import Image from 'next/image';
-import NextImage from '@/components/atom/NextImge';
+import NextImage from '@/components/atom/NextImage';
 
 const CoffeechatLists = () => {
   const { data: coffeechatListData } = useSelectCoffeechatList();
-
   return (
     <>
       <div className="h-60 bg-black text-white">
