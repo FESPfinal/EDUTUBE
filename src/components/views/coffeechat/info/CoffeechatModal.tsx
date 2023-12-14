@@ -1,6 +1,6 @@
 'use client';
 import Button from '@/components/atom/Button';
-import { IOrderDataType } from '@/helper/types/order';
+import { OrderData } from '@/helper/types/order';
 import useSelectCoffeechatInfo from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
 import useUpdateOrder from '@/queries/coffeechat/order/useUpdateOrder';
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
@@ -29,7 +29,7 @@ const CoffeechatModal = () => {
       alert('예약 시간을 선택하세요.');
       return;
     }
-    const product: IOrderDataType = {
+    const product: OrderData = {
       products: [
         {
           _id: _id,
