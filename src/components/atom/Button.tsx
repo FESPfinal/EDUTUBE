@@ -9,6 +9,7 @@ interface Props {
   hoverColor?: string;
   textColor?: string;
   size?: 'large' | 'medium' | 'small';
+  type?: 'button' | 'submit';
 }
 const sizes = {
   small: ' px-2 py-2 rounded-lg text-base w-content',
@@ -24,6 +25,7 @@ const Button = ({
   textColor = 'text-white',
   size = 'large',
   hoverColor = 'hover:bg-dark-main',
+  type = 'button'
 }: Props) => {
   const { systemTheme, theme } = useTheme();
   const currentTheme = theme === 'system' ? systemTheme : theme;
@@ -32,7 +34,7 @@ const Button = ({
     <button
       className={`font-medium ${disabled == true ? `bg-light-disabled hover:bg-light-disabled` : currentTheme === 'light' ? color : darkColor
         } ${textColor} ${sizeClass} ${hoverColor}`}
-      type="button"
+      type={type}
       onClick={onClick}
       disabled={disabled}
     >
