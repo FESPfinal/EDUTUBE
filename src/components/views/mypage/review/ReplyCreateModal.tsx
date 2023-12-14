@@ -6,7 +6,7 @@ import useCreateReply from '@/queries/coffeechat/review/useCreateReply';
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useSearchParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
@@ -21,12 +21,12 @@ type FormData = yup.InferType<typeof schema>;
 const ReplyCreateModal = () => {
   const router = useRouter();
   const params = useParams();
-  const productId = parseInt(params?.parents_id as string);
-  const orderId = parseInt(params?.order_id as string);
+  const searchParams = useSearchParams()
+  const orderId = parseInt(params?._id as string);
+  const productId = parseInt(searchParams?.get('parents_id') || '0');
   const { control, handleSubmit, formState: { errors }, setValue } = useForm<FormData>({ resolver: yupResolver(schema) });
 
   const { mutate: mutateCreateReply } = useCreateReply();
-
   const [selectedRate, setSelectedRate] = useState<number>(0);
 
   useEffect(() => {
@@ -34,6 +34,10 @@ const ReplyCreateModal = () => {
   }, [selectedRate, setValue]);
 
   const onSubmit = (data: FormData) => {
+    if (productId == 0) {
+      alert('전송에 실패하였습니다. 상품을 불러오지 못했습니다.');
+      return;
+    }
     const requestBody: replyData = {
       order_id: orderId, //주문번호
       product_id: productId, //product번호
