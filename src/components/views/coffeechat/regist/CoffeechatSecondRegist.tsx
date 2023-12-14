@@ -1,4 +1,3 @@
-// regist폴더 안
 'use client';
 import CheckBox from '@/components/atom/CheckBox';
 import KakaoMap from '../../../../helper/utils/kakaoMap/SearchMap';
