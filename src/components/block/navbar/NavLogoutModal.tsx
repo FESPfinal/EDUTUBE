@@ -1,20 +1,23 @@
 'use client';
 
-import Link from 'next/link';
-import Cookies from 'js-cookie';
-import { useRouter } from 'next/navigation';
+import useUserCartInfo from '@/stores/cart';
 import useUserInfo from '@/stores/userInfo';
+import Cookies from 'js-cookie';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const NavLogoutModal = () => {
   const { deleteUserInfo } = useUserInfo(store => store);
+  const { deleteUserCartCount } = useUserCartInfo(store => store);
   const router = useRouter();
 
   const handleLogout = () => {
     deleteUserInfo();
+    deleteUserCartCount();
     Cookies.remove('accessToken');
     Cookies.remove('refreshToken');
     Cookies.remove('user_id');
-    Cookies.remove('user_name');
+    Cookies.remove('userType');
     router.refresh();
     router.push('/');
   };

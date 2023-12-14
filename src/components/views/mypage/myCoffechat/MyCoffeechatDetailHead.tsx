@@ -1,5 +1,6 @@
 'use client';
 
+import NextImage from '@/components/atom/NextImge';
 import { formatDate } from '@/helper/utils/datetime';
 import useSelectCoffeechatInfo from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
 import Image from 'next/image';
@@ -19,15 +20,10 @@ const MyCoffeechatDetailHead = ({ _id }: { _id: string }) => {
     <div className="flex flex-row w-full gap-x-3 justify-between">
       <section className="flex-none">
         <Link href={`/coffeechat/info/${_id}`}>
-          <Image
+          <NextImage
             className="h-36 w-60 flex-none rounded-md bg-cover"
-            src={`https://localhost:443${
-              coffeechatInfoData ? coffeechatInfoData.mainImages[0] : ''
-            }`}
+            src={coffeechatInfoData?.mainImages[0] || ''}
             alt=""
-            width={80}
-            height={80}
-            unoptimized={true}
           />
         </Link>
       </section>

@@ -1,6 +1,6 @@
-'use client'
-import Button from '@/components/atom/button';
-import { IOrderDataType } from '@/helper/types/order';
+'use client';
+import Button from '@/components/atom/Button';
+import { OrderData } from '@/helper/types/order';
 import useSelectCoffeechatInfo from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
 import useUpdateOrder from '@/queries/coffeechat/order/useUpdateOrder';
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
@@ -26,10 +26,10 @@ const CoffeechatModal = () => {
 
   const reserveCoffeechat = (_id: number) => {
     if (!selectedDatetimeId) {
-      alert('예약 시간을 선택하세요.')
+      alert('예약 시간을 선택하세요.');
       return;
     }
-    const product: IOrderDataType = {
+    const product: OrderData = {
       products: [
         {
           _id: _id,
@@ -63,21 +63,44 @@ const CoffeechatModal = () => {
       <div className="bg-white p-4 rounded-lg ">
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-lg font-bold ">일정 선택하기</h3>
-          <div onClick={() => router.back()} className="cursor-pointer text-light-main"><FontAwesomeIcon icon={faCircleXmark} size="xl" /></div>
+          <div onClick={() => router.back()} className="cursor-pointer text-light-main">
+            <FontAwesomeIcon icon={faCircleXmark} size="xl" />
+          </div>
         </div>
         {/* TODO: item type 설정하기 */}
         <div className="flex gap-2 flex-wrap mb-6 justify-center">
           {coffeechatDetailData?.options.map((item: any, index: number) => (
-            <p key={index} className={` border-2 border-solid border-light-main rounded-lg p-2 cursor-pointer hover:bg-light-main minWidth-44  flex   ${item._id === selectedDatetimeId ? 'bg-light-main' : 'hover:bg-gray-200'
-              }`} onClick={() => handleDatetimeClick(item._id)}>
-              <p className={`text-gray-700 leading-6 mr-2 ${item._id === selectedDatetimeId ? 'text-white' : ''}`} >{JSON.stringify(item.extra.datetime.date).slice(1, 11)}&nbsp;/</p>
-              <p className={`text-gray-700 leading-6 ${item._id === selectedDatetimeId ? 'text-white' : ''}`}>{JSON.stringify(item.extra.datetime.time).slice(12, 17)}</p>
+            <p
+              key={index}
+              className={` border-2 border-solid border-light-main rounded-lg p-2 cursor-pointer hover:bg-light-main minWidth-44  flex   ${
+                item._id === selectedDatetimeId ? 'bg-light-main' : 'hover:bg-gray-200'
+              }`}
+              onClick={() => handleDatetimeClick(item._id)}
+            >
+              <p
+                className={`text-gray-700 leading-6 mr-2 ${
+                  item._id === selectedDatetimeId ? 'text-white' : ''
+                }`}
+              >
+                {JSON.stringify(item.extra.datetime.date).slice(1, 11)}&nbsp;/
+              </p>
+              <p
+                className={`text-gray-700 leading-6 ${
+                  item._id === selectedDatetimeId ? 'text-white' : ''
+                }`}
+              >
+                {JSON.stringify(item.extra.datetime.time).slice(12, 17)}
+              </p>
             </p>
           ))}
         </div>
-        <Button content="예약하기" size="medium" onClick={() => selectedDatetimeId && reserveCoffeechat(selectedDatetimeId)} />
+        <Button
+          content="예약하기"
+          size="medium"
+          onClick={() => selectedDatetimeId && reserveCoffeechat(selectedDatetimeId)}
+        />
       </div>
     </>
-  )
-}
+  );
+};
 export default CoffeechatModal;
