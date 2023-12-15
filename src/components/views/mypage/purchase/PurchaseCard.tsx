@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ShowPurchaseList } from './PurchaseList';
 import Button from '@/components/atom/Button';
-import NextImage from '@/components/atom/NextImge';
+import NextImage from '@/components/atom/NextImage';
 
 const PLACE_LIST = {
   ONLINE: 'online',

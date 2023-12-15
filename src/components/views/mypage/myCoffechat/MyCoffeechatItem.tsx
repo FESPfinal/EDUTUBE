@@ -1,6 +1,6 @@
 'use client';
 
-import NextImage from '@/components/atom/NextImge';
+import NextImage from '@/components/atom/NextImage';
 import { formatDate } from '@/helper/utils/datetime';
 import useSelectCoffeechatInfo from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
 import { MyCoffeechat } from '@/queries/mypage/myCoffeechat/useSelectMyCoffeechat';
