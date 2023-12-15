@@ -1,7 +1,7 @@
 'use client';
 
 import CheckBox from '@/components/atom/CheckBox';
-import NextImage from '@/components/atom/NextImge';
+import NextImage from '@/components/atom/NextImage';
 import useDeleteCoffeechatCart from '@/queries/coffeechat/cart/useDeleteCoffeechatCart';
 import useSelectCart, { CartItem } from '@/queries/mypage/cart/useSelectCart';
 import Link from 'next/link';

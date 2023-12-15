@@ -3,7 +3,6 @@
 import Image from 'next/image';
 import Skeleton from './Skeleton';
 import { IMAGE_ROUTE } from '@/helper/constants/commons';
-import { useEffect, useState } from 'react';
 
 interface Props {
   src: string;
@@ -18,11 +17,8 @@ const NextImage = ({
   alt = '',
   className = 'w-full h-32 object-cover mb-4 rounded-md',
 }: Props) => {
-  const [isShow, setIsShow] = useState(false);
+  const isShow = !regex.test(src) && !!src && typeof src == 'string';
 
-  useEffect(() => {
-    setIsShow(!regex.test(src));
-  }, [src]);
 
   return isShow ? (
     <Image
