@@ -2,7 +2,7 @@
 
 interface Props {
   point: string;
-  percent: string;
+  percent: string | number;
 }
 
 const RatingBar = ({ point = '0', percent = '0' }: Props) => {
