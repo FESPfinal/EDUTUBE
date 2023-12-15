@@ -5,6 +5,8 @@ import {
   default as PurchaseButton,
   default as UpdateButton
 } from '@/components/atom/Button';
+import RatingBarGroup from '@/components/atom/RatingBarGroup';
+import RatingStarGroup from '@/components/atom/RatingStarGroup';
 import ReplyItemCard from '@/components/views/coffeechat/review/ReplyItem';
 import useSelectCoffeechatInfo from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
 import useSelectReply from '@/queries/coffeechat/review/useSelectReply';
@@ -27,6 +29,9 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
   const [selectedDatetimeList, setSelectedDateTimeList] = useState<Datetime[]>();
   const [isReservationEnabled, setIsReservationEnabled] = useState(true);
   const stringifySelectedDatetimeList = selectedDatetimeList?.map(item => JSON.stringify(item));
+
+  const replyCount = replyListData?.length;
+
   useEffect(() => {
     setSelectedDateTimeList(coffeechatDetailData?.options?.map(item => item.extra.datetime));
   }, [coffeechatDetailData]);
@@ -54,6 +59,67 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
   useEffect(() => {
     setIsReservationEnabled(coffeechatDetailData?.options.length !== 0);
   }, [coffeechatDetailData]);
+
+  const calculateAverageRating = () => {
+    if (!replyListData || replyListData?.length === 0) {
+      return 0; // 빈 배열이거나 없는 경우 평균 0으로 간주
+    }
+    const totalRating = replyListData?.reduce((acc, item) => acc + item.rating, 0);
+    const averageRating = totalRating / replyListData?.length;
+    return averageRating;
+  }
+
+  const averageRating = calculateAverageRating();
+
+  const calculateRatingPercentages = () => {
+    if (!replyListData || replyListData?.length === 0) {
+      return {
+        five: 0,
+        four: 0,
+        three: 0,
+        two: 0,
+        one: 0,
+      };
+    }
+
+    const ratingCounts = {
+      five: 0,
+      four: 0,
+      three: 0,
+      two: 0,
+      one: 0,
+    };
+
+    replyListData.forEach(item => {
+      const { rating } = item;
+      if (rating === 5) {
+        ratingCounts.five += 1;
+      } else if (rating === 4) {
+        ratingCounts.four += 1;
+      } else if (rating === 3) {
+        ratingCounts.three += 1;
+      } else if (rating === 2) {
+        ratingCounts.two += 1;
+      } else if (rating === 1) {
+        ratingCounts.one += 1;
+      }
+    });
+
+    const totalCount = replyListData.length;
+
+    // 각 등급의 비율을 계산하여 percentList 객체 생성
+    const percentList = {
+      five: `${(ratingCounts.five / totalCount) * 100}`,
+      four: `${(ratingCounts.four / totalCount) * 100}`,
+      three: `${(ratingCounts.three / totalCount) * 100}`,
+      two: `${(ratingCounts.two / totalCount) * 100}`,
+      one: `${(ratingCounts.one / totalCount) * 100}`,
+    };
+
+    return percentList;
+  };
+
+  const ratingPercentages = calculateRatingPercentages();
 
   return (
     <div className="max-w-4xl mx-auto p-4">
@@ -105,7 +171,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
         {/* 색션 2-1 */}
         <div className="md:w-2/3 p-3 border-2 border-gray-200">
           <div id="content" className="mb-6">
-            <h3 className="text-lg font-bold mb-2">내용</h3>
+            <p className="text-lg font-bold mb-2">내용</p>
             <p
               className="text-md mb-2"
               dangerouslySetInnerHTML={{ __html: coffeechatDetailData?.content || '' }}
@@ -138,7 +204,21 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
             )}
           </div>
           <div id="review" className="mb-6">
-            <h3 className="text-lg font-bold mb-2">후기</h3>
+            <p className="flex gap-2">
+              <h3 className="text-lg font-bold mb-2">수강생 후기</h3>
+              <span className="text-lg font-medium text-light-main">{replyCount}개</span>
+            </p>
+            <p className="text-gray-700 text-sm">참여자들이 직접 작성한 후기입니다. </p>
+            <div className=" flex border-2 border-indigo">
+              <div className="flex flex-col border-2 border-black">
+                <p>{averageRating}</p>
+                <RatingStarGroup isReadOnly={true} defaultRate={averageRating} />
+                <p>{replyCount}개의 수강평</p>
+              </div>
+              <div className="flex flex-col border-2 border-black w-full">
+                <RatingBarGroup percentList={ratingPercentages} />
+              </div>
+            </div>
             <div className="flex flex-col gap-1">
               {replyListData?.map((item, index) => (
                 <ReplyItemCard key={index} rating={item.rating} content={item.content} userName={item.user.name} createdAt={item.createdAt} />
