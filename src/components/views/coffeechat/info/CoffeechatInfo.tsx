@@ -5,8 +5,7 @@ import {
   default as PurchaseButton,
   default as UpdateButton
 } from '@/components/atom/Button';
-import RatingBarGroup from '@/components/atom/RatingBarGroup';
-import RatingStarGroup from '@/components/atom/RatingStarGroup';
+import RatingSummary from '@/components/views/coffeechat/review/RatingSummary';
 import ReplyItemCard from '@/components/views/coffeechat/review/ReplyItem';
 import useSelectCoffeechatInfo from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
 import useSelectReply from '@/queries/coffeechat/review/useSelectReply';
@@ -30,7 +29,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
   const [isReservationEnabled, setIsReservationEnabled] = useState(true);
   const stringifySelectedDatetimeList = selectedDatetimeList?.map(item => JSON.stringify(item));
 
-  const replyCount = replyListData?.length;
+  const replyCount = replyListData?.length || 0;
 
   useEffect(() => {
     setSelectedDateTimeList(coffeechatDetailData?.options?.map(item => item.extra.datetime));
@@ -209,16 +208,11 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
               <span className="text-lg font-medium text-light-main">{replyCount}개</span>
             </p>
             <p className="text-gray-700 text-sm">참여자들이 직접 작성한 후기입니다. </p>
-            <div className=" flex border-2 border-indigo">
-              <div className="flex flex-col border-2 border-black">
-                <p>{averageRating}</p>
-                <RatingStarGroup isReadOnly={true} defaultRate={averageRating} />
-                <p>{replyCount}개의 수강평</p>
-              </div>
-              <div className="flex flex-col border-2 border-black w-full">
-                <RatingBarGroup percentList={ratingPercentages} />
-              </div>
-            </div>
+            <RatingSummary
+              averageRating={averageRating}
+              replyCount={replyCount}
+              ratingPercentages={ratingPercentages}
+            />
             <div className="flex flex-col gap-1">
               {replyListData?.map((item, index) => (
                 <ReplyItemCard key={index} rating={item.rating} content={item.content} userName={item.user.name} createdAt={item.createdAt} />
