@@ -55,6 +55,7 @@ const CreateRoom = function () {
           user_id: userInfo._id,
           hostName: userInfo.name,
           roomName: roomName,
+          parents_option: '',
         });
       } else {
         alert('채팅방 이름을 입력하세요.');
@@ -63,6 +64,8 @@ const CreateRoom = function () {
       alert('로그인 후에 이용하세요.');
     }
   };
+
+  console.log(rooms);
 
   return (
     <div>
