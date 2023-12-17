@@ -124,7 +124,12 @@ const MyCoffeechatDetailChatButton = ({ data, parentsId }: Props) => {
       <>
         {isExist ? (
           <Link href={data.itemInfo.online}>
-            <Button content={'채팅방 참여'} size={'small'} />
+            <Button
+              content={'채팅방 참여'}
+              size={'small'}
+              color={'bg-orange-400 hover:bg-orange-800'}
+              darkColor={'bg-orange-400 hover:bg-orange-800'}
+            />
           </Link>
         ) : (
           <Button content={'채팅방 생성'} size={'small'} onClick={handleCreateRoom} />
