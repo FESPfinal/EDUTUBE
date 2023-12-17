@@ -43,7 +43,8 @@ const MyCoffeechatItem = ({ data }: Props) => {
           <p className="text-sm font-semibold leading-6 text-gray-900">
             예약 인원 |{' '}
             <span className="text-light-main">
-              {data.quantity - (parentsData?.options.length || 0)}
+              {data.quantity -
+                (parentsData?.options.item.filter(item => !item.buyQuantity).length || 0)}
             </span>{' '}
             /{data.quantity}
           </p>
