@@ -68,38 +68,59 @@ const MyCoffeechatDetailChatButton = ({ data, parentsId }: Props) => {
     sellerOrdersRefetch();
   };
 
-  useEffect(() => {
-    function handleCreateRoomResponse(response: CreateRoomResponse) {
-      if (response.success) {
-        // 채팅방이 성공적으로 생성된 경우
-        //option에 해당하는 채팅방 입장 키
-        const roomKey = Object.entries(response.roomList).filter(
-          item => item[1].parents_option === `${parentsId}_${data.itemInfo.optionId}`,
-        )[0]?.[0];
+  // useEffect(() => {
+  //   function handleCreateRoomResponse(response: CreateRoomResponse) {
+  //     if (response.success) {
+  //       // 채팅방이 성공적으로 생성된 경우
+  //       //option에 해당하는 채팅방 입장 키
+  //       const roomKey = Object.entries(response.roomList).filter(
+  //         item => item[1].parents_option === `${parentsId}_${data.itemInfo.optionId}`,
+  //       )[0]?.[0];
 
-        if (roomKey !== undefined) {
-          const chatLink = `/mypage/chat/${roomKey}`;
-          updateChatLinkMutate(
-            {
-              _id: data.itemInfo.optionId,
-              extraData: { ...data.itemInfo.extra, online: chatLink },
-            },
-            {
-              onSuccess: () => {
-                refetchAll();
-              },
-            },
-          );
-        }
-      }
+  //       if (roomKey !== undefined) {
+  //         const chatLink = `/mypage/chat/${roomKey}`;
+  //         updateChatLinkMutate(
+  //           {
+  //             _id: data.itemInfo.optionId,
+  //             extraData: { ...data.itemInfo.extra, online: chatLink },
+  //           },
+  //           {
+  //             onSuccess: () => {
+  //               refetchAll();
+  //             },
+  //           },
+  //         );
+  //       }
+  //     }
+  //   }
+  //   // 서버에서 createRoom에 대한 응답을 받을 때 호출될 함수
+  //   socket.on('createRoomResponse', handleCreateRoomResponse);
+
+  //   return () => {
+  //     socket.off('createRoomResponse', handleCreateRoomResponse);
+  //   };
+  // }, []);
+
+  const updateLink = (response: CreateRoomResponse) => {
+    const roomKey = Object.entries(response.roomList).filter(
+      item => item[1].parents_option === `${parentsId}_${data.itemInfo.optionId}`,
+    )[0]?.[0];
+
+    if (roomKey !== undefined) {
+      const chatLink = `/mypage/chat/${roomKey}`;
+      updateChatLinkMutate(
+        {
+          _id: data.itemInfo.optionId,
+          extraData: { ...data.itemInfo.extra, online: chatLink },
+        },
+        {
+          onSuccess: () => {
+            refetchAll();
+          },
+        },
+      );
     }
-    // 서버에서 createRoom에 대한 응답을 받을 때 호출될 함수
-    socket.on('createRoomResponse', handleCreateRoomResponse);
-
-    return () => {
-      socket.off('createRoomResponse', handleCreateRoomResponse);
-    };
-  }, []);
+  };
 
   if (data.itemInfo.place === 'online') {
     // 채팅방 생성
@@ -111,6 +132,7 @@ const MyCoffeechatDetailChatButton = ({ data, parentsId }: Props) => {
             hostName: userInfo.name,
             roomName: data.itemInfo.name,
             parents_option: `${parentsId}_${data.itemInfo.optionId}`,
+            callback: updateLink,
           });
         } else {
           alert('채팅방 이름을 입력하세요.');

@@ -5,6 +5,7 @@ import { formatDate, formatTime } from '@/helper/utils/datetime';
 import useSelectCoffeechatInfo, { Extra } from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
 import { useEffect, useState } from 'react';
 import MyCoffeechatDetailChatButton from './MyCoffeechatDetailChatButton';
+import useSelectSellerOrders from '@/queries/mypage/myCoffeechat/useSelectSellerOrders';
 
 const MY_COFFECHAT_OPTIONS = {
   TOTAL: '전체',
@@ -62,33 +63,37 @@ type OrderFormat = {
 
 const MyCoffeechatDetailBody = ({ _id }: { _id: string }) => {
   const { data: parentsOrderData } = useSelectCoffeechatInfo(_id);
+  const { data: sellerOrdersData } = useSelectSellerOrders();
   const [options, setOptions] = useState<ReservedState[]>();
   const [showOptionList, setShowOptionList] = useState(options);
   const [selectedOption, setSelectedOption] = useState(MY_COFFECHAT_OPTIONS.TOTAL);
 
-  const parentsOptions = parentsOrderData?.options.item;
-
   useEffect(() => {
-    const optionsFormatList = parentsOptions?.map(option => ({
-      isReserved: !!option?.buyQuantity,
-      itemInfo: {
-        name: option?.name,
-        optionId: option._id,
-        sellerName: option.extra?.author,
-        date: option.extra.datetime?.date,
-        time: option.extra.datetime?.time,
-        userName: option.extra?.author,
-        price: option?.price,
-        place: option.extra?.place,
-        online: option.extra?.online,
-        offline: option.extra?.offline,
-        extra: option.extra,
-      },
-    }));
+    const parentsOptions = parentsOrderData?.options.item;
+    const optionsFormatList = parentsOptions?.map(option => {
+      // const customerInfo = sellerOrdersData?.filter(items => option._id === items.products.filter((item) => item));
+
+      return {
+        isReserved: !!option?.buyQuantity,
+        itemInfo: {
+          name: option?.name,
+          optionId: option._id,
+          sellerName: option.extra?.author,
+          date: option.extra.datetime?.date,
+          time: option.extra.datetime?.time,
+          userName: option.extra?.author,
+          price: option?.price,
+          place: option.extra?.place,
+          online: option.extra?.online,
+          offline: option.extra?.offline,
+          extra: option.extra,
+        },
+      };
+    });
 
     setShowOptionList(optionsFormatList);
     setOptions(optionsFormatList);
-  }, [parentsOptions, parentsOrderData]);
+  }, [parentsOrderData, sellerOrdersData]);
 
   useEffect(() => {
     //탭 선택 변경시 보여주는 데이터 변경

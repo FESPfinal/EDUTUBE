@@ -28,6 +28,7 @@ interface ClientToServerEvents {
     hostName: string;
     roomName: string;
     parents_option: string;
+    callback: ({ success, roomList }: CreateRoomResponse) => void;
   }) => void;
   // 채팅방 입장
   joinRoom: (

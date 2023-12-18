@@ -56,6 +56,7 @@ const CreateRoom = function () {
           hostName: userInfo.name,
           roomName: roomName,
           parents_option: '',
+          callback: () => {},
         });
       } else {
         alert('채팅방 이름을 입력하세요.');
