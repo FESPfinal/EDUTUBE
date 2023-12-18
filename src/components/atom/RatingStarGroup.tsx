@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import RatingStar from './RatingStar';
 
 interface Props {
@@ -17,6 +17,9 @@ interface Props {
  */
 const RatingStarGroup = ({ isReadOnly = true, defaultRate = 0, setSelectedRate }: Props) => {
   const [rate, setRate] = useState(defaultRate);
+  useEffect(() => {
+    setRate(defaultRate);
+  }, [defaultRate]);
   const handleStarRate = (value: number) => {
     setRate(value);
     setSelectedRate && setSelectedRate(value);
