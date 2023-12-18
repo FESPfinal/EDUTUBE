@@ -230,7 +230,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
         </div>
         {/* 색션 2-2 */}
         <div className="md:w-1/3 relative">
-          <div className="bg-white border-2 border-solid border-gray-200 rounded-sm p-4 shadow-md sticky top-12 right-0 z-10">
+          <div className="bg-white border-2 border-solid border-gray-200 rounded-sm p-4 shadow-md sticky top-24 right-0 z-10">
             <div className="mb-2">
               <h1 className="text-lg font-bold mb-2">{coffeechatDetailData?.name}</h1>
             </div>
