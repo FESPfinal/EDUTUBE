@@ -81,6 +81,7 @@ const CoffeechatCartModal = () => {
           content="장바구니"
           size="medium"
           onClick={() => selectedDatetimeId && cartCoffeechat(selectedDatetimeId)}
+          disabled={selectedDatetimeId === undefined}
         />
       </div>
     </>
