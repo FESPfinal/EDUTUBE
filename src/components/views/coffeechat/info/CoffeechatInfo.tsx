@@ -3,6 +3,7 @@ import Avatar from '@/components/atom/Avatar';
 import {
   default as DeleteButton,
   default as PurchaseButton,
+  default as CartButton,
   default as UpdateButton
 } from '@/components/atom/Button';
 import RatingBarGroup from '@/components/atom/RatingBarGroup';
@@ -255,14 +256,24 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
                   />
                 </>
               ) : (
-                <PurchaseButton
-                  content={isReservationEnabled ? '예약하기' : '예약 불가'}
-                  size="medium"
-                  onClick={() => {
-                    router.push(`/coffeechat/info/${_id}/reserve`);
-                  }}
-                  disabled={!isReservationEnabled}
-                />
+                <>
+                  <CartButton
+                    content={isReservationEnabled ? '장바구니' : '장바구니 담기 불가'}
+                    size="medium"
+                    onClick={() => {
+                      router.push(`/coffeechat/info/${_id}/cart`);
+                    }}
+                    disabled={!isReservationEnabled}
+                  />
+                  <PurchaseButton
+                    content={isReservationEnabled ? '예약하기' : '예약 불가'}
+                    size="medium"
+                    onClick={() => {
+                      router.push(`/coffeechat/info/${_id}/reserve`);
+                    }}
+                    disabled={!isReservationEnabled}
+                  />
+                </>
               )}
             </div>
           </div>
