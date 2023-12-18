@@ -18,13 +18,13 @@ const RatingSummary = ({ averageRating,
   replyCount,
   ratingPercentages }: Props) => {
   return (
-    <div className="flex border-2 border-indigo">
-      <div className="flex flex-col border-2 border-black">
-        <p>{averageRating}</p>
+    <div className="flex gap-6 bg-gray-100 rounded-lg mt-6 mb-6">
+      <div className="flex flex-col  p-8 items-center justify-center gap-5 ">
+        <p className="text-bold text-2xl">{averageRating}</p>
         <RatingStarGroup isReadOnly={true} defaultRate={averageRating} />
-        <p>{replyCount}개의 수강평</p>
+        <p className="text-gray-700 text-sm">{replyCount}개의 수강평</p>
       </div>
-      <div className="flex flex-col border-2 border-black w-full">
+      <div className="flex flex-col w-full  p-4">
         <RatingBarGroup percentList={ratingPercentages} />
       </div>
     </div>
