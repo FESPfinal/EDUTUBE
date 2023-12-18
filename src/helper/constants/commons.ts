@@ -1,1 +1,1 @@
-export const IMAGE_ROUTE = 'https://localhost:443';
+export const IMAGE_ROUTE = process.env.NEXT_PUBLIC_EDUTUBE_API;

@@ -69,7 +69,7 @@ const CoffeechatModal = () => {
         </div>
         {/* TODO: item type 설정하기 */}
         <div className="flex gap-2 flex-wrap mb-6 justify-center">
-          {coffeechatDetailData?.options.map((item: any, index: number) => (
+          {coffeechatDetailData?.options.item?.map((item: any, index: number) => (
             <p
               key={index}
               className={` border-2 border-solid border-light-main rounded-lg p-2 cursor-pointer hover:bg-light-main minWidth-44  flex   ${

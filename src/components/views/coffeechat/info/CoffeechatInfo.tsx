@@ -3,11 +3,12 @@ import Avatar from '@/components/atom/Avatar';
 import {
   default as DeleteButton,
   default as PurchaseButton,
-  default as UpdateButton
+  default as UpdateButton,
 } from '@/components/atom/Button';
 import RatingBarGroup from '@/components/atom/RatingBarGroup';
 import RatingStarGroup from '@/components/atom/RatingStarGroup';
 import ReplyItemCard from '@/components/views/coffeechat/review/ReplyItem';
+import { IMAGE_ROUTE } from '@/helper/constants/commons';
 import useSelectCoffeechatInfo from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
 import useSelectReply from '@/queries/coffeechat/review/useSelectReply';
 import useUserInfo from '@/stores/userInfo';
@@ -33,7 +34,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
   const replyCount = replyListData?.length;
 
   useEffect(() => {
-    setSelectedDateTimeList(coffeechatDetailData?.options?.map(item => item.extra.datetime));
+    setSelectedDateTimeList(coffeechatDetailData?.options?.item?.map(item => item.extra.datetime));
   }, [coffeechatDetailData]);
 
   useEffect(() => {
@@ -57,7 +58,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
   }, []);
 
   useEffect(() => {
-    setIsReservationEnabled(coffeechatDetailData?.options.length !== 0);
+    setIsReservationEnabled(coffeechatDetailData?.options?.item?.length !== 0);
   }, [coffeechatDetailData]);
 
   const calculateAverageRating = () => {
@@ -67,7 +68,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
     const totalRating = replyListData?.reduce((acc, item) => acc + item.rating, 0);
     const averageRating = totalRating / replyListData?.length;
     return averageRating;
-  }
+  };
 
   const averageRating = calculateAverageRating();
 
@@ -129,7 +130,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
         <div className="md:w-2/3">
           <div className="w-full h-96 aspect-w-3 aspect-h-2">
             <Image
-              src={`https://localhost:443/${coffeechatDetailData?.mainImages[0]}`}
+              src={`${IMAGE_ROUTE}${coffeechatDetailData?.mainImages[0]}`}
               alt={`${coffeechatDetailData?.name}`}
               className="w-full h-full object-cover"
               unoptimized={true}
@@ -143,7 +144,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
           <h1 className="text-2xl font-bold mb-2">{coffeechatDetailData?.name}</h1>
           <div className="flex items-center gap-3 mb-2">
             <Avatar
-              imageUrl={`https://localhost:443/${coffeechatDetailData?.extra.authorImage}`}
+              imageUrl={`${IMAGE_ROUTE}${coffeechatDetailData?.extra.authorImage}`}
               size={'xsmall'}
             />
             <p className="text-md font-bold">{coffeechatDetailData?.extra.author}</p>
@@ -183,10 +184,11 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
               {coffeechatDetailData?.extra.datetimeList.map((item: Datetime, index: number) => (
                 <p
                   key={index}
-                  className={`mb-2 mr-2 rounded-lg p-2.5 w-44 text-white ${stringifySelectedDatetimeList?.includes(JSON.stringify(item))
-                    ? 'bg-light-main'
-                    : 'bg-light-disabled text-gray-100'
-                    }`}
+                  className={`mb-2 mr-2 rounded-lg p-2.5 w-44 text-white ${
+                    stringifySelectedDatetimeList?.includes(JSON.stringify(item))
+                      ? 'bg-light-main'
+                      : 'bg-light-disabled text-gray-100'
+                  }`}
                 >
                   <span className=" mr-2">{JSON.stringify(item.date).slice(1, 11)}</span>
                   <span className=" mr-2">|</span>
@@ -221,9 +223,14 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
             </div>
             <div className="flex flex-col gap-1">
               {replyListData?.map((item, index) => (
-                <ReplyItemCard key={index} rating={item.rating} content={item.content} userName={item.user.name} createdAt={item.createdAt} />
-              ))
-              }
+                <ReplyItemCard
+                  key={index}
+                  rating={item.rating}
+                  content={item.content}
+                  userName={item.user.name}
+                  createdAt={item.createdAt}
+                />
+              ))}
             </div>
           </div>
         </div>
