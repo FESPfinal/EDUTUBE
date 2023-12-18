@@ -3,10 +3,11 @@ import Button from '@/components/atom/Button';
 import { OrderData } from '@/helper/types/order';
 import useSelectCoffeechatInfo from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
 import useUpdateOrder from '@/queries/coffeechat/order/useUpdateOrder';
+import useUserInfo from '@/stores/userInfo';
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useParams, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const CoffeechatModal = () => {
   const router = useRouter();
@@ -14,7 +15,28 @@ const CoffeechatModal = () => {
   const _id = params?._id as string;
   const { data: coffeechatDetailData, refetch: coffeechatRefetch } = useSelectCoffeechatInfo(_id);
   const { mutate: mutateOrderCoffeechat } = useUpdateOrder();
+  const { userInfo } = useUserInfo(store => store);
   const [selectedDatetimeId, setSelectedDatetimeId] = useState<number>();
+  const [isPurchased, setIsPurchased] = useState(userInfo.extra.point > 0);
+  const [sumPrice, setSumPrice] = useState(0);
+
+  useEffect(() => {
+    const charge = userInfo.extra.point - sumPrice;
+    if (charge >= 0) {
+      setIsPurchased(true);
+    } else {
+      setIsPurchased(false);
+    }
+  }, [sumPrice, userInfo.extra.point]);
+
+  useEffect(() => {
+    if (selectedDatetimeId == undefined) {
+      setSumPrice(0)
+    } else if (!!selectedDatetimeId) {
+      const sum = coffeechatDetailData?.price || 0
+      setSumPrice(sum);
+    }
+  }, [selectedDatetimeId])
 
   const handleDatetimeClick = (timeId: number) => {
     if (timeId === selectedDatetimeId) {
@@ -67,7 +89,7 @@ const CoffeechatModal = () => {
             <FontAwesomeIcon icon={faCircleXmark} size="xl" />
           </div>
         </div>
-        <div className="flex gap-2 flex-wrap mb-6 justify-center">
+        <div className="flex gap-2 flex-wrap mt-12 mb-12 justify-center">
           {coffeechatDetailData?.options.map((item, index: number) => (
             <p
               key={index}
@@ -90,10 +112,19 @@ const CoffeechatModal = () => {
             </p>
           ))}
         </div>
+        <div className="mt-6 mb-6">
+          <section className="flex flex-col gap-2">
+            <p>현재 보유 포인트 {userInfo.extra.point || 0} point</p>
+            <p className="text-lg">
+              총 결제 포인트 <span className="text-light-main">{sumPrice} point</span>
+            </p>
+          </section>
+        </div>
         <Button
           content="예약하기"
           size="medium"
           onClick={() => selectedDatetimeId && reserveCoffeechat(selectedDatetimeId)}
+          disabled={!isPurchased || selectedDatetimeId === undefined}
         />
       </div>
     </>
