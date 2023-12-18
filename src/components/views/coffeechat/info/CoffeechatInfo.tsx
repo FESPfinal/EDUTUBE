@@ -64,8 +64,12 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
       return 0; // 빈 배열이거나 없는 경우 평균 0으로 간주
     }
     const totalRating = replyListData?.reduce((acc, item) => acc + item.rating, 0);
-    const averageRating = totalRating / replyListData?.length;
-    return averageRating;
+    const averageRating = (totalRating / replyListData?.length);
+    if (Number.isInteger(averageRating)) {
+      return averageRating; // 소수점 없는 경우 자연수 반환
+    } else {
+      return averageRating.toFixed(1); // 소수점 둘째 자리까지 보여주기
+    }
   }
 
   const averageRating = calculateAverageRating();
@@ -108,11 +112,11 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
 
     // 각 등급의 비율을 계산하여 percentList 객체 생성
     const percentList = {
-      five: `${(ratingCounts.five / totalCount) * 100}`,
-      four: `${(ratingCounts.four / totalCount) * 100}`,
-      three: `${(ratingCounts.three / totalCount) * 100}`,
-      two: `${(ratingCounts.two / totalCount) * 100}`,
-      one: `${(ratingCounts.one / totalCount) * 100}`,
+      five: `${((ratingCounts.five / totalCount) * 100).toFixed(1)}`,
+      four: `${((ratingCounts.four / totalCount) * 100).toFixed(1)}`,
+      three: `${((ratingCounts.three / totalCount) * 100).toFixed(1)}`,
+      two: `${((ratingCounts.two / totalCount) * 100).toFixed(1)}`,
+      one: `${((ratingCounts.one / totalCount) * 100).toFixed(1)}`,
     };
 
     return percentList;
@@ -179,7 +183,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
           <div id="schedule" className="mb-6 ">
             <h3 className="text-lg font-bold mb-4">일정</h3>
             <div className="flex flex-wrap">
-              {coffeechatDetailData?.extra.datetimeList.map((item: Datetime, index: number) => (
+              {coffeechatDetailData?.extra.datetimeList?.map((item: Datetime, index: number) => (
                 <p
                   key={index}
                   className={`mb-2 mr-2 rounded-lg p-2.5 w-44 text-white ${stringifySelectedDatetimeList?.includes(JSON.stringify(item))
