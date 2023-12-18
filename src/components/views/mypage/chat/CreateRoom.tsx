@@ -51,13 +51,16 @@ const CreateRoom = function () {
   const handleCreateRoom = function () {
     if (userInfo) {
       if (roomName.trim().length > 0) {
-        socket.emit('createRoom', {
-          user_id: userInfo._id,
-          hostName: userInfo.name,
-          roomName: roomName,
-          parents_option: '',
-          callback: () => {},
-        });
+        socket.emit(
+          'createRoom',
+          {
+            user_id: userInfo._id,
+            hostName: userInfo.name,
+            roomName: roomName,
+            parents_option: '',
+          },
+          () => {},
+        );
       } else {
         alert('채팅방 이름을 입력하세요.');
       }

@@ -125,15 +125,19 @@ const MyCoffeechatDetailChatButton = ({ data, parentsId }: Props) => {
   if (data.itemInfo.place === 'online') {
     // 채팅방 생성
     const handleCreateRoom = () => {
+      console.log('clicked');
       if (userInfo) {
         if (data.itemInfo.name.trim().length > 0) {
-          socket.emit('createRoom', {
-            user_id: userInfo._id,
-            hostName: userInfo.name,
-            roomName: data.itemInfo.name,
-            parents_option: `${parentsId}_${data.itemInfo.optionId}`,
-            callback: updateLink,
-          });
+          socket.emit(
+            'createRoom',
+            {
+              user_id: userInfo._id,
+              hostName: userInfo.name,
+              roomName: data.itemInfo.name,
+              parents_option: `${parentsId}_${data.itemInfo.optionId}`,
+            },
+            updateLink,
+          );
         } else {
           alert('채팅방 이름을 입력하세요.');
         }

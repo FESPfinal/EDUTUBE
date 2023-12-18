@@ -23,13 +23,15 @@ interface ClientToServerEvents {
   // 채팅방 정보 조회
   getRoomInfo: (roomId: string, callback: (roomInfo: RoomItem) => void) => void;
   // 채팅방 생성
-  createRoom: (room: {
-    user_id: number;
-    hostName: string;
-    roomName: string;
-    parents_option: string;
-    callback: ({ success, roomList }: CreateRoomResponse) => void;
-  }) => void;
+  createRoom: (
+    room: {
+      user_id: number;
+      hostName: string;
+      roomName: string;
+      parents_option: string;
+    },
+    callback: ({ success, roomList }: CreateRoomResponse) => void,
+  ) => void;
   // 채팅방 입장
   joinRoom: (
     room: { roomId: string; user_id: number | undefined; nickName: string | undefined },
