@@ -58,7 +58,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
   }, []);
 
   useEffect(() => {
-    setIsReservationEnabled(coffeechatDetailData?.options.item.length !== 0);
+    setIsReservationEnabled(coffeechatDetailData?.options.item.filter(item => item.buyQuantity === 0).length !== 0);
   }, [coffeechatDetailData]);
 
   const calculateAverageRating = () => {
