@@ -3,6 +3,7 @@ import Avatar from '@/components/atom/Avatar';
 import {
   default as DeleteButton,
   default as PurchaseButton,
+  default as CartButton,
   default as UpdateButton
 } from '@/components/atom/Button';
 import RatingSummary from '@/components/views/coffeechat/review/RatingSummary';
@@ -227,7 +228,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
         </div>
         {/* 색션 2-2 */}
         <div className="md:w-1/3 relative">
-          <div className="bg-white border-2 border-solid border-gray-200 rounded-sm p-4 shadow-md sticky top-12 right-0 z-10">
+          <div className="bg-white border-2 border-solid border-gray-200 rounded-sm p-4 shadow-md sticky top-24 right-0 z-10">
             <div className="mb-2">
               <h1 className="text-lg font-bold mb-2">{coffeechatDetailData?.name}</h1>
             </div>
@@ -253,14 +254,24 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
                   />
                 </>
               ) : (
-                <PurchaseButton
-                  content={isReservationEnabled ? '예약하기' : '예약 불가'}
-                  size="medium"
-                  onClick={() => {
-                    router.push(`/coffeechat/info/${_id}/reserve`);
-                  }}
-                  disabled={!isReservationEnabled}
-                />
+                <>
+                  <CartButton
+                    content={isReservationEnabled ? '장바구니' : '장바구니 담기 불가'}
+                    size="medium"
+                    onClick={() => {
+                      router.push(`/coffeechat/info/${_id}/cart`);
+                    }}
+                    disabled={!isReservationEnabled}
+                  />
+                  <PurchaseButton
+                    content={isReservationEnabled ? '예약하기' : '예약 불가'}
+                    size="medium"
+                    onClick={() => {
+                      router.push(`/coffeechat/info/${_id}/reserve`);
+                    }}
+                    disabled={!isReservationEnabled}
+                  />
+                </>
               )}
             </div>
           </div>
