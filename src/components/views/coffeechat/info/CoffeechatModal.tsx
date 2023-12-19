@@ -90,7 +90,7 @@ const CoffeechatModal = () => {
           </div>
         </div>
         <div className="flex gap-2 flex-wrap mt-12 mb-12 justify-center">
-          {coffeechatDetailData?.options.map((item, index: number) => (
+          {coffeechatDetailData?.options?.item?.map((item, index: number) => (
             <p
               key={index}
               className={` border-2 border-solid border-light-main rounded-lg p-2 cursor-pointer hover:bg-light-main minWidth-44  flex   ${item._id === selectedDatetimeId ? 'bg-light-main' : 'hover:bg-gray-200'
