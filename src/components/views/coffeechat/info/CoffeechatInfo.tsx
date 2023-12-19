@@ -3,10 +3,10 @@ import Avatar from '@/components/atom/Avatar';
 import {
   default as DeleteButton,
   default as PurchaseButton,
+  default as CartButton,
   default as UpdateButton,
 } from '@/components/atom/Button';
-import RatingBarGroup from '@/components/atom/RatingBarGroup';
-import RatingStarGroup from '@/components/atom/RatingStarGroup';
+import RatingSummary from '@/components/views/coffeechat/review/RatingSummary';
 import ReplyItemCard from '@/components/views/coffeechat/review/ReplyItem';
 import { IMAGE_ROUTE } from '@/helper/constants/commons';
 import useSelectCoffeechatInfo from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
@@ -31,7 +31,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
   const [isReservationEnabled, setIsReservationEnabled] = useState(true);
   const stringifySelectedDatetimeList = selectedDatetimeList?.map(item => JSON.stringify(item));
 
-  const replyCount = replyListData?.length;
+  const replyCount = replyListData?.length || 0;
 
   useEffect(() => {
     setSelectedDateTimeList(coffeechatDetailData?.options?.item?.map(item => item.extra.datetime));
@@ -67,10 +67,14 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
     }
     const totalRating = replyListData?.reduce((acc, item) => acc + item.rating, 0);
     const averageRating = totalRating / replyListData?.length;
-    return averageRating;
+    if (Number.isInteger(averageRating)) {
+      return averageRating; // 소수점 없는 경우 자연수 반환
+    } else {
+      return averageRating.toFixed(1); // 소수점 둘째 자리까지 보여주기
+    }
   };
 
-  const averageRating = calculateAverageRating();
+  const averageRating = calculateAverageRating() as number;
 
   const calculateRatingPercentages = () => {
     if (!replyListData || replyListData?.length === 0) {
@@ -110,11 +114,11 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
 
     // 각 등급의 비율을 계산하여 percentList 객체 생성
     const percentList = {
-      five: `${(ratingCounts.five / totalCount) * 100}`,
-      four: `${(ratingCounts.four / totalCount) * 100}`,
-      three: `${(ratingCounts.three / totalCount) * 100}`,
-      two: `${(ratingCounts.two / totalCount) * 100}`,
-      one: `${(ratingCounts.one / totalCount) * 100}`,
+      five: `${((ratingCounts.five / totalCount) * 100).toFixed(1)}`,
+      four: `${((ratingCounts.four / totalCount) * 100).toFixed(1)}`,
+      three: `${((ratingCounts.three / totalCount) * 100).toFixed(1)}`,
+      two: `${((ratingCounts.two / totalCount) * 100).toFixed(1)}`,
+      one: `${((ratingCounts.one / totalCount) * 100).toFixed(1)}`,
     };
 
     return percentList;
@@ -181,7 +185,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
           <div id="schedule" className="mb-6 ">
             <h3 className="text-lg font-bold mb-4">일정</h3>
             <div className="flex flex-wrap">
-              {coffeechatDetailData?.extra.datetimeList.map((item: Datetime, index: number) => (
+              {coffeechatDetailData?.extra.datetimeList?.map((item: Datetime, index: number) => (
                 <p
                   key={index}
                   className={`mb-2 mr-2 rounded-lg p-2.5 w-44 text-white ${
@@ -211,16 +215,11 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
               <span className="text-lg font-medium text-light-main">{replyCount}개</span>
             </p>
             <p className="text-gray-700 text-sm">참여자들이 직접 작성한 후기입니다. </p>
-            <div className=" flex border-2 border-indigo">
-              <div className="flex flex-col border-2 border-black">
-                <p>{averageRating}</p>
-                <RatingStarGroup isReadOnly={true} defaultRate={averageRating} />
-                <p>{replyCount}개의 수강평</p>
-              </div>
-              <div className="flex flex-col border-2 border-black w-full">
-                <RatingBarGroup percentList={ratingPercentages} />
-              </div>
-            </div>
+            <RatingSummary
+              averageRating={averageRating}
+              replyCount={replyCount}
+              ratingPercentages={ratingPercentages}
+            />
             <div className="flex flex-col gap-1">
               {replyListData?.map((item, index) => (
                 <ReplyItemCard
@@ -236,7 +235,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
         </div>
         {/* 색션 2-2 */}
         <div className="md:w-1/3 relative">
-          <div className="bg-white border-2 border-solid border-gray-200 rounded-sm p-4 shadow-md sticky top-12 right-0 z-10">
+          <div className="bg-white border-2 border-solid border-gray-200 rounded-sm p-4 shadow-md sticky top-24 right-0 z-10">
             <div className="mb-2">
               <h1 className="text-lg font-bold mb-2">{coffeechatDetailData?.name}</h1>
             </div>
@@ -262,14 +261,24 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
                   />
                 </>
               ) : (
-                <PurchaseButton
-                  content={isReservationEnabled ? '예약하기' : '예약 불가'}
-                  size="medium"
-                  onClick={() => {
-                    router.push(`/coffeechat/info/${_id}/reserve`);
-                  }}
-                  disabled={!isReservationEnabled}
-                />
+                <>
+                  <CartButton
+                    content={isReservationEnabled ? '장바구니' : '장바구니 담기 불가'}
+                    size="medium"
+                    onClick={() => {
+                      router.push(`/coffeechat/info/${_id}/cart`);
+                    }}
+                    disabled={!isReservationEnabled}
+                  />
+                  <PurchaseButton
+                    content={isReservationEnabled ? '예약하기' : '예약 불가'}
+                    size="medium"
+                    onClick={() => {
+                      router.push(`/coffeechat/info/${_id}/reserve`);
+                    }}
+                    disabled={!isReservationEnabled}
+                  />
+                </>
               )}
             </div>
           </div>
