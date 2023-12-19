@@ -68,6 +68,8 @@ const MyCoffeechatDetailBody = ({ _id }: { _id: string }) => {
   const [showOptionList, setShowOptionList] = useState(options);
   const [selectedOption, setSelectedOption] = useState(MY_COFFECHAT_OPTIONS.TOTAL);
 
+  const isOnline = parentsOrderData?.extra.place === 'online';
+
   useEffect(() => {
     const parentsOptions = parentsOrderData?.options.item;
     const optionsFormatList = parentsOptions?.map(option => {
@@ -153,12 +155,14 @@ const MyCoffeechatDetailBody = ({ _id }: { _id: string }) => {
                     >
                       POINT
                     </th>
-                    <th
-                      scope="col"
-                      className="w-[10%] px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
-                    >
-                      채팅방
-                    </th>
+                    {isOnline && (
+                      <th
+                        scope="col"
+                        className="w-[10%] px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
+                      >
+                        채팅방
+                      </th>
+                    )}
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200 w-full">
@@ -181,11 +185,13 @@ const MyCoffeechatDetailBody = ({ _id }: { _id: string }) => {
                         </p>
                       </td> */}
                       <td className="px-4 py-4 whitespace-nowrap">{item.itemInfo.price}</td>
-                      <td className="px-4 py-4 whitespace-nowrap">
-                        {item.isReserved && (
-                          <MyCoffeechatDetailChatButton data={item} parentsId={_id} />
-                        )}
-                      </td>
+                      {isOnline && (
+                        <td className="px-4 py-4 whitespace-nowrap">
+                          {item.isReserved && (
+                            <MyCoffeechatDetailChatButton data={item} parentsId={_id} />
+                          )}
+                        </td>
+                      )}
                     </tr>
                   ))}
                 </tbody>

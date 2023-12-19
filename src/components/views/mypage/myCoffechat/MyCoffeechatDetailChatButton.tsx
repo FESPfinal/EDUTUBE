@@ -16,6 +16,8 @@ interface Props {
 }
 
 const MyCoffeechatDetailChatButton = ({ data, parentsId }: Props) => {
+  console.log(data);
+
   const { userInfo } = useUserInfo();
   const { mutate: updateChatLinkMutate } = useUpdateMyCoffeechatChatLink();
   const { refetch: coffeechatInfoRefetch } = useSelectCoffeechatInfo(parentsId);

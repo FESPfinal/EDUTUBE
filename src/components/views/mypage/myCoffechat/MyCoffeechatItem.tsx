@@ -31,6 +31,7 @@ const MyCoffeechatItem = ({ data }: Props) => {
               </div>
             </div>
             <p className="text-sm font-semibold leading-6 text-gray-900">{data.name}</p>
+            <p className="text-sm leading-6 text-gray-900">{parentsData?.extra.place}</p>
             <p className="text-sm leading-6 text-gray-900">
               {firstDate} ~ {lastDate}
             </p>
