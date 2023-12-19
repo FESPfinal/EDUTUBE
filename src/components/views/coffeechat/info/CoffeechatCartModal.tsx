@@ -1,11 +1,13 @@
 'use client';
 import Button from '@/components/atom/Button';
+import { formatDate, formatTime } from '@/helper/utils/datetime';
 import useCreateCoffeechatCart from '@/queries/coffeechat/cart/useCreateCoffeechatCart';
 import useSelectCoffeechatInfo from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
+
 
 const CoffeechatCartModal = () => {
   const router = useRouter();
@@ -55,27 +57,29 @@ const CoffeechatCartModal = () => {
           </div>
         </div>
         <div className="flex gap-2 flex-wrap mb-6 justify-center">
-          {coffeechatDetailData?.options.map((item, index: number) => (
-            <p
-              key={index}
-              className={` border-2 border-solid border-light-main rounded-lg p-2 cursor-pointer hover:bg-light-main minWidth-44  flex   ${item._id === selectedDatetimeId ? 'bg-light-main' : 'hover:bg-gray-200'
-                }`}
-              onClick={() => handleDatetimeClick(item._id)}
-            >
+          {coffeechatDetailData?.options?.item
+            ?.filter(item => item.buyQuantity === 0)
+            .map((item, index: number) => (
               <p
-                className={`text-gray-700 leading-6 mr-2 ${item._id === selectedDatetimeId ? 'text-white' : ''
+                key={index}
+                className={` border-2 border-solid border-light-main rounded-lg p-2 cursor-pointer hover:bg-light-main minWidth-44 flex ${item._id === selectedDatetimeId ? 'bg-light-main' : 'hover:bg-gray-200'
                   }`}
+                onClick={() => handleDatetimeClick(item._id)}
               >
-                {JSON.stringify(item.extra.datetime.date).slice(1, 11)}&nbsp;/
+                <p
+                  className={`text-gray-700 leading-6 mr-2 ${item._id === selectedDatetimeId ? 'text-white' : ''
+                    }`}
+                >
+                  {formatDate(item.extra.datetime.date)}&nbsp;
+                </p>
+                <p
+                  className={`text-gray-700 leading-6 ${item._id === selectedDatetimeId ? 'text-white' : ''
+                    }`}
+                >
+                  {formatTime(item.extra.datetime.time)}
+                </p>
               </p>
-              <p
-                className={`text-gray-700 leading-6 ${item._id === selectedDatetimeId ? 'text-white' : ''
-                  }`}
-              >
-                {JSON.stringify(item.extra.datetime.time).slice(12, 17)}
-              </p>
-            </p>
-          ))}
+            ))}
         </div>
         <Button
           content="장바구니"

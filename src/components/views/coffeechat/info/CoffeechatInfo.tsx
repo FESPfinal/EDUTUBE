@@ -16,26 +16,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-
-type Datetime = {
-  date: string;
-  time: string;
-};
+import { formatDate, formatTime } from '@/helper/utils/datetime';
 
 const CoffeechatInfo = ({ _id }: { _id: string }) => {
   const router = useRouter();
   const { data: coffeechatDetailData } = useSelectCoffeechatInfo(_id);
   const { data: replyListData } = useSelectReply(_id);
   const { userInfo } = useUserInfo(store => store);
-  const [selectedDatetimeList, setSelectedDateTimeList] = useState<Datetime[]>();
   const [isReservationEnabled, setIsReservationEnabled] = useState(true);
-  const stringifySelectedDatetimeList = selectedDatetimeList?.map(item => JSON.stringify(item));
-
   const replyCount = replyListData?.length || 0;
-
-  useEffect(() => {
-    setSelectedDateTimeList(coffeechatDetailData?.options?.item?.map(item => item.extra.datetime));
-  }, [coffeechatDetailData]);
 
   useEffect(() => {
     const handleScroll = (e: Event) => {
@@ -58,7 +47,9 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
   }, []);
 
   useEffect(() => {
-    setIsReservationEnabled(coffeechatDetailData?.options?.item?.length !== 0);
+    setIsReservationEnabled(
+      coffeechatDetailData?.options?.item?.filter(item => item.buyQuantity === 0).length !== 0,
+    );
   }, [coffeechatDetailData]);
 
   const calculateAverageRating = () => {
@@ -70,7 +61,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
     if (Number.isInteger(averageRating)) {
       return averageRating; // 소수점 없는 경우 자연수 반환
     } else {
-      return averageRating.toFixed(1); // 소수점 둘째 자리까지 보여주기
+      return parseFloat(averageRating.toFixed(1)); // 소수점 둘째 자리까지 보여주기
     }
   };
 
@@ -185,18 +176,15 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
           <div id="schedule" className="mb-6 ">
             <h3 className="text-lg font-bold mb-4">일정</h3>
             <div className="flex flex-wrap">
-              {coffeechatDetailData?.extra.datetimeList?.map((item: Datetime, index: number) => (
+              {coffeechatDetailData?.options?.item?.map((item: any, index: number) => (
                 <p
                   key={index}
-                  className={`mb-2 mr-2 rounded-lg p-2.5 w-44 text-white ${
-                    stringifySelectedDatetimeList?.includes(JSON.stringify(item))
-                      ? 'bg-light-main'
-                      : 'bg-light-disabled text-gray-100'
+                  className={`mb-2 mr-2 rounded-lg p-2.5 w-36 text-center text-white ${
+                    item.buyQuantity == 0 ? 'bg-light-main' : 'bg-light-disabled text-gray-100'
                   }`}
                 >
-                  <span className=" mr-2">{JSON.stringify(item.date).slice(1, 11)}</span>
-                  <span className=" mr-2">|</span>
-                  <span>{JSON.stringify(item.time).slice(12, 17)}</span>
+                  <p className=" mr-2">{formatDate(item.extra.datetime.date)}</p>
+                  <p>{formatTime(item.extra.datetime.time)}</p>
                 </p>
               ))}
             </div>
@@ -210,10 +198,10 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
             )}
           </div>
           <div id="review" className="mb-6">
-            <p className="flex gap-2">
+            <div className="flex gap-2">
               <h3 className="text-lg font-bold mb-2">수강생 후기</h3>
               <span className="text-lg font-medium text-light-main">{replyCount}개</span>
-            </p>
+            </div>
             <p className="text-gray-700 text-sm">참여자들이 직접 작성한 후기입니다. </p>
             <RatingSummary
               averageRating={averageRating}
