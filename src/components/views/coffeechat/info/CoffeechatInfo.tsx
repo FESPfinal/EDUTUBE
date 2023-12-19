@@ -17,25 +17,13 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { formatDate, formatTime } from '@/helper/utils/datetime';
 
-// type Datetime = {
-//   date: string;
-//   time: string;
-// };
-
 const CoffeechatInfo = ({ _id }: { _id: string }) => {
   const router = useRouter();
   const { data: coffeechatDetailData } = useSelectCoffeechatInfo(_id);
   const { data: replyListData } = useSelectReply(_id);
   const { userInfo } = useUserInfo(store => store);
-  // const [selectedDatetimeList, setSelectedDateTimeList] = useState<Datetime[]>();
   const [isReservationEnabled, setIsReservationEnabled] = useState(true);
   const replyCount = replyListData?.length || 0;
-
-  // useEffect(() => {
-  //   {
-  //     coffeechatDetailData?.options && setSelectedDateTimeList(coffeechatDetailData?.options?.map(item => item.extra.datetime))
-  //   };
-  // }, [coffeechatDetailData]);
 
   useEffect(() => {
     const handleScroll = (e: Event) => {
