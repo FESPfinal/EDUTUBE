@@ -75,7 +75,7 @@ type ProductItem = {
   updatedAt: string;
   replies: [];
   bookmarks: [];
-  options: Options[];
+  options: { item: Options[] };
 };
 
 const useSelectCoffeechatInfo = (_id: string) => {
