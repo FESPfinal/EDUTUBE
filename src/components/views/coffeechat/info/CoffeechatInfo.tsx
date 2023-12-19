@@ -15,21 +15,20 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { formatDate, formatTime } from '@/helper/utils/datetime';
 
-type Datetime = {
-  date: string;
-  time: string;
-};
+// type Datetime = {
+//   date: string;
+//   time: string;
+// };
 
 const CoffeechatInfo = ({ _id }: { _id: string }) => {
   const router = useRouter();
   const { data: coffeechatDetailData } = useSelectCoffeechatInfo(_id);
   const { data: replyListData } = useSelectReply(_id);
   const { userInfo } = useUserInfo(store => store);
-  const [selectedDatetimeList, setSelectedDateTimeList] = useState<Datetime[]>();
+  // const [selectedDatetimeList, setSelectedDateTimeList] = useState<Datetime[]>();
   const [isReservationEnabled, setIsReservationEnabled] = useState(true);
-  const stringifySelectedDatetimeList = selectedDatetimeList?.map(item => JSON.stringify(item));
-
   const replyCount = replyListData?.length || 0;
 
   // useEffect(() => {
@@ -59,7 +58,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
   }, []);
 
   useEffect(() => {
-    setIsReservationEnabled(coffeechatDetailData?.options.length !== 0);
+    setIsReservationEnabled(coffeechatDetailData?.options.item.length !== 0);
   }, [coffeechatDetailData]);
 
   const calculateAverageRating = () => {
@@ -186,17 +185,16 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
           <div id="schedule" className="mb-6 ">
             <h3 className="text-lg font-bold mb-4">일정</h3>
             <div className="flex flex-wrap">
-              {coffeechatDetailData?.extra.datetimeList?.map((item: Datetime, index: number) => (
+              {coffeechatDetailData?.options?.item?.map((item: any, index: number) => (
                 <p
                   key={index}
-                  className={`mb-2 mr-2 rounded-lg p-2.5 w-44 text-white ${stringifySelectedDatetimeList?.includes(JSON.stringify(item))
+                  className={`mb-2 mr-2 rounded-lg p-2.5 w-36 text-center text-white ${item.buyQuantity == 0
                     ? 'bg-light-main'
                     : 'bg-light-disabled text-gray-100'
                     }`}
                 >
-                  <span className=" mr-2">{JSON.stringify(item.date).slice(1, 11)}</span>
-                  <span className=" mr-2">|</span>
-                  <span>{JSON.stringify(item.time).slice(12, 17)}</span>
+                  <p className=" mr-2">{formatDate(item.extra.datetime.date)}</p>
+                  <p>{formatTime(item.extra.datetime.time)}</p>
                 </p>
               ))}
             </div>
