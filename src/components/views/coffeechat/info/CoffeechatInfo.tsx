@@ -32,9 +32,11 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
 
   const replyCount = replyListData?.length || 0;
 
-  useEffect(() => {
-    setSelectedDateTimeList(coffeechatDetailData?.options?.map(item => item.extra.datetime));
-  }, [coffeechatDetailData]);
+  // useEffect(() => {
+  //   {
+  //     coffeechatDetailData?.options && setSelectedDateTimeList(coffeechatDetailData?.options?.map(item => item.extra.datetime))
+  //   };
+  // }, [coffeechatDetailData]);
 
   useEffect(() => {
     const handleScroll = (e: Event) => {
@@ -69,7 +71,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
     if (Number.isInteger(averageRating)) {
       return averageRating; // 소수점 없는 경우 자연수 반환
     } else {
-      return averageRating.toFixed(1); // 소수점 둘째 자리까지 보여주기
+      return parseFloat(averageRating.toFixed(1));; // 소수점 둘째 자리까지 보여주기
     }
   }
 
@@ -208,10 +210,10 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
             )}
           </div>
           <div id="review" className="mb-6">
-            <p className="flex gap-2">
+            <div className="flex gap-2">
               <h3 className="text-lg font-bold mb-2">수강생 후기</h3>
               <span className="text-lg font-medium text-light-main">{replyCount}개</span>
-            </p>
+            </div>
             <p className="text-gray-700 text-sm">참여자들이 직접 작성한 후기입니다. </p>
             <RatingSummary
               averageRating={averageRating}
