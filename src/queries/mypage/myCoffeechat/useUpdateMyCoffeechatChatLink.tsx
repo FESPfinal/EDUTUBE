@@ -1,7 +1,6 @@
 'use client';
 
 import useEdutubeAxios from '@/helper/utils/useEdutubeAxios';
-import { Extra } from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
 import { useMutation } from '@tanstack/react-query';
 
 const URL = `/posts`;
@@ -19,7 +18,7 @@ type RequestData = {
 const useUpdateMyCoffeechatChatLink = () => {
   const { edutubeAxios } = useEdutubeAxios();
   const patchAxios = async ({ _id, reqData }: RequestData) => {
-    const response = await edutubeAxios.post(URL, { extra: { ...reqData } });
+    const response = await edutubeAxios.post(URL, reqData);
     return response.data.item;
   };
 

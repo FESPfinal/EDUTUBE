@@ -3,16 +3,34 @@
 import useEdutubeAxios from '@/helper/utils/useEdutubeAxios';
 import { useQuery } from '@tanstack/react-query';
 
-// /posts?type=qna&custom={"product_id":1} 이걸로 수정
-const URL = (_id: string) => `/posts/${_id}`;
+const URL = (_id: number) => `/posts?type=coffeechat&custom={"product_id":${_id}}`;
 
-const useSelectMyCoffeechatChatLink = () => {
-  const { edutubeAxios } = useEdutubeAxios();
-  const getAxios = async (_id: string) => {
-    const response = await edutubeAxios.get(_id);
-    return response.data.item;
+type ChatLinkItem = {
+  _id: number;
+  type: string;
+  product_id: number;
+  title: string;
+  content: string;
+  user: {
+    _id: number;
+    name: string;
   };
-  return useQuery({ queryKey: [URL], queryFn: () => getAxios });
+  createdAt: string;
+  updatedAt: string;
+  seller_id: number;
+  product: {
+    name: string;
+    image: string;
+  };
+};
+
+const useSelectMyCoffeechatChatLink = (_id: number) => {
+  const { edutubeAxios } = useEdutubeAxios();
+  const getAxios = async () => {
+    const response = await edutubeAxios.get(URL(_id));
+    return response.data.item?.[0] as ChatLinkItem;
+  };
+  return useQuery({ queryKey: [URL, _id], queryFn: getAxios });
 };
 
 export default useSelectMyCoffeechatChatLink;

@@ -22,12 +22,13 @@ const MyCoffeechatDetailChatButton = ({ data, parentsId, chatLink }: Props) => {
   const { mutate: updateChatLinkMutate } = useUpdateMyCoffeechatChatLink();
   const { refetch: coffeechatInfoRefetch } = useSelectCoffeechatInfo(parentsId);
   const { refetch: sellerOrdersRefetch } = useSelectSellerOrders();
+  const { data: chatLinkData } = useSelectMyCoffeechatChatLink(data.itemInfo.optionId);
 
   const [isConnected, setIsConnected] = useState(socket.connected);
   const [rooms, setRooms] = useState<RoomsData>({});
 
   const isExist = !!Object.keys(rooms).filter(
-    key => `/mypage/chat/${key}` === data.itemInfo.online,
+    key => `/mypage/chat/${key}` === chatLinkData?.title,
   )[0];
 
   useEffect(() => {
@@ -124,7 +125,7 @@ const MyCoffeechatDetailChatButton = ({ data, parentsId, chatLink }: Props) => {
   return (
     <>
       {isExist ? (
-        <Link href={data.itemInfo.online}>
+        <Link href={chatLinkData?.title || ''}>
           <Button
             content={'채팅방 참여'}
             size={'small'}
