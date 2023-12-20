@@ -12,6 +12,7 @@ import useSelectCoffeechatInfo, {
   ProductItem,
 } from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
 import useSelectReply from '@/queries/coffeechat/review/useSelectReply';
+import useDeleteCoffeechat from '@/queries/coffeechat/delete/useDeleteCoffeechat';
 import useUserInfo from '@/stores/userInfo';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -26,8 +27,9 @@ interface Props {
 
 const CoffeechatInfo = ({ _id, initData }: Props) => {
   const router = useRouter();
-  const { data: coffeechatDetailData } = useSelectCoffeechatInfo(_id);
+  const { data: coffeechatDetailData, refetch: coffeechatDetailRefetch } = useSelectCoffeechatInfo(_id);
   const { data: replyListData } = useSelectReply(_id);
+  const { mutate: deleteCoffeechat } = useDeleteCoffeechat();
   const { userInfo } = useUserInfo(store => store);
   const [coffeechatList, setCoffeechatList] = useState<ProductItem | undefined>(initData);
   const [isReservationEnabled, setIsReservationEnabled] = useState(true);
@@ -125,6 +127,13 @@ const CoffeechatInfo = ({ _id, initData }: Props) => {
 
   const ratingPercentages = calculateRatingPercentages();
 
+  const onDeleteCoffeechat = () => {
+    deleteCoffeechat(_id);
+    alert('삭제되었습니다.');
+    router.push(`/coffeechat`);
+    coffeechatDetailRefetch();
+  }
+
   return (
     <div className="max-w-4xl mx-auto p-4">
       {/* 색션 1*/}
@@ -187,9 +196,8 @@ const CoffeechatInfo = ({ _id, initData }: Props) => {
               {coffeechatList?.options?.item?.map((item: any, index: number) => (
                 <p
                   key={index}
-                  className={`mb-2 mr-2 rounded-lg p-2.5 w-36 text-center text-white ${
-                    item.buyQuantity == 0 ? 'bg-light-main' : 'bg-light-disabled text-gray-100'
-                  }`}
+                  className={`mb-2 mr-2 rounded-lg p-2.5 w-36 text-center text-white ${item.buyQuantity == 0 ? 'bg-light-main' : 'bg-light-disabled text-gray-100'
+                    }`}
                 >
                   <p className=" mr-2">{formatDate(item.extra.datetime?.date)}</p>
                   <p>{formatTime(item.extra.datetime?.time)}</p>
@@ -250,7 +258,7 @@ const CoffeechatInfo = ({ _id, initData }: Props) => {
                   <DeleteButton
                     content="삭제하기"
                     size="medium"
-                    onClick={() => alert('삭제하기 구현해야함')}
+                    onClick={() => onDeleteCoffeechat()}
                     color="bg-light-error"
                     darkColor="bg-dark-error"
                     hoverColor="hover:bg-red-700"
