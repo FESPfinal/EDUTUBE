@@ -6,6 +6,7 @@ import useSelectCoffeechatInfo, { Extra } from '@/queries/coffeechat/info/useSel
 import { useEffect, useState } from 'react';
 import MyCoffeechatDetailChatButton from './MyCoffeechatDetailChatButton';
 import useSelectSellerOrders from '@/queries/mypage/myCoffeechat/useSelectSellerOrders';
+import useSelectMyCoffeechatChatLink from '@/queries/mypage/myCoffeechat/useSelectMyCoffeechatChatLink';
 
 const MY_COFFECHAT_OPTIONS = {
   TOTAL: '전체',
@@ -64,6 +65,8 @@ type OrderFormat = {
 const MyCoffeechatDetailBody = ({ _id }: { _id: string }) => {
   const { data: parentsOrderData } = useSelectCoffeechatInfo(_id);
   const { data: sellerOrdersData } = useSelectSellerOrders();
+  const { data: chatLinkData } = useSelectMyCoffeechatChatLink();
+
   const [options, setOptions] = useState<ReservedState[]>();
   const [showOptionList, setShowOptionList] = useState(options);
   const [selectedOption, setSelectedOption] = useState(MY_COFFECHAT_OPTIONS.TOTAL);
@@ -188,7 +191,11 @@ const MyCoffeechatDetailBody = ({ _id }: { _id: string }) => {
                       {isOnline && (
                         <td className="px-4 py-4 whitespace-nowrap">
                           {item.isReserved && (
-                            <MyCoffeechatDetailChatButton data={item} parentsId={_id} />
+                            <MyCoffeechatDetailChatButton
+                              data={item}
+                              parentsId={_id}
+                              chatLink={''}
+                            />
                           )}
                         </td>
                       )}
