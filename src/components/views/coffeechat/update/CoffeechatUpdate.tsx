@@ -8,16 +8,13 @@ import Radio from '@/components/atom/Radio';
 import { jobCategoryConst, regionCategoryConst } from '@/helper/constants/categoryConst';
 import { PLACE_TYPES } from '@/helper/constants/placeConst';
 // queries
-import useUpdateCoffeechat, {
-  UpdateResponseData,
-} from '@/queries/coffeechat/update/useUpdateCoffeechat';
+import useUpdateCoffeechat, { } from '@/queries/coffeechat/update/useUpdateCoffeechat';
 import useCreateFile from '@/queries/common/useCreateFile';
 import useSelectCoffeechatInfo from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
 // library
 import { yupResolver } from '@hookform/resolvers/yup';
-import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { Controller, useForm, UseFormRegisterReturn } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import useUserInfo from '@/stores/userInfo';
 import { useParams, useRouter } from 'next/navigation';
@@ -39,12 +36,6 @@ const schema = yup.object().shape({
 });
 
 type RegistFormData = yup.InferType<typeof schema>;
-type RegistFormDataExtend = {
-  online: string;
-  offline: string;
-  onlinePlace: string;
-  offlinePlace: string;
-} & RegistFormData;
 
 const PLACE_TYPE = 'placeType';
 
@@ -70,9 +61,9 @@ const CoffeechatUpdate = () => {
   const [selectedRegionCategory, setSelectedRegionCategory] = useState(`${coffeechatDetailData?.extra.regionCategory}`);
 
   useEffect(() => {
-    console.log(coffeechatDetailData?.extra?.jobCategory[0])
     coffeechatDetailData && setSelectedJobCategory([coffeechatDetailData?.extra.jobCategory[0]])
     coffeechatDetailData && setSelectedRegionCategory(coffeechatDetailData?.extra.regionCategory)
+    coffeechatDetailData && setPlaceType(`${coffeechatDetailData?.extra.place}`)
   }, [coffeechatDetailData])
 
   const handlePlaceType = (type: string) => {
@@ -90,21 +81,22 @@ const CoffeechatUpdate = () => {
       active: true,
       extra: {
         intro: formSubmitData.intro,
-        place: placeType,
+        place: coffeechatDetailData?.extra?.place,
         online: coffeechatDetailData?.extra?.online || '',
         offline: coffeechatDetailData?.extra?.offline || '',
         datetimeList: coffeechatDetailData?.extra?.datetimeList,
         author: userInfo.extra.nickname,
         authorImage: userInfo.extra.profileImage.path,
-        jobCategory: selectedJobCategory,
-        regionCategory: selectedRegionCategory,
+        jobCategory: coffeechatDetailData?.extra?.jobCategory,
+        regionCategory: coffeechatDetailData?.extra?.regionCategory,
         productType: 'parents',
         depth: 1
       }
     }
     mutateUpdateCoffeechat({ updateData, _id }, {
       onSuccess: () => {
-        alert('성공')
+        alert('커피챗 게시물 수정이 성공적으로 완료되었습니다.')
+        router.push(`/coffeechat/info/${_id}`)
       },
       onError: error => {
         alert(`${error.message}`)
@@ -116,22 +108,17 @@ const CoffeechatUpdate = () => {
     const formData = new FormData();
     if (imageFile) {
       formData.append('attach', imageFile);
-      alert('여기 통과')
       createImageMutate(formData, {
         onSuccess: (fileName: { name: string; path: string }) => {
           const imagePath = fileName.path;
-          console.log('path>>>>', imagePath);
           updateParentsProduct({ formSubmitData: data, fileName: imagePath });
-          console.log('forSubmitData', data)
         },
         onError: error => {
-          console.log('error>>>>', error);
-          alert('이미지 업로드가 실패하였습니다.');
+          alert(`이미지 업로드가 실패하였습니다. ${error.message}`);
         },
       });
     } else {
       coffeechatDetailData?.mainImages[0] && updateParentsProduct({ formSubmitData: data, fileName: coffeechatDetailData.mainImages[0] })
-      alert('이미지 그대로')
     }
   };
   return (
@@ -239,7 +226,7 @@ const CoffeechatUpdate = () => {
           >
             온라인
           </Radio>
-          <Radio value={PLACE_TYPES.OFFLINE} name={PLACE_TYPE} onClick={handlePlaceType} disabled={true}>
+          <Radio value={PLACE_TYPES.OFFLINE} name={PLACE_TYPE} onClick={handlePlaceType} disabled={true} >
             오프라인
           </Radio>
           {placeType === PLACE_TYPES.ONLINE ? (
