@@ -8,17 +8,17 @@ import PurchaseCard from './PurchaseCard';
 const TOTAL = '전체';
 
 export type ShowPurchaseList = {
-  _id: '';
-  parent: '';
-  image: '';
-  name: '';
-  place: '';
-  jobCategory: [];
-  intro: '';
-  author: '';
-  datetime: { date: ''; time: '' };
-  offline: '';
-  online: '';
+  _id: number;
+  parent: string;
+  image: string;
+  name: string;
+  place: string;
+  jobCategory: string[];
+  intro: string;
+  author: string;
+  datetime: { date: string; time: string };
+  offline: string;
+  online: string;
 };
 
 const PurchaseList = () => {
