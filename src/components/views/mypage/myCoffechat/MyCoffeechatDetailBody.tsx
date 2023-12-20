@@ -119,10 +119,10 @@ const MyCoffeechatDetailBody = ({ _id }: { _id: string }) => {
         </p>
         <FilterButtons options={mypageCoffeechatDetailFilter} setPropsOption={setSelectedOption} />
       </section>
-      <div className="flex flex-col w-full">
-        <div className="-my-2 overflow-x-auto w-full scrollbar-hide">
+      <div className="flex flex-col w-full overflow-y-auto max-h-[calc(100vh-400px)] scrollbar-hide">
+        <div className="-my-2 overflow-x-auto w-full">
           <div className="py-2 align-middle inline-block w-full">
-            <div className="shadow overflow-hidden scrollbar-hide border-b border-gray-200 sm:rounded-lg w-full">
+            <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg w-full">
               <table className="divide-y divide-gray-200 w-full">
                 <thead className="bg-dark-main">
                   <tr>
