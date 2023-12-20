@@ -5,8 +5,11 @@ import ReactQueryClient from '@/helper/utils/ReactQueryClient';
 import Navbar from '@/components/block/navbar/Navbar';
 
 export const metadata: Metadata = {
-  title: 'EDUTUBE',
-  description: '원하는 강의만 모아서 볼 수 있어요!',
+  title: 'EDUTUBE 커피챗',
+  description: '교육 영상을 원하는 카테고리별로 무료수강하고, 현직자와 커피챗을 진행해보세요!',
+  openGraph: {
+    images: ['/uploads/edutube.jpg'],
+  },
 };
 
 export default function RootLayout({

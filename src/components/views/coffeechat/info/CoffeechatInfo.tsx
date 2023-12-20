@@ -4,11 +4,13 @@ import {
   default as DeleteButton,
   default as PurchaseButton,
   default as CartButton,
-  default as UpdateButton
+  default as UpdateButton,
 } from '@/components/atom/Button';
 import RatingSummary from '@/components/views/coffeechat/review/RatingSummary';
 import ReplyItemCard from '@/components/views/coffeechat/review/ReplyItem';
-import useSelectCoffeechatInfo from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
+import useSelectCoffeechatInfo, {
+  ProductItem,
+} from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
 import useSelectReply from '@/queries/coffeechat/review/useSelectReply';
 import useUserInfo from '@/stores/userInfo';
 import Image from 'next/image';
@@ -17,11 +19,17 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { formatDate, formatTime } from '@/helper/utils/datetime';
 
-const CoffeechatInfo = ({ _id }: { _id: string }) => {
+interface Props {
+  _id: string;
+  initData: ProductItem;
+}
+
+const CoffeechatInfo = ({ _id, initData }: Props) => {
   const router = useRouter();
   const { data: coffeechatDetailData } = useSelectCoffeechatInfo(_id);
   const { data: replyListData } = useSelectReply(_id);
   const { userInfo } = useUserInfo(store => store);
+  const [coffeechatList, setCoffeechatList] = useState<ProductItem | undefined>(initData);
   const [isReservationEnabled, setIsReservationEnabled] = useState(true);
   const replyCount = replyListData?.length || 0;
 
@@ -46,7 +54,10 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
   }, []);
 
   useEffect(() => {
-    setIsReservationEnabled(coffeechatDetailData?.options.item.filter(item => item.buyQuantity === 0).length !== 0);
+    setIsReservationEnabled(
+      coffeechatDetailData?.options?.item?.filter(item => item.buyQuantity === 0).length !== 0,
+    );
+    setCoffeechatList(coffeechatDetailData);
   }, [coffeechatDetailData]);
 
   const calculateAverageRating = () => {
@@ -54,13 +65,13 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
       return 0; // 빈 배열이거나 없는 경우 평균 0으로 간주
     }
     const totalRating = replyListData?.reduce((acc, item) => acc + item.rating, 0);
-    const averageRating = (totalRating / replyListData?.length);
+    const averageRating = totalRating / replyListData?.length;
     if (Number.isInteger(averageRating)) {
       return averageRating; // 소수점 없는 경우 자연수 반환
     } else {
-      return parseFloat(averageRating.toFixed(1));; // 소수점 둘째 자리까지 보여주기
+      return parseFloat(averageRating.toFixed(1)); // 소수점 둘째 자리까지 보여주기
     }
-  }
+  };
 
   const averageRating = calculateAverageRating();
 
@@ -122,8 +133,8 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
         <div className="md:w-2/3">
           <div className="w-full h-96 aspect-w-3 aspect-h-2">
             <Image
-              src={`https://localhost:443/${coffeechatDetailData?.mainImages[0]}`}
-              alt={`${coffeechatDetailData?.name}`}
+              src={`https://localhost:443/${initData?.mainImages[0]}`}
+              alt={`${initData?.name}`}
               className="w-full h-full object-cover"
               unoptimized={true}
               width={80}
@@ -133,21 +144,21 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
         </div>
         {/* 색션 1-2 */}
         <div className="md:w-1/3 p-2 flex flex-col gap-3">
-          <h1 className="text-2xl font-bold mb-2">{coffeechatDetailData?.name}</h1>
+          <h1 className="text-2xl font-bold mb-2">{initData?.name}</h1>
           <div className="flex items-center gap-3 mb-2">
             <Avatar
-              imageUrl={`https://localhost:443/${coffeechatDetailData?.extra.authorImage}`}
+              imageUrl={`https://localhost:443/${initData?.extra.authorImage}`}
               size={'xsmall'}
             />
-            <p className="text-md font-bold">{coffeechatDetailData?.extra.author}</p>
+            <p className="text-md font-bold">{initData?.extra.author}</p>
           </div>
-          <p className="mb-2"> {coffeechatDetailData?.extra.intro}</p>
+          <p className="mb-2"> {initData?.extra.intro}</p>
           <div className="flex items-center gap-3" style={{ marginTop: 'auto' }}>
             <p className="inline-block rounded-full px-2 py-1 text-sm font-medium tracking-wide border-solid border bg-light-main text-white">
-              {coffeechatDetailData?.extra.jobCategory[0]}
+              {initData?.extra?.jobCategory?.[0]}
             </p>
             <p className="inline-block rounded-full px-2 py-1 text-sm font-medium tracking-wide border-solid border bg-dark-main text-white">
-              {coffeechatDetailData?.extra.regionCategory}
+              {initData?.extra.regionCategory}
             </p>
           </div>
         </div>
@@ -167,32 +178,31 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
             <p className="text-lg font-bold mb-2">내용</p>
             <p
               className="text-md mb-2"
-              dangerouslySetInnerHTML={{ __html: coffeechatDetailData?.content || '' }}
+              dangerouslySetInnerHTML={{ __html: initData?.content || '' }}
             />
           </div>
           <div id="schedule" className="mb-6 ">
             <h3 className="text-lg font-bold mb-4">일정</h3>
             <div className="flex flex-wrap">
-              {coffeechatDetailData?.options?.item?.map((item: any, index: number) => (
+              {coffeechatList?.options?.item?.map((item: any, index: number) => (
                 <p
                   key={index}
-                  className={`mb-2 mr-2 rounded-lg p-2.5 w-36 text-center text-white ${item.buyQuantity == 0
-                    ? 'bg-light-main'
-                    : 'bg-light-disabled text-gray-100'
-                    }`}
+                  className={`mb-2 mr-2 rounded-lg p-2.5 w-36 text-center text-white ${
+                    item.buyQuantity == 0 ? 'bg-light-main' : 'bg-light-disabled text-gray-100'
+                  }`}
                 >
-                  <p className=" mr-2">{formatDate(item.extra.datetime.date)}</p>
-                  <p>{formatTime(item.extra.datetime.time)}</p>
+                  <p className=" mr-2">{formatDate(item.extra.datetime?.date)}</p>
+                  <p>{formatTime(item.extra.datetime?.time)}</p>
                 </p>
               ))}
             </div>
           </div>
           <div id="place" className="mb-6">
             <h3 className="text-lg font-bold mb-2">장소</h3>
-            {coffeechatDetailData?.extra.place === 'online' ? (
-              <p className="mb-2">온라인 주소: {coffeechatDetailData?.extra.online}</p>
+            {initData?.extra.place === 'online' ? (
+              <p className="mb-2">온라인 주소: {initData?.extra.online}</p>
             ) : (
-              <p className="mb-2">오프라인 주소: {coffeechatDetailData?.extra.offline}</p>
+              <p className="mb-2">오프라인 주소: {initData?.extra.offline}</p>
             )}
           </div>
           <div id="review" className="mb-6">
@@ -208,9 +218,14 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
             />
             <div className="flex flex-col gap-1">
               {replyListData?.map((item, index) => (
-                <ReplyItemCard key={index} rating={item.rating} content={item.content} userName={item.user.name} createdAt={item.createdAt} />
-              ))
-              }
+                <ReplyItemCard
+                  key={index}
+                  rating={item.rating}
+                  content={item.content}
+                  userName={item.user.name}
+                  createdAt={item.createdAt}
+                />
+              ))}
             </div>
           </div>
         </div>
@@ -218,14 +233,14 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
         <div className="md:w-1/3 relative">
           <div className="bg-white border-2 border-solid border-gray-200 rounded-sm p-4 shadow-md sticky top-24 right-0 z-10">
             <div className="mb-2">
-              <h1 className="text-lg font-bold mb-2">{coffeechatDetailData?.name}</h1>
+              <h1 className="text-lg font-bold mb-2">{initData?.name}</h1>
             </div>
             <div className="mb-4">
               <span className="text-md font-medium text-gray-500 mr-2">가격</span>
-              <span className="text-lg font-bold ">{coffeechatDetailData?.price}포인트</span>
+              <span className="text-lg font-bold ">{initData?.price}포인트</span>
             </div>
             <div className="space-y-4">
-              {userInfo.type === 'seller' && coffeechatDetailData?.seller_id === userInfo._id ? (
+              {userInfo.type === 'seller' && initData?.seller_id === userInfo._id ? (
                 <>
                   <UpdateButton
                     content="수정하기"

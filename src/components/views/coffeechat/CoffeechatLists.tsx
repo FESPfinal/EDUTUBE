@@ -1,12 +1,17 @@
 'use client';
-import useSelectCoffeechatList from '../../../queries/coffeechat/useSelectCoffeechatList';
+import useSelectCoffeechatList, {
+  CoffeechatList,
+} from '../../../queries/coffeechat/useSelectCoffeechatList';
 import Link from 'next/link';
 import ad_first from '/public/images/ad_first.png';
 import Image from 'next/image';
 import NextImage from '@/components/atom/NextImage';
 
-const CoffeechatLists = () => {
-  const { data: coffeechatListData } = useSelectCoffeechatList();
+interface Props {
+  initData: CoffeechatList;
+}
+
+const CoffeechatLists = ({ initData }: Props) => {
   return (
     <>
       <div className="h-60 bg-black text-white">
@@ -15,7 +20,7 @@ const CoffeechatLists = () => {
       <div className="h-10"></div>
       <div className="h-10" />
       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {coffeechatListData?.map(item => (
+        {initData?.map(item => (
           <li
             key={item._id}
             className="relative group bg-white p-4 rounded-lg shadow-md overflow-hidden transition duration-300 hover:opacity-80"

@@ -37,7 +37,7 @@ type Options = {
   updatedAt: string;
 };
 
-type ProductItem = {
+export type ProductItem = {
   _id: number;
   mainImages: string[];
   name: string;
