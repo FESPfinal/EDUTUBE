@@ -19,6 +19,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { formatDate, formatTime } from '@/helper/utils/datetime';
+import NextImage from '@/components/atom/NextImage';
 
 interface Props {
   _id: string;
@@ -133,13 +134,10 @@ const CoffeechatInfo = ({ _id, initData }: Props) => {
         {/* 색션 1-1 */}
         <div className="md:w-2/3">
           <div className="w-full h-96 aspect-w-3 aspect-h-2">
-            <Image
-              src={`${IMAGE_ROUTE}${coffeechatDetailData?.mainImages[0]}`}
+            <NextImage
+              src={`${initData?.mainImages[0]}`}
               alt={`${initData?.name}`}
               className="w-full h-full object-cover"
-              unoptimized={true}
-              width={80}
-              height={80}
             />
           </div>
         </div>

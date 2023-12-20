@@ -4,17 +4,22 @@ import useEdutubeAxios from '@/helper/utils/useEdutubeAxios';
 import { Extra } from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
 import { useMutation } from '@tanstack/react-query';
 
-const URL = (_id: number) => `/seller/products/${_id}`;
+const URL = `/posts`;
 
 type RequestData = {
   _id: number;
-  extraData: Extra;
+  reqData: {
+    type: 'coffeechat';
+    product_id: number;
+    title: string;
+    content: string;
+  };
 };
 
 const useUpdateMyCoffeechatChatLink = () => {
   const { edutubeAxios } = useEdutubeAxios();
-  const patchAxios = async ({ _id, extraData }: RequestData) => {
-    const response = await edutubeAxios.patch(URL(_id), { extra: extraData });
+  const patchAxios = async ({ _id, reqData }: RequestData) => {
+    const response = await edutubeAxios.post(URL, { extra: { ...reqData } });
     return response.data.item;
   };
 

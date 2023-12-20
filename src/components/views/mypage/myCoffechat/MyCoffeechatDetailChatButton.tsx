@@ -9,15 +9,15 @@ import Link from 'next/link';
 import useUpdateMyCoffeechatChatLink from '@/queries/mypage/myCoffeechat/useUpdateMyCoffeechatChatLink';
 import useSelectCoffeechatInfo from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
 import useSelectSellerOrders from '@/queries/mypage/myCoffeechat/useSelectSellerOrders';
+import useSelectMyCoffeechatChatLink from '@/queries/mypage/myCoffeechat/useSelectMyCoffeechatChatLink';
 
 interface Props {
   data: ReservedState;
   parentsId: string;
+  chatLink: string | undefined;
 }
 
-const MyCoffeechatDetailChatButton = ({ data, parentsId }: Props) => {
-  console.log(data);
-
+const MyCoffeechatDetailChatButton = ({ data, parentsId, chatLink }: Props) => {
   const { userInfo } = useUserInfo();
   const { mutate: updateChatLinkMutate } = useUpdateMyCoffeechatChatLink();
   const { refetch: coffeechatInfoRefetch } = useSelectCoffeechatInfo(parentsId);
@@ -82,7 +82,12 @@ const MyCoffeechatDetailChatButton = ({ data, parentsId }: Props) => {
       updateChatLinkMutate(
         {
           _id: data.itemInfo.optionId,
-          extraData: { ...data.itemInfo.extra, online: chatLink },
+          reqData: {
+            type: 'coffeechat',
+            product_id: data.itemInfo.optionId,
+            title: chatLink,
+            content: '',
+          },
         },
         {
           onSuccess: () => {
