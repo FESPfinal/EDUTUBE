@@ -48,7 +48,6 @@ const useUpdateOrder = () => {
     return response.data as UpdateResponseData;
   };
   return useMutation({
-    //매개변수가 1개여야하는데 2개로 받아서 타입에러가 났음!! 그래서 {}로 감싸거 받으니까 없어졌엉
     mutationFn: ({ updateData, _id }: { updateData: any; _id: string }) =>
       patchAxios(updateData, _id),
   });
