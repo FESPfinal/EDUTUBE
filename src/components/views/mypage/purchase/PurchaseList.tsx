@@ -78,7 +78,7 @@ const PurchaseList = () => {
 
   return (
     <>
-      <div className="m-10">
+      <div className="m-10 mb-0 w-full">
         <p className="text-xl font-bold mb-4">커피챗 구매 목록 리스트</p>
         <section className="flex gap-1 border-b pb-2 mb-2">
           <Category
@@ -96,7 +96,7 @@ const PurchaseList = () => {
             />
           ))}
         </section>
-        <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 overflow-y-auto scrollbar-hide max-h-[calc(100vh-220px)]">
           {showPurchaseList?.map(item => (
             <React.Fragment key={item._id}>
               <PurchaseCard data={item} />

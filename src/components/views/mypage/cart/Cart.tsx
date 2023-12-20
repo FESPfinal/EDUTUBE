@@ -145,7 +145,10 @@ const Cart = () => {
         </div>
       </section>
       <section>
-        <ul role="list" className="divide-y divide-gray-100">
+        <ul
+          role="list"
+          className="divide-y divide-gray-100 overflow-y-auto min-h-[calc(100vh-330px)] max-h-[calc(100vh-330px)] scrollbar-hide"
+        >
           {cartData?.map((item: CartItem) => (
             <CartItemCard
               data={item}
@@ -156,7 +159,7 @@ const Cart = () => {
           ))}
         </ul>
       </section>
-      <section className="w-full pb-40 border-t border-gray-300">
+      <section className="w-full border-t border-gray-300">
         <div className="flex justify-between items-end mb-2 mt-2">
           <div>
             <section className="flex flex-col gap-2">

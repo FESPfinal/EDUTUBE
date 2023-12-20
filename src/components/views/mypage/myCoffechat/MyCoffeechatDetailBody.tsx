@@ -3,10 +3,9 @@
 import FilterButtons from '@/components/atom/FilterButtons';
 import { formatDate, formatTime } from '@/helper/utils/datetime';
 import useSelectCoffeechatInfo, { Extra } from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
+import useSelectSellerOrders from '@/queries/mypage/myCoffeechat/useSelectSellerOrders';
 import { useEffect, useState } from 'react';
 import MyCoffeechatDetailChatButton from './MyCoffeechatDetailChatButton';
-import useSelectSellerOrders from '@/queries/mypage/myCoffeechat/useSelectSellerOrders';
-import useSelectMyCoffeechatChatLink from '@/queries/mypage/myCoffeechat/useSelectMyCoffeechatChatLink';
 
 const MY_COFFECHAT_OPTIONS = {
   TOTAL: '전체',
@@ -65,7 +64,6 @@ type OrderFormat = {
 const MyCoffeechatDetailBody = ({ _id }: { _id: string }) => {
   const { data: parentsOrderData } = useSelectCoffeechatInfo(_id);
   const { data: sellerOrdersData } = useSelectSellerOrders();
-  const { data: chatLinkData } = useSelectMyCoffeechatChatLink();
 
   const [options, setOptions] = useState<ReservedState[]>();
   const [showOptionList, setShowOptionList] = useState(options);
@@ -122,9 +120,9 @@ const MyCoffeechatDetailBody = ({ _id }: { _id: string }) => {
         <FilterButtons options={mypageCoffeechatDetailFilter} setPropsOption={setSelectedOption} />
       </section>
       <div className="flex flex-col w-full">
-        <div className="-my-2 overflow-x-auto w-full">
+        <div className="-my-2 overflow-x-auto w-full scrollbar-hide">
           <div className="py-2 align-middle inline-block w-full">
-            <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg w-full">
+            <div className="shadow overflow-hidden scrollbar-hide border-b border-gray-200 sm:rounded-lg w-full">
               <table className="divide-y divide-gray-200 w-full">
                 <thead className="bg-dark-main">
                   <tr>
