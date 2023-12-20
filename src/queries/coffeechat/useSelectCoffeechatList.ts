@@ -33,7 +33,7 @@ type CoffeechatItem = {
   updatedAt: string;
 };
 
-type CoffeechatList = CoffeechatItem[];
+export type CoffeechatList = CoffeechatItem[];
 
 const URL = '/products';
 
