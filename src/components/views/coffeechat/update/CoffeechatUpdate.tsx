@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 // component
 import Category from '@/components/atom/Category';
 import ImageUploader from '@/components/atom/ImageUploader';
@@ -68,6 +68,12 @@ const CoffeechatUpdate = () => {
   const [imageFile, setImageFile] = useState<File>();
   const [selectedJobCategory, setSelectedJobCategory] = useState<string[]>([`${coffeechatDetailData?.extra.jobCategory[0]}`]);
   const [selectedRegionCategory, setSelectedRegionCategory] = useState(`${coffeechatDetailData?.extra.regionCategory}`);
+
+  useEffect(() => {
+    console.log(coffeechatDetailData?.extra?.jobCategory[0])
+    coffeechatDetailData && setSelectedJobCategory([coffeechatDetailData?.extra.jobCategory[0]])
+    coffeechatDetailData && setSelectedRegionCategory(coffeechatDetailData?.extra.regionCategory)
+  }, [coffeechatDetailData])
 
   const handlePlaceType = (type: string) => {
     setPlaceType(type);
