@@ -29,6 +29,7 @@ const CoffeechatInfo = ({ _id, initData }: Props) => {
   const { data: coffeechatDetailData } = useSelectCoffeechatInfo(_id);
   const { data: replyListData } = useSelectReply(_id);
   const { userInfo } = useUserInfo(store => store);
+  const [coffeechatList, setCoffeechatList] = useState<ProductItem | undefined>(initData);
   const [isReservationEnabled, setIsReservationEnabled] = useState(true);
   const replyCount = replyListData?.length || 0;
 
@@ -56,6 +57,7 @@ const CoffeechatInfo = ({ _id, initData }: Props) => {
     setIsReservationEnabled(
       coffeechatDetailData?.options?.item?.filter(item => item.buyQuantity === 0).length !== 0,
     );
+    setCoffeechatList(coffeechatDetailData);
   }, [coffeechatDetailData]);
 
   const calculateAverageRating = () => {
@@ -182,7 +184,7 @@ const CoffeechatInfo = ({ _id, initData }: Props) => {
           <div id="schedule" className="mb-6 ">
             <h3 className="text-lg font-bold mb-4">일정</h3>
             <div className="flex flex-wrap">
-              {initData?.options?.item?.map((item: any, index: number) => (
+              {coffeechatList?.options?.item?.map((item: any, index: number) => (
                 <p
                   key={index}
                   className={`mb-2 mr-2 rounded-lg p-2.5 w-36 text-center text-white ${
