@@ -37,7 +37,7 @@ type Options = {
   updatedAt: string;
 };
 
-type ProductItem = {
+export type ProductItem = {
   _id: number;
   mainImages: string[];
   name: string;
@@ -75,7 +75,7 @@ type ProductItem = {
   updatedAt: string;
   replies: [];
   bookmarks: [];
-  options: Options[];
+  options: { item: Options[] };
 };
 
 const useSelectCoffeechatInfo = (_id: string) => {
