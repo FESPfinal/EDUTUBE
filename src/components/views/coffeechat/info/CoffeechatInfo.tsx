@@ -46,7 +46,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
   }, []);
 
   useEffect(() => {
-    setIsReservationEnabled(coffeechatDetailData?.options.item.filter(item => item.buyQuantity === 0).length !== 0);
+    setIsReservationEnabled(coffeechatDetailData?.options?.item?.filter(item => item.buyQuantity === 0).length !== 0);
   }, [coffeechatDetailData]);
 
   const calculateAverageRating = () => {
@@ -122,7 +122,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
         <div className="md:w-2/3">
           <div className="w-full h-96 aspect-w-3 aspect-h-2">
             <Image
-              src={`https://localhost:443/${coffeechatDetailData?.mainImages[0]}`}
+              src={`https://localhost:443${coffeechatDetailData?.mainImages[0]}`}
               alt={`${coffeechatDetailData?.name}`}
               className="w-full h-full object-cover"
               unoptimized={true}
@@ -144,10 +144,10 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
           <p className="mb-2"> {coffeechatDetailData?.extra.intro}</p>
           <div className="flex items-center gap-3" style={{ marginTop: 'auto' }}>
             <p className="inline-block rounded-full px-2 py-1 text-sm font-medium tracking-wide border-solid border bg-light-main text-white">
-              {coffeechatDetailData?.extra.jobCategory[0]}
+              {coffeechatDetailData?.extra?.jobCategory[0]}
             </p>
             <p className="inline-block rounded-full px-2 py-1 text-sm font-medium tracking-wide border-solid border bg-dark-main text-white">
-              {coffeechatDetailData?.extra.regionCategory}
+              {coffeechatDetailData?.extra?.regionCategory}
             </p>
           </div>
         </div>
@@ -230,7 +230,7 @@ const CoffeechatInfo = ({ _id }: { _id: string }) => {
                   <UpdateButton
                     content="수정하기"
                     size="medium"
-                    onClick={() => alert('수정하기 구현해야함')}
+                    onClick={() => router.push(`/coffeechat/update/${_id}`)}
                   />
                   <DeleteButton
                     content="삭제하기"
