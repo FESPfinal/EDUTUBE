@@ -187,9 +187,8 @@ const CoffeechatInfo = ({ _id, initData }: Props) => {
               {coffeechatList?.options?.item?.map((item: any, index: number) => (
                 <p
                   key={index}
-                  className={`mb-2 mr-2 rounded-lg p-2.5 w-36 text-center text-white ${
-                    item.buyQuantity == 0 ? 'bg-light-main' : 'bg-light-disabled text-gray-100'
-                  }`}
+                  className={`mb-2 mr-2 rounded-lg p-2.5 w-36 text-center text-white ${item.buyQuantity == 0 ? 'bg-light-main' : 'bg-light-disabled text-gray-100'
+                    }`}
                 >
                   <p className=" mr-2">{formatDate(item.extra.datetime?.date)}</p>
                   <p>{formatTime(item.extra.datetime?.time)}</p>
@@ -245,7 +244,7 @@ const CoffeechatInfo = ({ _id, initData }: Props) => {
                   <UpdateButton
                     content="수정하기"
                     size="medium"
-                    onClick={() => alert('수정하기 구현해야함')}
+                    onClick={() => router.push(`/coffeechat/update/${_id}`)}
                   />
                   <DeleteButton
                     content="삭제하기"
