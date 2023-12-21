@@ -18,6 +18,7 @@ const useUserCartInfo = create(
       },
       deleteUserCartCount: () => {
         set({ userCartCount: 0 });
+        localStorage.clear();
       },
     }),
     {
