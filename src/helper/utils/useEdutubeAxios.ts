@@ -15,10 +15,8 @@ const useEdutubeAxios = () => {
   const logout = () => {
     deleteAccessToken();
     deleteUserInfo();
-    Cookies.remove('accessToken');
+    Cookies.remove('userType');
     Cookies.remove('refreshToken');
-    Cookies.remove('user_id');
-    Cookies.remove('user_name');
     router.refresh();
     router.push('/');
   };
