@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faImage } from '@fortawesome/free-solid-svg-icons';
 import { StaticImport } from 'next/dist/shared/lib/get-img-props';
-import { SERVER_URL } from '@/helper/constants/apiConst';
+import { IMAGE_ROUTE } from '@/helper/constants/commons';
 
 interface Props {
   onImageUpload: (image: File) => void;
@@ -51,7 +51,7 @@ const ProfileImageUploader: React.FC<Props> = ({ onImageUpload, defaultImage }) 
           <div className="h-20 w-20 relative">
             {defaultImage ? (
               <Image
-                src={`${SERVER_URL}${defaultImage.path}`}
+                src={`${IMAGE_ROUTE}${defaultImage.path}`}
                 width={80}
                 height={80}
                 className="rounded-full h-20 w-20 object-cover"

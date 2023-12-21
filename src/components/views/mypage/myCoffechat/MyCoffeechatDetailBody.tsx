@@ -2,24 +2,37 @@
 
 import FilterButtons from '@/components/atom/FilterButtons';
 import { formatDate, formatTime } from '@/helper/utils/datetime';
-import useSelectCoffeechatInfo from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
-import useSelectSellerOrders, { Order } from '@/queries/mypage/myCoffeechat/useSelectSellerOrders';
-import { useCallback, useEffect, useState } from 'react';
+import useSelectCoffeechatInfo, { Extra } from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
+import useSelectSellerOrders from '@/queries/mypage/myCoffeechat/useSelectSellerOrders';
+import { useEffect, useState } from 'react';
+import MyCoffeechatDetailChatButton from './MyCoffeechatDetailChatButton';
 
 const MY_COFFECHAT_OPTIONS = {
   TOTAL: '전체',
   RESERVED: '예약된 내역',
   UNRESERVED: '예약안된 내역',
 };
-const mypageCoffecatDetailFilter = [
+const mypageCoffeechatDetailFilter = [
   MY_COFFECHAT_OPTIONS.TOTAL,
   MY_COFFECHAT_OPTIONS.RESERVED,
   MY_COFFECHAT_OPTIONS.UNRESERVED,
 ];
 
-type ReservedState = {
-  isReserved: false;
-  itemInfo: { date: ''; time: ''; userName: ''; price: '' };
+export type ReservedState = {
+  isReserved: boolean;
+  itemInfo: {
+    name: string;
+    optionId: number;
+    sellerName: string;
+    date: string;
+    time: string;
+    userName: string;
+    price: number;
+    place: 'online' | 'offline';
+    online: string;
+    offline: string;
+    extra: Extra;
+  };
 };
 
 type OrderFormat = {
@@ -51,77 +64,62 @@ type OrderFormat = {
 const MyCoffeechatDetailBody = ({ _id }: { _id: string }) => {
   const { data: parentsOrderData } = useSelectCoffeechatInfo(_id);
   const { data: sellerOrdersData } = useSelectSellerOrders();
-  //parents option list + order list
-  const [reservedStateList, setReservedStateList] = useState<ReservedState[]>();
-  //parents _id인 값을 filter해서 저장
-  const [filteredOrders, setFilteredOrders] = useState<Order[]>();
-  const [showOptionList, setShowOptionList] = useState(reservedStateList);
+
+  const [options, setOptions] = useState<ReservedState[]>();
+  const [showOptionList, setShowOptionList] = useState(options);
   const [selectedOption, setSelectedOption] = useState(MY_COFFECHAT_OPTIONS.TOTAL);
 
-  useEffect(() => {
-    const childOfParents = sellerOrdersData?.filter(
-      orders => orders.products.filter(order => order.extra?.parent === parseInt(_id)).length > 0,
-    );
-    setFilteredOrders(childOfParents);
-  }, [_id, sellerOrdersData]);
+  const isOnline = parentsOrderData?.extra.place === 'online';
 
   useEffect(() => {
-    //options는 예약 가능한 목록
-    const options = parentsOrderData?.options;
-    const optionsFormatList =
-      options?.map(option => ({
-        isReserved: false,
+    const parentsOptions = parentsOrderData?.options.item;
+    const optionsFormatList = parentsOptions?.map(option => {
+      // const customerInfo = sellerOrdersData?.filter(items => option._id === items.products.filter((item) => item));
+
+      return {
+        isReserved: !!option?.buyQuantity,
         itemInfo: {
-          date: option.extra.datetime.date,
-          time: option.extra.datetime.time,
-          userName: '',
-          price: option.price,
+          name: option?.name,
+          optionId: option._id,
+          sellerName: option.extra?.author,
+          date: option.extra.datetime?.date,
+          time: option.extra.datetime?.time,
+          userName: option.extra?.author,
+          price: option?.price,
+          place: option.extra?.place,
+          online: option.extra?.online,
+          offline: option.extra?.offline,
+          extra: option.extra,
         },
-      })) || [];
+      };
+    });
 
-    //orders는 예약 된 목록(불가능한 목록)
-    let ordersFormatList = new Array();
-    filteredOrders?.map(order =>
-      order.products.forEach(item => {
-        ordersFormatList.push({ item: item, userName: order.address.name });
-      }),
-    );
-    ordersFormatList = ordersFormatList.map((order: { item: OrderFormat; userName: string }) => ({
-      isReserved: true,
-      itemInfo: {
-        date: order.item.extra.datetime.date,
-        time: order.item.extra.datetime.time,
-        userName: order.userName,
-        price: order.item.price,
-      },
-    }));
-
-    setReservedStateList([...optionsFormatList, ...ordersFormatList]);
-    setShowOptionList([...optionsFormatList, ...ordersFormatList]);
-  }, [filteredOrders, parentsOrderData]);
+    setShowOptionList(optionsFormatList);
+    setOptions(optionsFormatList);
+  }, [parentsOrderData, sellerOrdersData]);
 
   useEffect(() => {
     //탭 선택 변경시 보여주는 데이터 변경
     if (selectedOption === MY_COFFECHAT_OPTIONS.TOTAL) {
-      setShowOptionList(reservedStateList);
+      setShowOptionList(options);
     }
     if (selectedOption === MY_COFFECHAT_OPTIONS.RESERVED) {
-      setShowOptionList(reservedStateList?.filter(data => data.isReserved));
+      setShowOptionList(options?.filter(data => data.isReserved));
     }
     if (selectedOption === MY_COFFECHAT_OPTIONS.UNRESERVED) {
-      setShowOptionList(reservedStateList?.filter(data => !data.isReserved));
+      setShowOptionList(options?.filter(data => !data.isReserved));
     }
-  }, [reservedStateList, selectedOption]);
+  }, [options, selectedOption]);
 
   return (
     <>
       <section className="flex justify-between w-full">
         <p className="text-sm leading-8">
-          전체 커피챗 수 <span className="text-light-main">{reservedStateList?.length}</span>
+          전체 커피챗 수 <span className="text-light-main">{options?.length}</span>
         </p>
-        <FilterButtons options={mypageCoffecatDetailFilter} setPropsOption={setSelectedOption} />
+        <FilterButtons options={mypageCoffeechatDetailFilter} setPropsOption={setSelectedOption} />
       </section>
-      <div className="flex flex-col w-full">
+      <div className="flex flex-col w-full overflow-y-auto max-h-[calc(100vh-400px)] scrollbar-hide">
         <div className="-my-2 overflow-x-auto w-full">
           <div className="py-2 align-middle inline-block w-full">
             <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg w-full">
@@ -158,6 +156,14 @@ const MyCoffeechatDetailBody = ({ _id }: { _id: string }) => {
                     >
                       POINT
                     </th>
+                    {isOnline && (
+                      <th
+                        scope="col"
+                        className="w-[10%] px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
+                      >
+                        채팅방
+                      </th>
+                    )}
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200 w-full">
@@ -180,6 +186,17 @@ const MyCoffeechatDetailBody = ({ _id }: { _id: string }) => {
                         </p>
                       </td> */}
                       <td className="px-4 py-4 whitespace-nowrap">{item.itemInfo.price}</td>
+                      {isOnline && (
+                        <td className="px-4 py-4 whitespace-nowrap">
+                          {item.isReserved && (
+                            <MyCoffeechatDetailChatButton
+                              data={item}
+                              parentsId={_id}
+                              chatLink={''}
+                            />
+                          )}
+                        </td>
+                      )}
                     </tr>
                   ))}
                 </tbody>

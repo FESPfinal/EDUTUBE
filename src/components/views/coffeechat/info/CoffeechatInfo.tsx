@@ -8,6 +8,7 @@ import {
 } from '@/components/atom/Button';
 import RatingSummary from '@/components/views/coffeechat/review/RatingSummary';
 import ReplyItemCard from '@/components/views/coffeechat/review/ReplyItem';
+import { IMAGE_ROUTE } from '@/helper/constants/commons';
 import useSelectCoffeechatInfo, {
   ProductItem,
 } from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
@@ -19,6 +20,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { formatDate, formatTime } from '@/helper/utils/datetime';
+import NextImage from '@/components/atom/NextImage';
 
 interface Props {
   _id: string;
@@ -75,7 +77,7 @@ const CoffeechatInfo = ({ _id, initData }: Props) => {
     }
   };
 
-  const averageRating = calculateAverageRating();
+  const averageRating = calculateAverageRating() as number;
 
   const calculateRatingPercentages = () => {
     if (!replyListData || replyListData?.length === 0) {
@@ -140,13 +142,10 @@ const CoffeechatInfo = ({ _id, initData }: Props) => {
         {/* 색션 1-1 */}
         <div className="md:w-2/3">
           <div className="w-full h-96 aspect-w-3 aspect-h-2">
-            <Image
-              src={`https://localhost:443/${initData?.mainImages[0]}`}
+            <NextImage
+              src={`${initData?.mainImages[0]}`}
               alt={`${initData?.name}`}
               className="w-full h-full object-cover"
-              unoptimized={true}
-              width={80}
-              height={80}
             />
           </div>
         </div>
@@ -154,10 +153,7 @@ const CoffeechatInfo = ({ _id, initData }: Props) => {
         <div className="md:w-1/3 p-2 flex flex-col gap-3">
           <h1 className="text-2xl font-bold mb-2">{initData?.name}</h1>
           <div className="flex items-center gap-3 mb-2">
-            <Avatar
-              imageUrl={`https://localhost:443/${initData?.extra.authorImage}`}
-              size={'xsmall'}
-            />
+            <Avatar imageUrl={`${IMAGE_ROUTE}${initData?.extra.authorImage}`} size={'xsmall'} />
             <p className="text-md font-bold">{initData?.extra.author}</p>
           </div>
           <p className="mb-2"> {initData?.extra.intro}</p>

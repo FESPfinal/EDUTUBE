@@ -3,9 +3,9 @@ import { useQuery } from '@tanstack/react-query';
 
 const URL = '/products';
 
-type Extra = {
+export type Extra = {
   intro: string;
-  place: string;
+  place: 'online' | 'offline';
   online: string;
   offline: string;
   datetime: {

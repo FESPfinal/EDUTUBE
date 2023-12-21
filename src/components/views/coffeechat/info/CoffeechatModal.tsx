@@ -32,12 +32,12 @@ const CoffeechatModal = () => {
 
   useEffect(() => {
     if (selectedDatetimeId == undefined) {
-      setSumPrice(0)
+      setSumPrice(0);
     } else if (!!selectedDatetimeId) {
-      const sum = coffeechatDetailData?.price || 0
+      const sum = coffeechatDetailData?.price || 0;
       setSumPrice(sum);
     }
-  }, [selectedDatetimeId])
+  }, [selectedDatetimeId]);
 
   const handleDatetimeClick = (timeId: number) => {
     if (timeId === selectedDatetimeId) {
@@ -96,19 +96,22 @@ const CoffeechatModal = () => {
             .map((item, index: number) => (
               <p
                 key={index}
-                className={` border-2 border-solid border-light-main rounded-lg p-2 cursor-pointer hover:bg-light-main minWidth-44 flex ${item._id === selectedDatetimeId ? 'bg-light-main' : 'hover:bg-gray-200'
-                  }`}
+                className={` border-2 border-solid border-light-main rounded-lg p-2 cursor-pointer hover:bg-light-main minWidth-44 flex ${
+                  item._id === selectedDatetimeId ? 'bg-light-main' : 'hover:bg-gray-200'
+                }`}
                 onClick={() => handleDatetimeClick(item._id)}
               >
                 <p
-                  className={`text-gray-700 leading-6 mr-2 ${item._id === selectedDatetimeId ? 'text-white' : ''
-                    }`}
+                  className={`text-gray-700 leading-6 mr-2 ${
+                    item._id === selectedDatetimeId ? 'text-white' : ''
+                  }`}
                 >
                   {formatDate(item.extra.datetime.date)}&nbsp;
                 </p>
                 <p
-                  className={`text-gray-700 leading-6 ${item._id === selectedDatetimeId ? 'text-white' : ''
-                    }`}
+                  className={`text-gray-700 leading-6 ${
+                    item._id === selectedDatetimeId ? 'text-white' : ''
+                  }`}
                 >
                   {formatTime(item.extra.datetime.time)}
                 </p>

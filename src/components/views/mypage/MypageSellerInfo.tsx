@@ -105,7 +105,7 @@ const MypageSellerInfo = () => {
 
   return (
     <>
-      <div className="mb-10">
+      <div className="flex items-center justify-center mb-10">
         <ProfileImageUploader
           onImageUpload={setImageFile}
           defaultImage={userInfo?.extra?.profileImage}
@@ -214,7 +214,7 @@ const MypageSellerInfo = () => {
           type="submit"
           className="w-full px-3 py-4 text-white bg-light-main rounded-md hover:bg-dark-main focus:outline-none"
         >
-          수정하기
+          수정 완료
         </button>
       </form>
     </>

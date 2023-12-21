@@ -8,6 +8,7 @@ import Link from 'next/link';
 
 const MyCoffeechatDetailHead = ({ _id }: { _id: string }) => {
   const { data: coffeechatInfoData } = useSelectCoffeechatInfo(_id);
+  console.log('coffeechatInfoData>>', coffeechatInfoData);
 
   const datetimeList = coffeechatInfoData?.extra.datetimeList;
 
@@ -43,7 +44,8 @@ const MyCoffeechatDetailHead = ({ _id }: { _id: string }) => {
         <p className="text-m leading-6 text-gray-900">
           예약 인원 |{' '}
           <span className="text-light-main">
-            {(coffeechatInfoData?.quantity || 0) - (coffeechatInfoData?.options?.length || 0)}
+            {(coffeechatInfoData?.quantity || 0) -
+              (coffeechatInfoData?.options?.item?.filter(item => !item.buyQuantity).length || 0)}
           </span>
           /{coffeechatInfoData?.quantity}
         </p>

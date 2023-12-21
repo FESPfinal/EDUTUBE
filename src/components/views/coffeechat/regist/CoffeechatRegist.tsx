@@ -158,12 +158,12 @@ const CoffeechatRegist = () => {
         offline: formSubmitData.offlinePlace || '',
         datetimeList: datetimeList,
         author: userInfo.extra.nickname,
-        authorImage: userInfo.extra.profileImage.path,
+        authorImage: userInfo.extra.profileImage?.path,
         type: 'coffeechat',
         jobCategory: selectedJobCategory,
         regionCategory: selectedRegionCategory,
         productType: 'parents',
-        depth: 1
+        depth: 1,
       },
     };
     mutateCreateProduct(requestBody, {
@@ -181,13 +181,11 @@ const CoffeechatRegist = () => {
     if (imageFile) {
       formData.append('attach', imageFile);
       createImageMutate(formData, {
-        onSuccess: (fileName: { name: string; path: string }) => {
-          const imagePath = fileName.path;
-          console.log('path>>>>', imagePath);
+        onSuccess: response => {
+          const imagePath = response.path;
           createParentsProduct({ formSubmitData: data, fileName: imagePath });
         },
         onError: error => {
-          console.log('error>>>>', error);
           alert('이미지 업로드가 실패하였습니다.');
         },
       });
