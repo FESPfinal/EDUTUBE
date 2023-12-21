@@ -183,11 +183,9 @@ const CoffeechatRegist = () => {
       createImageMutate(formData, {
         onSuccess: response => {
           const imagePath = response.path;
-          console.log('path>>>>', imagePath);
           createParentsProduct({ formSubmitData: data, fileName: imagePath });
         },
         onError: error => {
-          console.log('error>>>>', error);
           alert('이미지 업로드가 실패하였습니다.');
         },
       });
