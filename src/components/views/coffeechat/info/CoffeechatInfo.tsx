@@ -10,6 +10,7 @@ import RatingSummary from '@/components/views/coffeechat/review/RatingSummary';
 import ReplyItemCard from '@/components/views/coffeechat/review/ReplyItem';
 import { IMAGE_ROUTE } from '@/helper/constants/commons';
 import useSelectCoffeechatInfo, {
+  Options,
   ProductItem,
 } from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
 import useSelectReply from '@/queries/coffeechat/review/useSelectReply';
@@ -19,7 +20,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { formatDate, formatTime } from '@/helper/utils/datetime';
+import { formatDate, formatTime, isOverThanReserveTime } from '@/helper/utils/datetime';
 import NextImage from '@/components/atom/NextImage';
 
 interface Props {
@@ -29,7 +30,7 @@ interface Props {
 
 const CoffeechatInfo = ({ _id, initData }: Props) => {
   const router = useRouter();
-  const { data: coffeechatDetailData} = useSelectCoffeechatInfo(_id);
+  const { data: coffeechatDetailData } = useSelectCoffeechatInfo(_id);
   const { data: replyListData } = useSelectReply(_id);
   const { mutate: deleteCoffeechat } = useDeleteCoffeechat();
   const { userInfo } = useUserInfo(store => store);
@@ -133,7 +134,17 @@ const CoffeechatInfo = ({ _id, initData }: Props) => {
     deleteCoffeechat(_id);
     alert('삭제되었습니다.');
     router.push(`/coffeechat`);
-  }
+  };
+
+  const isDisable = (item: Options) => {
+    if (item.buyQuantity !== 0) {
+      return true;
+    }
+    if (isOverThanReserveTime(item.extra.datetime.date, item.extra.datetime.time)) {
+      return true;
+    }
+    return false;
+  };
 
   return (
     <div className="max-w-4xl mx-auto p-4">
@@ -188,11 +199,12 @@ const CoffeechatInfo = ({ _id, initData }: Props) => {
           <div id="schedule" className="mb-6 ">
             <h3 className="text-lg font-bold mb-4">일정</h3>
             <div className="flex flex-wrap">
-              {coffeechatList?.options?.item?.map((item: any, index: number) => (
+              {coffeechatList?.options?.item?.map((item, index) => (
                 <p
                   key={index}
-                  className={`mb-2 mr-2 rounded-lg p-2.5 w-36 text-center text-white ${item.buyQuantity == 0 ? 'bg-light-main' : 'bg-light-disabled text-gray-100'
-                    }`}
+                  className={`mb-2 mr-2 rounded-lg p-2.5 w-36 text-center text-white ${
+                    isDisable(item) ? 'bg-light-disabled text-gray-100' : 'bg-light-main'
+                  }`}
                 >
                   <p className=" mr-2">{formatDate(item.extra.datetime?.date)}</p>
                   <p>{formatTime(item.extra.datetime?.time)}</p>

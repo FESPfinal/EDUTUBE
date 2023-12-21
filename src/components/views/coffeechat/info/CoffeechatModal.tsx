@@ -1,7 +1,7 @@
 'use client';
 import Button from '@/components/atom/Button';
 import { OrderData } from '@/helper/types/order';
-import { formatDate, formatTime } from '@/helper/utils/datetime';
+import { formatDate, formatTime, isOverThanReserveTime } from '@/helper/utils/datetime';
 import useSelectCoffeechatInfo from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
 import useUpdateOrder from '@/queries/coffeechat/order/useUpdateOrder';
 import useUserInfo from '@/stores/userInfo';
@@ -92,7 +92,11 @@ const CoffeechatModal = () => {
         </div>
         <div className="flex gap-2 flex-wrap mt-12 mb-12 justify-center">
           {coffeechatDetailData?.options?.item
-            ?.filter(item => item.buyQuantity === 0)
+            ?.filter(
+              item =>
+                item.buyQuantity === 0 &&
+                !isOverThanReserveTime(item.extra.datetime.date, item.extra.datetime.time),
+            )
             .map((item, index: number) => (
               <p
                 key={index}
