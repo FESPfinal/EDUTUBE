@@ -27,7 +27,7 @@ interface Props {
 
 const CoffeechatInfo = ({ _id, initData }: Props) => {
   const router = useRouter();
-  const { data: coffeechatDetailData, refetch: coffeechatDetailRefetch } = useSelectCoffeechatInfo(_id);
+  const { data: coffeechatDetailData} = useSelectCoffeechatInfo(_id);
   const { data: replyListData } = useSelectReply(_id);
   const { mutate: deleteCoffeechat } = useDeleteCoffeechat();
   const { userInfo } = useUserInfo(store => store);
@@ -131,7 +131,6 @@ const CoffeechatInfo = ({ _id, initData }: Props) => {
     deleteCoffeechat(_id);
     alert('삭제되었습니다.');
     router.push(`/coffeechat`);
-    coffeechatDetailRefetch();
   }
 
   return (
