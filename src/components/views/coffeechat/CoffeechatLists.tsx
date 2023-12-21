@@ -1,9 +1,9 @@
 'use client';
-import useSelectCoffeechatList, {
+import {
   CoffeechatList,
-} from '../../../queries/coffeechat/useSelectCoffeechatList';
+} from '@/queries/coffeechat/useSelectCoffeechatList';
 import Link from 'next/link';
-import ad_first from '/public/images/ad_first.png';
+import banner from '/public/images/banner.png';
 import Image from 'next/image';
 import NextImage from '@/components/atom/NextImage';
 
@@ -15,7 +15,7 @@ const CoffeechatLists = ({ initData }: Props) => {
   return (
     <>
       <div className="h-60 bg-black text-white">
-        <Image src={ad_first} alt="광고사진" />
+        <Image src={banner} alt="광고사진" />
       </div>
       <div className="h-10"></div>
       <div className="h-10" />
