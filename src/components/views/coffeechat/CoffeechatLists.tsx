@@ -42,6 +42,11 @@ const CoffeechatLists = ({ initData }: Props) => {
                 <div className="text-xs font-semibold bg-white text-light-main border border-light-main solid  w-fit px-2 py-1 rounded-xl">
                   {item?.extra?.place}
                 </div>
+                {item.extra.place === 'offline' && (
+                  <div className="text-xs font-semibold bg-dark-main text-white w-fit px-2 py-1 rounded-xl">
+                    {item?.extra?.offline}
+                  </div>
+                )}
               </div>
               <div className="absolute top-0 left-0 w-full h-full opacity-0 bg-black text-white p-4 transition duration-300 group-hover:opacity-90">
                 <p className="text-lg font-bold mb-2">상세보기</p>
