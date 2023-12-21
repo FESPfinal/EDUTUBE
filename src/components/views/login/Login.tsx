@@ -5,6 +5,7 @@ import useSelectCartMutate from '@/queries/login/useSelectCartMutate';
 import useUserCartInfo from '@/stores/cart';
 import useUserInfo from '@/stores/userInfo';
 import { yupResolver } from '@hookform/resolvers/yup';
+import Cookies from 'js-cookie';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -56,9 +57,7 @@ const Login = () => {
     //로그인페이지 접속시 데이터 리셋
     deleteUserInfo();
     deleteUserCartCount();
-    Cookies.remove('accessToken');
     Cookies.remove('refreshToken');
-    Cookies.remove('user_id');
     Cookies.remove('userType');
   }, [deleteUserCartCount, deleteUserInfo, router]);
 
