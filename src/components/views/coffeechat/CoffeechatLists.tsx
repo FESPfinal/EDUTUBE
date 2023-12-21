@@ -1,7 +1,7 @@
 'use client';
-import useSelectCoffeechatList, {
+import {
   CoffeechatList,
-} from '../../../queries/coffeechat/useSelectCoffeechatList';
+} from '@/queries/coffeechat/useSelectCoffeechatList';
 import Link from 'next/link';
 import banner from '/public/images/banner.png';
 import Image from 'next/image';
