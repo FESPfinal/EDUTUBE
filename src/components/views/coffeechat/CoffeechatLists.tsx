@@ -1,7 +1,5 @@
 'use client';
-import {
-  CoffeechatList,
-} from '@/queries/coffeechat/useSelectCoffeechatList';
+import { CoffeechatList } from '@/queries/coffeechat/useSelectCoffeechatList';
 import Link from 'next/link';
 import banner from '/public/images/banner.png';
 import Image from 'next/image';
@@ -35,17 +33,16 @@ const CoffeechatLists = ({ initData }: Props) => {
                 제목: {item.name}
               </div>
               <div className="text-gray-600 mb-2 text-opacity-70 group-hover:text-opacity-100 transition duration-300">
-                판매자: {item.extra.author}
+                바리스타: {item.extra.author}
               </div>
-
-              {/*
-              TODO: init 데이터 수정후 주석 해제
-              <div className="text-gray-600 mb-2 text-opacity-70 group-hover:text-opacity-100 transition duration-300">
-                카테고리:{' '}
-                {item?.extra?.category?.length > 1
-                  ? `${item?.extra?.category[0]}` + ', ' + `${item?.extra?.category[1]}`
-                  : item?.extra?.category[0]}
-              </div> */}
+              <div className="flex gap-2">
+                <div className="text-xs font-semibold bg-light-main text-white w-fit px-2 py-1 rounded-xl">
+                  {item?.extra?.jobCategory?.[0] && item?.extra?.jobCategory[0]}
+                </div>
+                <div className="text-xs font-semibold bg-white text-light-main border border-light-main solid  w-fit px-2 py-1 rounded-xl">
+                  {item?.extra?.place}
+                </div>
+              </div>
               <div className="absolute top-0 left-0 w-full h-full opacity-0 bg-black text-white p-4 transition duration-300 group-hover:opacity-90">
                 <p className="text-lg font-bold mb-2">상세보기</p>
                 <p className="mb-2">intro: {item?.extra.intro}</p>
