@@ -4,7 +4,6 @@ import useLogin from '@/queries/login/useLogin';
 import useSelectCartMutate from '@/queries/login/useSelectCartMutate';
 import useUserCartInfo from '@/stores/cart';
 import { yupResolver } from '@hookform/resolvers/yup';
-import Cookies from 'js-cookie';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -37,7 +36,6 @@ const Login = () => {
       },
       {
         onSuccess: data => {
-          Cookies.set('user_name', data.name);
           router.push('/');
           cartMutate(undefined, {
             onSuccess: cartInfo => {
