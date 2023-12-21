@@ -1,22 +1,15 @@
-import Cookies from 'js-cookie';
-import { Product } from './../../helper/types/order';
+import useEdutubeAxios from '@/helper/utils/useEdutubeAxios';
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
+import { Product } from './../../helper/types/order';
 
-const BASE_URL = process.env.NEXT_PUBLIC_EDUTUBE_API;
 const URL: string = '/seller/products';
 
-const axiosPost = async (requestBody: Product) => {
-  const accessToken = Cookies.get('accessToken');
-  const response = await axios.post(BASE_URL + URL, requestBody, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-  return response;
-};
-
 const useCreateProduct = () => {
+  const { edutubeAxios } = useEdutubeAxios();
+  const axiosPost = async (requestBody: Product) => {
+    const response = await edutubeAxios.post(URL, requestBody);
+    return response;
+  };
   return useMutation({
     mutationFn: (requestBody: Product) => axiosPost(requestBody),
   });

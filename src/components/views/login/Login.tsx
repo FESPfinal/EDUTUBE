@@ -3,10 +3,12 @@
 import useLogin from '@/queries/login/useLogin';
 import useSelectCartMutate from '@/queries/login/useSelectCartMutate';
 import useUserCartInfo from '@/stores/cart';
+import useUserInfo from '@/stores/userInfo';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
@@ -19,14 +21,14 @@ type FormData = yup.InferType<typeof schema>;
 
 const Login = () => {
   const router = useRouter();
-
   const {
     handleSubmit,
     register,
     formState: { errors },
   } = useForm<FormData>({ resolver: yupResolver(schema) });
 
-  const { setUserCartCount } = useUserCartInfo(store => store);
+  const { deleteUserInfo } = useUserInfo(store => store);
+  const { setUserCartCount, deleteUserCartCount } = useUserCartInfo(store => store);
   const { mutate: loginMutate } = useLogin();
   const { mutate: cartMutate } = useSelectCartMutate();
   const onSubmit = (data: FormData) => {
@@ -37,9 +39,6 @@ const Login = () => {
       },
       {
         onSuccess: data => {
-          Cookies.set('accessToken', data.token.accessToken);
-          Cookies.set('user_id', String(data._id));
-          Cookies.set('user_name', data.name);
           router.push('/');
           cartMutate(undefined, {
             onSuccess: cartInfo => {
@@ -53,6 +52,14 @@ const Login = () => {
       },
     );
   };
+
+  useEffect(() => {
+    //로그인페이지 접속시 데이터 리셋
+    deleteUserInfo();
+    deleteUserCartCount();
+    Cookies.remove('refreshToken');
+    Cookies.remove('userType');
+  }, [deleteUserCartCount, deleteUserInfo, router]);
 
   return (
     <>

@@ -1,6 +1,5 @@
 'use client';
-import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 // component
 import Category from '@/components/atom/Category';
 import ImageUploader from '@/components/atom/ImageUploader';
@@ -8,24 +7,18 @@ import Radio from '@/components/atom/Radio';
 // helper
 import { jobCategoryConst, regionCategoryConst } from '@/helper/constants/categoryConst';
 import { PLACE_TYPES } from '@/helper/constants/placeConst';
-import { TempChildProduct, TempParentsProduct } from '@/helper/types/tempProduct';
 // queries
-import tempUseCreateProduct, {
-  ProductResponseData,
-} from '@/queries/coffeechat/tempUseCreateProduct';
+import useUpdateCoffeechat, { } from '@/queries/coffeechat/update/useUpdateCoffeechat';
 import useCreateFile from '@/queries/common/useCreateFile';
+import useSelectCoffeechatInfo from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
 // library
 import { yupResolver } from '@hookform/resolvers/yup';
-import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { Controller, useForm, UseFormRegisterReturn } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import useUserInfo from '@/stores/userInfo';
-
-const datetimeSchema = yup.object().shape({
-  date: yup.date().required('날짜를 선택해주세요.'),
-  time: yup.date().required('시간을 선택해주세요.'),
-});
+import { useParams, useRouter } from 'next/navigation';
+import { formatDate, formatTime } from '@/helper/utils/datetime';
 
 const schema = yup.object().shape({
   name: yup.string().required('제목을 입력해주세요.').max(30, '최대 30자까지 입력 가능합니다.'),
@@ -35,30 +28,21 @@ const schema = yup.object().shape({
     .min(10, '내용은 최소 10자 이상이어야 합니다.')
     .max(500, '최대 500자까지 입력 가능합니다.'),
   intro: yup.string().required('소개글을 입력해주세요.').max(50, '최대 50자까지 입력 가능합니다.'),
-  datetimeList: yup.array().of(datetimeSchema).required('하나 이상의 날짜 및 시간을 추가해주세요.'),
   price: yup
     .number()
     .required('가격을 입력해주세요.')
     .min(0, '최소 가격은 0 이어야 합니다.')
     .typeError('숫자를 입력하세요.'),
-  online: yup.string(),
-  offline: yup.string(),
-  onlinePlace: yup.string(),
-  offlinePlace: yup.string(),
 });
 
 type RegistFormData = yup.InferType<typeof schema>;
-type RegistFormDataExtend = {
-  online: string;
-  offline: string;
-  onlinePlace: string;
-  offlinePlace: string;
-} & RegistFormData;
 
 const PLACE_TYPE = 'placeType';
 
-const CoffeechatRegist = () => {
+const CoffeechatUpdate = () => {
   const router = useRouter();
+  const params = useParams();
+  const _id = params?._id as string;
   const {
     register,
     handleSubmit,
@@ -67,81 +51,27 @@ const CoffeechatRegist = () => {
   } = useForm<RegistFormData>({
     resolver: yupResolver(schema),
   });
-  const { mutate: mutateCreateProduct } = tempUseCreateProduct();
+  const { mutate: mutateUpdateCoffeechat } = useUpdateCoffeechat();
+  const { data: coffeechatDetailData } = useSelectCoffeechatInfo(_id);
   const { mutate: createImageMutate } = useCreateFile();
   const { userInfo } = useUserInfo(store => store);
-  const [placeType, setPlaceType] = useState(PLACE_TYPES.ONLINE);
-  const [datetimeList, setDatetimeList] = useState<{ date: Date; time: Date }[]>([]);
+  const [placeType, setPlaceType] = useState(`${coffeechatDetailData?.extra.place}`);
   const [imageFile, setImageFile] = useState<File>();
-  const [selectedJobCategory, setSelectedJobCategory] = useState<string[]>([]);
-  const [selectedRegionCategory, setSelectedRegionCategory] = useState('');
+  const [selectedJobCategory, setSelectedJobCategory] = useState<string[]>([`${coffeechatDetailData?.extra.jobCategory[0]}`]);
+  const [selectedRegionCategory, setSelectedRegionCategory] = useState(`${coffeechatDetailData?.extra.regionCategory}`);
+
+  useEffect(() => {
+    coffeechatDetailData && setSelectedJobCategory([coffeechatDetailData?.extra.jobCategory[0]])
+    coffeechatDetailData && setSelectedRegionCategory(coffeechatDetailData?.extra.regionCategory)
+    coffeechatDetailData && setPlaceType(`${coffeechatDetailData?.extra.place}`)
+  }, [coffeechatDetailData])
 
   const handlePlaceType = (type: string) => {
     setPlaceType(type);
   };
 
-  const handleAddDatetime = (event: React.MouseEvent) => {
-    event.preventDefault();
-    setDatetimeList([...datetimeList, { date: new Date(), time: new Date() }]);
-  };
-
-  const handleRemoveDatetime = (index: number, event: React.MouseEvent) => {
-    event.preventDefault();
-    const newDatetime = [...datetimeList];
-    newDatetime.splice(index, 1);
-    setDatetimeList(newDatetime);
-  };
-
-  const createChildProduct = (
-    data: ProductResponseData,
-    formSubmitData: RegistFormData,
-    fileName: string,
-    date: { date: Date; time: Date },
-  ) => {
-    const requestBody: TempChildProduct = {
-      mainImages: [fileName],
-      name: formSubmitData.name,
-      content: JSON.stringify(date), //datetime
-      price: formSubmitData.price,
-      shippingFees: 0,
-      show: true,
-      active: true,
-      quantity: 1,
-      buyQuantity: 0,
-      extra: {
-        intro: formSubmitData.intro,
-        place: placeType,
-        online: formSubmitData.online || '',
-        offline: formSubmitData.offline || '',
-        datetime: date,
-        author: userInfo.extra.nickname,
-        type: 'coffeechat',
-        jobCategory: selectedJobCategory,
-        regionCategory: selectedRegionCategory,
-        productType: 'child',
-        depth: 2,
-        parent: data._id,
-      },
-    };
-    mutateCreateProduct(requestBody, {
-      onSuccess: () => {
-        alert('등록되었습니다');
-        router.push('/coffeechat');
-      },
-      onError: error => {
-        alert(`child 등록에 실패하였습니다${error.message}`);
-      },
-    });
-  };
-
-  const createParentsProduct = ({
-    formSubmitData,
-    fileName,
-  }: {
-    formSubmitData: RegistFormData;
-    fileName: string;
-  }) => {
-    const requestBody: TempParentsProduct = {
+  const updateParentsProduct = ({ formSubmitData, fileName }: { formSubmitData: RegistFormData; fileName: string }) => {
+    const updateData = {
       mainImages: [fileName],
       name: formSubmitData.name,
       content: formSubmitData.content,
@@ -149,58 +79,55 @@ const CoffeechatRegist = () => {
       shippingFees: 0,
       show: true,
       active: true,
-      quantity: datetimeList.length,
-      buyQuantity: 0,
       extra: {
         intro: formSubmitData.intro,
-        place: placeType,
-        online: formSubmitData.onlinePlace || '',
-        offline: formSubmitData.offlinePlace || '',
-        datetimeList: datetimeList,
+        place: coffeechatDetailData?.extra?.place,
+        online: coffeechatDetailData?.extra?.online || '',
+        offline: coffeechatDetailData?.extra?.offline || '',
+        datetimeList: coffeechatDetailData?.extra?.datetimeList,
         author: userInfo.extra.nickname,
-        authorImage: userInfo.extra.profileImage?.path,
-        type: 'coffeechat',
-        jobCategory: selectedJobCategory,
-        regionCategory: selectedRegionCategory,
+        authorImage: userInfo.extra.profileImage.path,
+        jobCategory: coffeechatDetailData?.extra?.jobCategory,
+        regionCategory: coffeechatDetailData?.extra?.regionCategory,
         productType: 'parents',
-        depth: 1,
-      },
-    };
-    mutateCreateProduct(requestBody, {
-      onSuccess: (data: ProductResponseData) => {
-        datetimeList.map(date => createChildProduct(data, formSubmitData, fileName, date));
+        depth: 1
+      }
+    }
+    mutateUpdateCoffeechat({ updateData, _id }, {
+      onSuccess: () => {
+        alert('커피챗 게시물 수정이 성공적으로 완료되었습니다.')
+        router.push(`/coffeechat/info/${_id}`)
       },
       onError: error => {
-        alert(`parents 등록에 실패하였습니다${error.message}`);
-      },
-    });
-  };
+        alert(`${error.message}`)
+      }
+    })
+  }
 
   const onSubmit = (data: RegistFormData) => {
     const formData = new FormData();
     if (imageFile) {
       formData.append('attach', imageFile);
       createImageMutate(formData, {
-        onSuccess: response => {
-          const imagePath = response.path;
-          createParentsProduct({ formSubmitData: data, fileName: imagePath });
+        onSuccess: (fileName: { name: string; path: string }) => {
+          const imagePath = fileName.path;
+          updateParentsProduct({ formSubmitData: data, fileName: imagePath });
         },
         onError: error => {
-          alert('이미지 업로드가 실패하였습니다.');
+          alert(`이미지 업로드가 실패하였습니다. ${error.message}`);
         },
       });
     } else {
-      alert('이미지를 등록해주세요.');
+      coffeechatDetailData?.mainImages[0] && updateParentsProduct({ formSubmitData: data, fileName: coffeechatDetailData.mainImages[0] })
     }
   };
-
   return (
     <div className="max-w-md mx-auto my-16">
       {/* 이미지 업로드 */}
       <div className="mb-4">
         <label className="block text-gray-700">
           이미지 업로드
-          <ImageUploader onImageUpload={setImageFile} />
+          <ImageUploader onImageUpload={setImageFile} defaultImage={coffeechatDetailData?.mainImages[0]} />
         </label>
       </div>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -213,6 +140,7 @@ const CoffeechatRegist = () => {
               placeholder="제목을 입력해주세요"
               {...register('name', { required: '제목은 필수 입력입니다.' })}
               className="mt-1 p-2 border rounded w-full"
+              defaultValue={coffeechatDetailData?.name}
             />
           </label>
           {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
@@ -229,6 +157,7 @@ const CoffeechatRegist = () => {
                 minLength: { value: 10, message: '내용은 최소 10자 이상이어야 합니다.' },
               })}
               className="mt-1 p-2 border rounded w-full"
+              defaultValue={coffeechatDetailData?.content}
             />
           </label>
           {errors.content && <p className="text-red-500 text-sm">{errors.content.message}</p>}
@@ -247,6 +176,7 @@ const CoffeechatRegist = () => {
                     : setSelectedJobCategory([name]);
                 }}
                 selectedCategory={selectedJobCategory[0]}
+                disabled={true}
               />
             ))}
           </div>
@@ -266,6 +196,7 @@ const CoffeechatRegist = () => {
                     : setSelectedRegionCategory(name);
                 }}
                 selectedCategory={selectedRegionCategory}
+                disabled={true}
               />
             ))}
           </div>
@@ -280,6 +211,7 @@ const CoffeechatRegist = () => {
               placeholder="소개글을 입력해주세요"
               {...register('intro', { required: '소개글은 필수 입력입니다.' })}
               className="mt-1 p-2 border rounded w-full"
+              defaultValue={coffeechatDetailData?.extra?.intro}
             />
           </label>
           {errors.intro && <p className="text-red-500 text-sm">{errors.intro?.message}</p>}
@@ -289,12 +221,12 @@ const CoffeechatRegist = () => {
           <Radio
             value={PLACE_TYPES.ONLINE}
             name={PLACE_TYPE}
-            defaultChecked
             onClick={handlePlaceType}
+            disabled={true}
           >
             온라인
           </Radio>
-          <Radio value={PLACE_TYPES.OFFLINE} name={PLACE_TYPE} onClick={handlePlaceType}>
+          <Radio value={PLACE_TYPES.OFFLINE} name={PLACE_TYPE} onClick={handlePlaceType} disabled={true} >
             오프라인
           </Radio>
           {placeType === PLACE_TYPES.ONLINE ? (
@@ -303,8 +235,9 @@ const CoffeechatRegist = () => {
               <input
                 type="text"
                 placeholder="주소를 입력해주세요."
-                {...register('onlinePlace')}
-                className="mt-1 p-2 border rounded w-full"
+                className="mt-1 p-2 border rounded w-full bg-gray-200 text-gray-500"
+                defaultValue={coffeechatDetailData?.extra?.online}
+                disabled={true}
               />
             </label>
           ) : (
@@ -313,82 +246,39 @@ const CoffeechatRegist = () => {
               <input
                 type="text"
                 placeholder="주소를 입력해주세요."
-                {...register('offlinePlace')}
-                className="mt-1 p-2 border rounded w-full"
+                className="mt-1 p-2 border rounded w-full bg-gray-200 text-gray-500"
+                defaultValue={coffeechatDetailData?.extra?.offline}
+                disabled={true}
               />
             </label>
-          )}
-          {errors.onlinePlace && (
-            <p className="text-red-500 text-sm">{errors.onlinePlace.message}</p>
-          )}
-          {errors.offlinePlace && (
-            <p className="text-red-500 text-sm">{errors.offlinePlace.message}</p>
           )}
         </div>
         {/* 날짜 및 시간 등록 */}
         <div className="mb-4">
           <label className="block text-gray-700">날짜 및 시간 등록</label>
-          {datetimeList.map((dt, index) => (
-            <div key={index} className="flex items-center mb-2">
-              <Controller
-                control={control}
-                name={`datetimeList.${index}.date`}
-                defaultValue={dt.date}
-                render={() => (
-                  <DatePicker
-                    selected={dt.date}
-                    onChange={newDate => {
-                      const newDatetime = [...datetimeList];
-                      newDatetime[index].date = newDate as Date;
-                      setDatetimeList(newDatetime);
-                    }}
-                    dateFormat="yyyy-MM-dd"
-                    placeholderText="날짜를 선택하세요"
-                    className="mr-2 p-2 border rounded"
-                  />
-                )}
-              />
-              <Controller
-                control={control}
-                name={`datetimeList.${index}.time`}
-                defaultValue={dt.time}
-                render={() => (
-                  <DatePicker
-                    selected={dt.time}
-                    onChange={newTime => {
-                      const newDatetime = [...datetimeList];
-                      newDatetime[index].time = newTime as Date;
-                      setDatetimeList(newDatetime);
-                    }}
-                    showTimeSelect
-                    showTimeSelectOnly
-                    timeIntervals={15}
-                    dateFormat="h:mm aa"
-                    placeholderText="시간을 선택하세요"
-                    className="p-2 border rounded"
-                  />
-                )}
-              />
-              <button
-                type="button"
-                onClick={(event: React.MouseEvent) => handleRemoveDatetime(index, event)}
-                className="ml-2 text-red-500"
-              >
-                삭제
-              </button>
-            </div>
-          ))}
+          <div className="flex gap-2 flex-wrap mb-6 mt-6">
+            {coffeechatDetailData?.options?.item
+              .map((item, index: number) => (
+                <p
+                  key={index}
+                  className={` border-2 border-solid border-gray-400 rounded-lg p-2 minWidth-48 flex bg-gray-200 `}
+                >
+                  <p
+                    className={`text-gray-700 leading-6 mr-2 text-gray-400 
+                      `}
+                  >
+                    {formatDate(item.extra.datetime.date)}&nbsp;
+                  </p>
+                  <p
+                    className={`text-gray-700 leading-6 text-gray-400
+                      `}
+                  >
+                    {formatTime(item.extra.datetime.time)}
+                  </p>
+                </p>
+              ))}
+          </div>
           {/* [TODO] 날짜 시간 유효성 검사 수정 */}
-          {errors.datetimeList && (
-            <p className="text-red-500 text-sm">{errors.datetimeList.message}</p>
-          )}
-          <button
-            type="button"
-            onClick={(event: React.MouseEvent) => handleAddDatetime(event)}
-            className="mt-2 p-2 bg-blue-500 text-white rounded hover:bg-blue-700"
-          >
-            날짜 및 시간 추가
-          </button>
         </div>
         {/* 가격 */}
         <div className="mb-4">
@@ -397,7 +287,7 @@ const CoffeechatRegist = () => {
             <Controller
               name="price"
               control={control}
-              defaultValue={0}
+              defaultValue={coffeechatDetailData?.price}
               render={({ field }) => (
                 <input type="number" {...field} className="mt-1 p-2 border rounded w-full" />
               )}
@@ -413,7 +303,6 @@ const CoffeechatRegist = () => {
         </button>
       </form>
     </div>
-  );
-};
-
-export default CoffeechatRegist;
+  )
+}
+export default CoffeechatUpdate;

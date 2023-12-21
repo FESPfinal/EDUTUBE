@@ -8,16 +8,19 @@ import {
 } from '@/components/atom/Button';
 import RatingSummary from '@/components/views/coffeechat/review/RatingSummary';
 import ReplyItemCard from '@/components/views/coffeechat/review/ReplyItem';
+import { IMAGE_ROUTE } from '@/helper/constants/commons';
 import useSelectCoffeechatInfo, {
   ProductItem,
 } from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
 import useSelectReply from '@/queries/coffeechat/review/useSelectReply';
+import useDeleteCoffeechat from '@/queries/coffeechat/delete/useDeleteCoffeechat';
 import useUserInfo from '@/stores/userInfo';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { formatDate, formatTime } from '@/helper/utils/datetime';
+import NextImage from '@/components/atom/NextImage';
 
 interface Props {
   _id: string;
@@ -26,8 +29,9 @@ interface Props {
 
 const CoffeechatInfo = ({ _id, initData }: Props) => {
   const router = useRouter();
-  const { data: coffeechatDetailData } = useSelectCoffeechatInfo(_id);
+  const { data: coffeechatDetailData} = useSelectCoffeechatInfo(_id);
   const { data: replyListData } = useSelectReply(_id);
+  const { mutate: deleteCoffeechat } = useDeleteCoffeechat();
   const { userInfo } = useUserInfo(store => store);
   const [coffeechatList, setCoffeechatList] = useState<ProductItem | undefined>(initData);
   const [isReservationEnabled, setIsReservationEnabled] = useState(true);
@@ -73,7 +77,7 @@ const CoffeechatInfo = ({ _id, initData }: Props) => {
     }
   };
 
-  const averageRating = calculateAverageRating();
+  const averageRating = calculateAverageRating() as number;
 
   const calculateRatingPercentages = () => {
     if (!replyListData || replyListData?.length === 0) {
@@ -125,6 +129,12 @@ const CoffeechatInfo = ({ _id, initData }: Props) => {
 
   const ratingPercentages = calculateRatingPercentages();
 
+  const onDeleteCoffeechat = () => {
+    deleteCoffeechat(_id);
+    alert('삭제되었습니다.');
+    router.push(`/coffeechat`);
+  }
+
   return (
     <div className="max-w-4xl mx-auto p-4">
       {/* 색션 1*/}
@@ -132,13 +142,10 @@ const CoffeechatInfo = ({ _id, initData }: Props) => {
         {/* 색션 1-1 */}
         <div className="md:w-2/3">
           <div className="w-full h-96 aspect-w-3 aspect-h-2">
-            <Image
-              src={`https://localhost:443/${initData?.mainImages[0]}`}
+            <NextImage
+              src={`${initData?.mainImages[0]}`}
               alt={`${initData?.name}`}
               className="w-full h-full object-cover"
-              unoptimized={true}
-              width={80}
-              height={80}
             />
           </div>
         </div>
@@ -146,10 +153,7 @@ const CoffeechatInfo = ({ _id, initData }: Props) => {
         <div className="md:w-1/3 p-2 flex flex-col gap-3">
           <h1 className="text-2xl font-bold mb-2">{initData?.name}</h1>
           <div className="flex items-center gap-3 mb-2">
-            <Avatar
-              imageUrl={`https://localhost:443/${initData?.extra.authorImage}`}
-              size={'xsmall'}
-            />
+            <Avatar imageUrl={`${IMAGE_ROUTE}${initData?.extra.authorImage}`} size={'xsmall'} />
             <p className="text-md font-bold">{initData?.extra.author}</p>
           </div>
           <p className="mb-2"> {initData?.extra.intro}</p>
@@ -187,9 +191,8 @@ const CoffeechatInfo = ({ _id, initData }: Props) => {
               {coffeechatList?.options?.item?.map((item: any, index: number) => (
                 <p
                   key={index}
-                  className={`mb-2 mr-2 rounded-lg p-2.5 w-36 text-center text-white ${
-                    item.buyQuantity == 0 ? 'bg-light-main' : 'bg-light-disabled text-gray-100'
-                  }`}
+                  className={`mb-2 mr-2 rounded-lg p-2.5 w-36 text-center text-white ${item.buyQuantity == 0 ? 'bg-light-main' : 'bg-light-disabled text-gray-100'
+                    }`}
                 >
                   <p className=" mr-2">{formatDate(item.extra.datetime?.date)}</p>
                   <p>{formatTime(item.extra.datetime?.time)}</p>
@@ -245,12 +248,12 @@ const CoffeechatInfo = ({ _id, initData }: Props) => {
                   <UpdateButton
                     content="수정하기"
                     size="medium"
-                    onClick={() => alert('수정하기 구현해야함')}
+                    onClick={() => router.push(`/coffeechat/update/${_id}`)}
                   />
                   <DeleteButton
                     content="삭제하기"
                     size="medium"
-                    onClick={() => alert('삭제하기 구현해야함')}
+                    onClick={() => onDeleteCoffeechat()}
                     color="bg-light-error"
                     darkColor="bg-dark-error"
                     hoverColor="hover:bg-red-700"
