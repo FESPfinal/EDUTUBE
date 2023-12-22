@@ -7,6 +7,7 @@ import useSelectCart, { CartItem } from '@/queries/mypage/cart/useSelectCart';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { IsSelectedItem } from './Cart';
+import useUserCartInfo from '@/stores/cart';
 
 interface Props {
   data: CartItem;
@@ -18,6 +19,7 @@ const CartItem = ({ data, managingCartItemList, isAllProductChecked }: Props) =>
   const reservedDate = new Date(data?.product?.extra?.datetime?.date);
   const reservedTime = new Date(data?.product?.extra?.datetime?.time);
 
+  const { decreaseUserCartCount } = useUserCartInfo(store => store);
   const { mutate: deleteProduct } = useDeleteCoffeechatCart();
   const { refetch: cartRefetch } = useSelectCart();
   const [isChecked, setIsChecked] = useState(isAllProductChecked);
@@ -38,6 +40,7 @@ const CartItem = ({ data, managingCartItemList, isAllProductChecked }: Props) =>
   const onDelete = () => {
     deleteProduct(data._id, {
       onSuccess: () => {
+        decreaseUserCartCount(1);
         cartRefetch();
       },
     });

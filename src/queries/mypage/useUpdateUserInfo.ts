@@ -17,13 +17,13 @@ const useUpdateUserInfo = () => {
     setUserInfo({
       _id: userInfo._id,
       email: userInfo.email,
-      name: item.name,
-      phone: item.phone,
-      address: item.address,
+      name: item.name ? item.name : userInfo.name,
+      phone: item.phone ? item.phone : userInfo.phone,
+      address: item.address ? item.address : userInfo.address,
       type: userInfo.type,
       createdAt: userInfo.createdAt,
       updatedAt: item.updatedAt,
-      extra: item.extra,
+      extra: item.extra ? item.extra : userInfo.extra,
     });
 
     return item;

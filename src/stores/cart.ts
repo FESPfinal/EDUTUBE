@@ -7,6 +7,7 @@ type UserCartItem = {
   userCartCount: number;
   setUserCartCount: (count: number) => void;
   increaseUserCartCount: () => void;
+  decreaseUserCartCount: (decreaseCount: number) => void;
   deleteUserCartCount: () => void;
 };
 
@@ -18,9 +19,12 @@ const useUserCartInfo = create(
         set({ userCartCount: count });
       },
       increaseUserCartCount: () => {
-        if (get().userCartCount === 0) {
-          set({ userCartCount: get().userCartCount + 1 });
-        }
+        set(state => ({
+          userCartCount: state.userCartCount + 1,
+        }));
+      },
+      decreaseUserCartCount: (decreaseCount: number) => {
+        set(state => ({ userCartCount: state.userCartCount - decreaseCount }));
       },
       deleteUserCartCount: () => {
         set({ userCartCount: 0 });

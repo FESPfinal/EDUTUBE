@@ -1,5 +1,6 @@
 'use client';
 
+import { redirect } from 'next/navigation';
 import useUserCartInfo from '@/stores/cart';
 import useUserInfo from '@/stores/userInfo';
 import Cookies from 'js-cookie';
@@ -17,7 +18,7 @@ const NavLogoutModal = () => {
     Cookies.remove('refreshToken');
     Cookies.remove('userType');
     router.refresh();
-    router.push('/');
+    redirect('/');
   };
 
   return (
