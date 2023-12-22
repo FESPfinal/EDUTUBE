@@ -18,8 +18,7 @@
 
 ## 1. 프로젝트 소개
 
-이미지 추가
-<br>
+![iso_1_rectangle 3](https://github.com/FESPfinal/EDUTUBE/assets/119591236/b37d9c85-467e-4e74-b559-3a86077410e0)
 
 인프런과 같이 교육 관련 영상을 카테고리별로 묶어 
 쉽게 시청할 수 있도록 서비스를 제공하고 커피챗을 통해 사용자들이 지식 공유를 할 수 있도록 도움을 주는 플랫폼입니다
@@ -33,7 +32,7 @@
 
 🏃2023.11.19 ~ 2023.12.26
 
-이미지 추가
+![image 7](https://github.com/FESPfinal/EDUTUBE/assets/119591236/622d3186-2381-4c72-a204-d205a904f028)
 
 | 주차                             | 작업 내용                                                                                                                                  |
 | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -101,6 +100,33 @@
 </tr>
 </table>
 
+#### NextJs 사용: React 기반의 웹 프레임워크
+```
+· 초기 로딩 성능을 향상시켜 검색엔진 최적화(SEO)를 개선학 사용자에게 빠른 페이지 로딩 속도를 제공하여 사용했습니다.
+
+· 파일 시스템 기반의 간편한 라우팅을 제공해 페이지 제작시 특정 디렉토리 구조를 따르면 자동으로 라우팅이 설정되어 사용하였습니다.
+```
+
+#### Axios 사용: 웹 어플리케이션과 서버와의 통신
+```
+· 간결하고 직관적인 API를 제공하여 `axios.get()`, `axios.post()`와 같은 메서드를 사용하여 간단하게 API요청을 보낼 수 있어 사용하였습니다.
+
+· 요청과 응답을 인터셉트하고 수정할 수 있는 인터셉터를 제공해, 요청 전에 특정 작업을 수행하거나 응답을 가공할 수 있어 사용하였습니다.
+```
+
+#### Zustand 사용: 상태관리가 용이한 상태관리 라이브러리
+```
+· 불필요한 리렌더링을 방지하고 효율적인 상태 업데이크를 제공하여 구독한 상태가 변경될 때만 리렌더링이 발생하게 되어 사용하였습니다.
+
+· TypeScript와 함께 사용할 수 있도록 지원하여 상태와 액션에 대한 타입 정의를 쉽게 추가할 수 있어 사용하였습니다.
+```
+
+#### React-Query 사용: 서버와의 데이터 통신 및 상태관리
+```
+· 서버에서 데이터를 가져오고 필요에 따라 캐싱된 데이터를 효율적으로 관리하며, 로딩 상태, 에러 상태등을 간편하게 처리하여 사용하였습니다.
+
+· 서버의 데이터를 변경하는데 사용한 Mutations를 통해 데이터 생성, 갱신, 삭제 등을 처리하는데 용이하여 사용하였습니다.
+```
 <br>
 
 # 4. 협업 환경
@@ -248,14 +274,21 @@
 ```
 
 ## Google Sheets
-이미지
+![image 3](https://github.com/FESPfinal/EDUTUBE/assets/119591236/af39a3ed-1e1c-45bf-b7a8-cb35c0144b05)
+<br>
+
 ## Notion
-이미지
+URL: https://www.notion.so/FESP_-_EduTube-4873904b5a454a29b51c90a9b7ee3b06
+![캡처_2023_12_21_21_02_46_199 1](https://github.com/FESPfinal/EDUTUBE/assets/119591236/7737291c-59ea-4839-adb4-76bb66d20e73)
+<br>
+
 ## Discord
-이미지
+![image 23](https://github.com/FESPfinal/EDUTUBE/assets/119591236/346b9029-c663-422f-aa20-878fa126093d)
+<br >
 
 # 5. 역할 분담
-이미지 추가
+![Group 5401](https://github.com/FESPfinal/EDUTUBE/assets/119591236/e9e2c7b6-4ec7-4428-91ea-07f8282d49e1)
+<br>
 
 
 # 6. 폴더 구조
@@ -297,66 +330,162 @@
 
 # 7. 구현 기능 
 
-gif
+추후 추가 예정
 
 # 8. 주요 코드
 
-코드 
+<details>
+<summary>커피챗 게시물 등록</summary>
+<div>
+
+React-Hook-Form으로 입력 필드 갱신시 리렌더링 최소화하며, yup으로 클라이언트 측에서 데이터 유효성을 처리합니다.
+
+Yup 라이브러리로 폼 필드에 유효성 검사 규칙을 정의한 뒤, React-Hook-Form에서는 register훅으로 입력 등록 및 errors 객체로 유효성 검사 오류를 처리한다.
+
+```tsx
+const schema = yup.object().shape({
+  name: yup.string().required('제목을 입력해주세요.').max(30, '최대 30자까지 입력 가능합니다.'),
+  content: yup
+    .string()
+    .required('내용을 입력해주세요.')
+    .min(10, '내용은 최소 10자 이상이어야 합니다.')
+    .max(500, '최대 500자까지 입력 가능합니다.'),
+  intro: yup.string().required('소개글을 입력해주세요.').max(50, '최대 50자까지 입력 가능합니다.'),
+  datetimeList: yup.array().of(datetimeSchema).required('하나 이상의 날짜 및 시간을 추가해주세요.'),
+  price: yup
+    .number()
+    .required('가격을 입력해주세요.')
+    .min(0, '최소 가격은 0 이어야 합니다.')
+    .typeError('숫자를 입력하세요.'),
+  online: yup.string(),
+  offline: yup.string(),
+  onlinePlace: yup.string(),
+  offlinePlace: yup.string(),
+});
+
+```
+
+</div>
+</details>
+
+<details>
+<summary>인증 토큰 관리</summary>
+<div>
+
+각 axios 요청마다 헤더에 access token을 설정하는 번거로움을 줄입니다.
+
+로컬 스토리지 대신 zustand와 쿠키를 사용하여 access token을 저장함으로써, XSS와 CSRF와 같ㅌ은 공격에 대한 방어력을 강화한다.
+
+새로고침이나 다른 상황에서 zustand가 초기화되더라도 자동으로 access token을 재발급받아 설정하므로, 사용자는 세션을 유지하는데 문제가 없다.
+
+```tsx
+  edutubeAxios.interceptors.response.use(
+    response => {
+      // 응답 성공 시 처리 로직
+      return response;
+    },
+    async error => {
+      // 응답 에러 처리 로직
+      const originalRequest = error.config;
+      if (error.response?.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true;
+        if (refreshToken) {
+          try {
+            const { data } = await axios.get(BASE_URL + '/users/refresh', {
+              headers: {
+                Authorization: `Bearer ${refreshToken}`,
+              },
+            });
+            setAccessToken(data.accessToken);
+            originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
+            return edutubeAxios(originalRequest);
+          } catch (error) {
+            // 리프레시 토큰 갱신 실패 시 로그아웃 등의 처리
+            logout();
+            return Promise.reject(error);
+          }
+        } else {
+          // 리프레시 토큰이 없을 경우 로그아웃 등의 처리
+          logout();
+          return Promise.reject(error);
+        }
+      }
+      return Promise.reject(error);
+    },
+  );
+
+```
+
+</div>
+</details>
+
+
+<details>
+<summary>채팅 기능(Socket.io-client)</summary>
+<div>
+
+서비스 내에서 커피챗의 전체 과정이 이루어지도록 함으로써, 사용자의 서비스 이탈을 방지합니다.
+
+또한 서비스 내에서 바로 소통할 수 있어 다른 플랫폼으로 이동할 필요가 없어 유저들이 서비스에
+더욱 적극적으로 참여하도록 유도해 유저의 참여도와 만족도를 높이며 브랜드 충성도를 향상시킵니다.
+
+```tsx
+/**
+ * 예약된 시간과 현재 시간의 차를 밀리초단위로 계산하는 함수
+ * @param datetime string 예약된 일자 및 시간
+ * @returns 계산된 밀리초 차
+ */
+export const calculateTimeDifferenceInMinutes = (datetime: string) => {
+  // 현재 시간
+  const currentTime = new Date();
+
+  // 비교할 날짜
+  const reservedDate = new Date(datetime);
+
+  // 두 시간 사이의 차이를 밀리초로 계산
+  const differenceInMilliseconds = reservedDate.getTime() - currentTime.getTime();
+
+  return differenceInMilliseconds;
+};
+
+/**
+ * 예약된 시간과 현재 시간의 차이가 커피챗 시작 전 10분과 커피챗 시작 후 60분 이내일 때 true 값 반환하는 함수
+ * @param datetime string 예약된 일자 및 시간
+ * @returns boolean
+ */
+export const isBetweenTenToHour = (datetime: string) => {
+  const tenMinutes = 10;
+  const tenMinMilliseconds = tenMinutes * 60 * 1000; // 1분 = 60초, 1초 = 1000밀리초
+
+  const hour = 60;
+  const oneHourMilliseconds = hour * 60 * 1000; // 1분 = 60초, 1초 = 1000밀리초
+
+  const isLessThanTen = calculateTimeDifferenceInMinutes(datetime) <= tenMinMilliseconds;
+  const isMoreThanHour = calculateTimeDifferenceInMinutes(datetime) <= -oneHourMilliseconds;
+  return isLessThanTen && isMoreThanHour;
+};
+
+```
+
+</div>
+</details>
+
+<br>
 
 # 9. 리펙토링 할 부분
-## 기능
-- 북마크 CRUD <br>
-- 동영상 컨텐츠 CRUD <br>
-- 마이 페이지 <br>
-  - Feat: 북마크 페이지 <br>
-  - Feat: 내가 작성한 후기 리스트 확인 <br>
-  - Refactor: 상품검색을 이용해 Child 상품 가져올 수 있도록 로직 변경 <br>
-- Admin 계정<br>
-  - Feat: Seller 계정 관리<br>
-  - Feat: Product 코드 관리<br>
-  - Feat: 배너 관리 기능<br>
-- 상품 등록 페이지<br>
-  - Feat: 페이지네이션<br>
-  - Refactor: 캘린더 다중 일자 선택<br>
-- 커피챗 리스트 페이지<br>
-  - Feat: 검색, 필터링 기능<br>
-  - Feat: 페이지네이션 or 무한 스크롤<br>
-- 포인트<br>
-  - Feat: 동영상 컨텐츠 시청에 따라 포인트 부여<br>
-  - Feat: 포인트를 구매할 수 있는 기능<br>
 
-## 보안<br>
-- XSS(Cross-Site Scripting)<br>
-  - 권한없는 사용자가 악의적인 용도로 스크립트 삽입하는 공격 막기<br>
-
-## 성능<br>
-- 속도 개선(lighthouse)<br>
-- 코드 최적화<br>
-  - 필요없는 코드 제거<br>
-  - 코드 압축(minify)<br>
-  - 코드분할하여 초기로딩 단축<br>
-  - Lazy loading<br>
-  - SSR data mapping<br>
-
-## UI<br>
-- Footer 추가<br>
-- 스켈레톤 적용<br>
-- 모바일 최적화<br>
-- 채팅방 <br>
-  - 전반적인 UI 수정 필요<br>
-- 커피챗 상세 페이지<br>
-  - 예약 모달 캘린더화<br>
-  - 일정 캘린더화<br>
+![Group 5399](https://github.com/FESPfinal/EDUTUBE/assets/119591236/17aababa-f1d7-4835-a395-bfa6f1dd70ea)
+![Group 5399 (1)](https://github.com/FESPfinal/EDUTUBE/assets/119591236/c6dcab44-6eb4-4dea-b1e4-7a6e0a63adb2)
 
 <br>
 
 # 10. 팀원 소개
-이미지
+![Group 5400 (2)](https://github.com/FESPfinal/EDUTUBE/assets/119591236/07cdca5f-74cd-449b-9e26-98298f0e8f62)
 
 # 11. 회고 및 소감
 
 ## 조민경
-### [프로젝트를 시작하기 전에 계획한 각자의 목표 및 이룬 점/ 아쉬운 점]<br>
+### [프로젝트를 시작하기 전 계획한 각자의 목표 및 이룬 점/ 아쉬운 점]<br>
 이번 프로젝트에서는 사용해보지 못했던 기술을 익혀보고, 적용하는 것과 발생한 이슈에 대해 블로깅을 꾸준히 하는 것이 목표였습니다. refresh token을 사용하여 로그인을 유지하는 것과, middleware를 사용해 본 것, Next.js14를 사용해보는 것 등 새로운 기술을 익히는 데에는 목표를 달성할 수 있어 기뻤습니다.
 하지만 성능 최적화, 이슈 블로깅 등 기능구현을 하느라 목표했던 것들을 이루지 못한 부분도 있어 아쉬운 마음이 있습니다. 이런 부분은 추후 리팩토링을 하면서 점차 채워가겠습니다!
 
@@ -364,14 +493,14 @@ gif
 이번 프로젝트에서 제일 많이 들었던 생각은 ‘공식 문서에 답이 있다!’입니다. Next.js 14의 경우 최신 스택에다 ChatGPT에도 데이터가 없어 이슈 발생 시 잘 해결할 수 있을까 걱정이 많았는데, 공식문서에 사용법이 자세히 나와있어 생각보다 트러블슈팅하는데에 어려움이 적었습니다. 친절한 공식문서의 소중함을 이번 프로젝트를 통해 더욱이 느끼게 되었습니다! 공식문서 최고!!
 <br>
 ## 전서희
-### [프로젝트를 시작하기 전에 계획한 각자의 목표 및 이룬 점/ 아쉬운 점]<br>
+### [프로젝트를 시작하기 전 계획한 각자의 목표 및 이룬 점/ 아쉬운 점]<br>
 함께 배우면서 하는 프로젝트의 장점을 살려 새로운 기술을 사용해보면서 다양한 도전을 해보는 것이 목표였습니다. 처음 다루어보는 NextJS, reactQuery를 사용하면서 다양한 도전에 대한 목표를 이룬 것 같습니다. 아쉬웠던 점은 최적화 및 성능 개선에도 노력을 많이 하고 싶었는데, 시간이 촉박해 주어진 기능을 완성하기도 어려웠다는 것입니다. 부트캠프 수료 기간이 끝나도 추후 리팩토링으로 최적화를 해보면서 실력을 향상시켜보고 싶습니다.
 
 ### [깨달은 점 후기 및 소감]<br>
 기술은 사용해보지 않았을 땐 막연하게 무섭다고만 생각했는데 직접 해보니 많이 어렵지 않았습니다. 백문이 불여일타라고 직접 해보는게 정말 좋은 것 같습니다. 앞으로도 잘 모르는 기술 나와도 겁먹지 말고 도전해보고 싶습니다~
 <br>
 ## 우경석
-### [프로젝트를 시작하기 전에 계획한 각자의 목표 및 이룬 점/ 아쉬운 점]<br>
+### [프로젝트를 시작하기 전 계획한 각자의 목표 및 이룬 점/ 아쉬운 점]<br>
 코드 읽는 눈이 아직은 부족한걸 잘 알기에 코드 읽는 눈을 기르고 싶었고, github도 잘 다루는 것이 목표였습니다. react-hook-form을 공부하면서 팀원들에게 설명하면서 조금은 코드 읽는 눈이 높아지는 경험을 하게 되었고 github은 어느정도 익숙해졌으나, 아직은 어색해서 조금은 아쉬운 점이 있었다.
 
 ### [깨달은 점 후기 및 소감]<br>
