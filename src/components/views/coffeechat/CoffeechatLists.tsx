@@ -35,15 +35,15 @@ const CoffeechatLists = ({ initData }: Props) => {
               <div className="text-gray-600 mb-2 text-opacity-70 group-hover:text-opacity-100 transition duration-300">
                 바리스타: {item.extra.author}
               </div>
-              <div className="flex gap-2">
-                <div className="text-xs font-semibold bg-light-main text-white w-fit px-2 py-1 rounded-xl">
+              <div className="flex flex-wrap gap-2">
+                <div className="min-w-fit text-xs font-semibold bg-light-main text-white w-fit px-2 py-1 rounded-xl">
                   {item?.extra?.jobCategory?.[0] && item?.extra?.jobCategory[0]}
                 </div>
-                <div className="text-xs font-semibold bg-white text-light-main border border-light-main solid  w-fit px-2 py-1 rounded-xl">
+                <div className="min-w-fit text-xs font-semibold bg-white text-light-main border border-light-main solid  w-fit px-2 py-1 rounded-xl">
                   {item?.extra?.place}
                 </div>
                 {item.extra.place === 'offline' && (
-                  <div className="text-xs font-semibold bg-dark-main text-white w-fit px-2 py-1 rounded-xl">
+                  <div className="min-w-fit text-xs font-semibold bg-dark-main text-white w-fit px-2 py-1 rounded-xl">
                     {item?.extra?.offline}
                   </div>
                 )}
