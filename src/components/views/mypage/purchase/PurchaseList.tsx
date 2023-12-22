@@ -3,6 +3,8 @@ import Category from '@/components/atom/Category';
 import React, { useEffect, useState } from 'react';
 import useSelectOrder, { Product } from '../../../../queries/coffeechat/order/useSelectOrder';
 import PurchaseCard from './PurchaseCard';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 //임시 카테고리
 const TOTAL = '전체';
@@ -22,7 +24,7 @@ export type ShowPurchaseList = {
 };
 
 const PurchaseList = () => {
-  const { data: purchaseListData } = useSelectOrder();
+  const { data: purchaseListData, isLoading } = useSelectOrder();
   const [categoryList, setCategoryList] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState({
     isSelected: true,
@@ -97,11 +99,17 @@ const PurchaseList = () => {
           ))}
         </section>
         <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 overflow-y-auto scrollbar-hide max-h-[calc(100vh-220px)]">
-          {showPurchaseList?.map(item => (
-            <React.Fragment key={item._id}>
-              <PurchaseCard data={item} />
-            </React.Fragment>
-          ))}
+          {isLoading ? (
+            <li>
+              <Skeleton height={300} />
+            </li>
+          ) : (
+            showPurchaseList?.map(item => (
+              <React.Fragment key={item._id}>
+                <PurchaseCard data={item} />
+              </React.Fragment>
+            ))
+          )}
         </ul>
       </div>
     </>
