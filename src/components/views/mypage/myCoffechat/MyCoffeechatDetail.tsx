@@ -22,8 +22,6 @@ const MyCoffeechatDetail = () => {
   const [isConnected, setIsConnected] = useState(socket.connected);
   const [rooms, setRooms] = useState<RoomsData>({});
 
-  console.log('websoket>>', isConnected);
-
   useEffect(() => {
     function onConnect() {
       setIsConnected(true);
@@ -61,6 +59,7 @@ const MyCoffeechatDetail = () => {
 
   //데이터 리패치
   const refetchAll = () => {
+    console.log('리패치');
     coffeechatInfoRefetch();
     sellerOrdersRefetch();
   };
@@ -70,7 +69,11 @@ const MyCoffeechatDetail = () => {
    * @param response api 응답 값
    * @param optionData child product에 대해 ReservedState 타입으로 구성한 데이터
    */
-  const updateLink = (response: CreateRoomResponse, optionData: ReservedState) => {
+  const updateLink = (
+    response: CreateRoomResponse,
+    optionData: ReservedState,
+    callback: (isCreatedChat: boolean) => void,
+  ) => {
     const roomKey = Object.entries(response.roomList).filter(
       item => item[1].parents_option === `${_id}_${optionData.itemInfo.optionId}`,
     )[0]?.[0];
@@ -90,6 +93,8 @@ const MyCoffeechatDetail = () => {
         {
           onSuccess: () => {
             refetchAll();
+            const isCreatedChat = true;
+            callback(isCreatedChat);
           },
         },
       );
@@ -97,7 +102,10 @@ const MyCoffeechatDetail = () => {
   };
 
   // 채팅방 생성
-  const handleCreateRoom = (optionData: ReservedState) => {
+  const handleCreateRoom = (
+    optionData: ReservedState,
+    callback: (isCreatedChat: boolean) => void,
+  ) => {
     console.log('clicked');
     if (userInfo) {
       if (optionData.itemInfo.name.trim().length > 0) {
@@ -109,7 +117,7 @@ const MyCoffeechatDetail = () => {
             roomName: optionData.itemInfo.name,
             parents_option: `${_id}_${optionData.itemInfo.optionId}`,
           },
-          response => updateLink(response, optionData),
+          response => updateLink(response, optionData, callback),
         );
       } else {
         alert('채팅방 이름을 입력하세요.');

@@ -1,5 +1,7 @@
 'use client';
 
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 import useSelectMyCoffeechat, {
   MyCoffeechat,
 } from '@/queries/mypage/myCoffeechat/useSelectMyCoffeechat';
@@ -9,33 +11,15 @@ import MyCoffeechatItem from './MyCoffeechatItem';
 import SearchBar from '@/components/block/searchBar/SearchBar';
 import useSelectSellerItemSearch from '@/queries/mypage/myCoffeechat/useSelectSellerItemSearch';
 
-const PRODUCT_TYPE = {
-  PARENTS: 'parents',
-  CHILD: 'child',
-  COFFEECHAT: 'coffeechat',
-};
-
 const MypageMyCoffeechat = () => {
-  const { data: myProductList } = useSelectMyCoffeechat();
+  const { data: myProductList, isLoading } = useSelectMyCoffeechat();
   const { mutate: searchMutate } = useSelectSellerItemSearch();
 
   const [coffeechatParentsList, setCoffeechatParentsList] = useState<MyCoffeechat[]>();
   const [searchTerm, setSearchTerm] = useState('');
 
-  const filteringParents = (products: MyCoffeechat[]) => {
-    const coffeechatList = products.filter(item => item.extra.type === PRODUCT_TYPE.COFFEECHAT);
-    const parentsList = coffeechatList.filter(
-      item => item.extra.productType === PRODUCT_TYPE.PARENTS,
-    );
-    return parentsList;
-  };
-
   useEffect(() => {
-    //parent data만 filter해서 저장
-    if (myProductList) {
-      const parentsList = filteringParents(myProductList);
-      setCoffeechatParentsList(parentsList);
-    }
+    setCoffeechatParentsList(myProductList);
   }, [myProductList]);
 
   const handleSearch = (term: string) => {
@@ -46,8 +30,7 @@ const MypageMyCoffeechat = () => {
   const doSearch = () => {
     searchMutate(searchTerm, {
       onSuccess: data => {
-        const parentsList = filteringParents(data);
-        setCoffeechatParentsList(parentsList);
+        setCoffeechatParentsList(data);
       },
     });
   };
@@ -74,9 +57,15 @@ const MypageMyCoffeechat = () => {
       </section>
       <section>
         <ul role="list" className="divide-y divide-gray-100">
-          {coffeechatParentsList?.map(item => {
-            return <MyCoffeechatItem data={item} key={item._id} />;
-          })}
+          {isLoading ? (
+            <li>
+              <Skeleton height={200} />
+            </li>
+          ) : (
+            coffeechatParentsList?.map(item => {
+              return <MyCoffeechatItem data={item} key={item._id} />;
+            })
+          )}
         </ul>
       </section>
     </>
