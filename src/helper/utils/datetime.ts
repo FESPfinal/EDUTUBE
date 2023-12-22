@@ -31,7 +31,6 @@ export const calculateTimeDifferenceInMinutes = (datetime: Date) => {
   // 두 시간 사이의 차이를 밀리초로 계산
   const differenceInMilliseconds = reservedDate.getTime() - currentTime.getTime();
 
-  console.log('differenceInMilliseconds>>>', differenceInMilliseconds);
   return differenceInMilliseconds;
 };
 
