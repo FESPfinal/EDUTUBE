@@ -3,6 +3,7 @@ import Button from '@/components/atom/Button';
 import { formatDate, formatTime, isOverThanReserveTime } from '@/helper/utils/datetime';
 import useCreateCoffeechatCart from '@/queries/coffeechat/cart/useCreateCoffeechatCart';
 import useSelectCoffeechatInfo from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
+import useUserCartInfo from '@/stores/cart';
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useParams, useRouter } from 'next/navigation';
@@ -12,6 +13,7 @@ const CoffeechatCartModal = () => {
   const router = useRouter();
   const params = useParams();
   const _id = params?._id as string;
+  const { increaseUserCartCount } = useUserCartInfo(store => store);
   const { data: coffeechatDetailData } = useSelectCoffeechatInfo(_id);
   const { mutate: mutateCartCoffeechat } = useCreateCoffeechatCart();
   const [selectedDatetimeId, setSelectedDatetimeId] = useState<number>();
@@ -33,14 +35,20 @@ const CoffeechatCartModal = () => {
     mutateCartCoffeechat(_id, {
       onSuccess: () => {
         alert(`장바구니에 상품을 담았습니다.`);
+        increaseUserCartCount();
         router.back();
       },
       onError: error => {
         if (error.message == 'authToken is not defined') {
           alert(`로그인 이후에 결제가 가능합니다.`);
+          router.back();
           router.push('/login');
+        } else if (error.message == 'Request failed with status code 401') {
+          alert(`로그인 이후에 장바구니 담기가 가능합니다.`);
+          router.back();
         } else {
           alert(`장바구니에 상품 담기를 실패하셨습니다. ${error.message}`);
+          router.back();
         }
       },
     });
