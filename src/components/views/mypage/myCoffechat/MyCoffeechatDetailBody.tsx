@@ -74,8 +74,10 @@ const MyCoffeechatDetailBody = ({ _id }: { _id: string }) => {
   useEffect(() => {
     const parentsOptions = parentsOrderData?.options.item;
     const optionsFormatList = parentsOptions?.map(option => {
-      // const customerInfo = sellerOrdersData?.filter(items => option._id === items.products.filter((item) => item));
-
+      //option_id가 일치하는 주문내역
+      const customerInfo = sellerOrdersData?.filter(
+        items => option._id === items.products.filter(item => item)[0]._id,
+      );
       return {
         isReserved: !!option?.buyQuantity,
         itemInfo: {
@@ -84,7 +86,7 @@ const MyCoffeechatDetailBody = ({ _id }: { _id: string }) => {
           sellerName: option.extra?.author,
           date: option.extra.datetime?.date,
           time: option.extra.datetime?.time,
-          userName: option.extra?.author,
+          userName: customerInfo?.[0]?.address?.name || '',
           price: option?.price,
           place: option.extra?.place,
           online: option.extra?.online,
