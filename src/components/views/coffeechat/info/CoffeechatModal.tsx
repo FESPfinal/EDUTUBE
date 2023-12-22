@@ -60,7 +60,7 @@ const CoffeechatModal = () => {
         },
       ],
       address: {
-        name: '',
+        name: userInfo.extra.nickname,
         value: '',
       },
     };
