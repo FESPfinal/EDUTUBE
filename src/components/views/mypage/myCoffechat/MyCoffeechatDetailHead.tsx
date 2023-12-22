@@ -8,7 +8,6 @@ import Link from 'next/link';
 
 const MyCoffeechatDetailHead = ({ _id }: { _id: string }) => {
   const { data: coffeechatInfoData } = useSelectCoffeechatInfo(_id);
-  console.log('coffeechatInfoData>>', coffeechatInfoData);
 
   const datetimeList = coffeechatInfoData?.extra.datetimeList;
 
