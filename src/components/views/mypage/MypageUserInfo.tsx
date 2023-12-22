@@ -93,7 +93,7 @@ const MypageUserInfo = () => {
 
   return (
     <>
-      <div className="mb-10">
+      <div className="flex items-center justify-center mb-10">
         <ProfileImageUploader
           onImageUpload={setImageFile}
           defaultImage={userInfo?.extra?.profileImage}

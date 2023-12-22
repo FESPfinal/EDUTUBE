@@ -1,23 +1,17 @@
-import Cookies from 'js-cookie';
+import useEdutubeAxios from '@/helper/utils/useEdutubeAxios';
+import useUserInfo from '@/stores/userInfo';
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
 
-const user_id = Cookies.get('user_id');
-const BASE_URL = process.env.NEXT_PUBLIC_EDUTUBE_API;
-const URL = `/users/${user_id}/name`;
-
-const axiosGet = async () => {
-  const accessToken = Cookies.get('user_id');
-  const response = await axios.get(BASE_URL + URL, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-  // profile image 추가 예정
-  return response.data.item.name;
-};
+const URL = (user_id: number) => `/users/${user_id}/name`;
 
 const useGetUserInfo = (_id: string) => {
+  const { edutubeAxios } = useEdutubeAxios();
+  const { userInfo } = useUserInfo(store => store);
+  const axiosGet = async () => {
+    const response = await edutubeAxios.get(URL(userInfo._id));
+    // profile image 추가 예정
+    return response.data.item.name;
+  };
   return useQuery({ queryKey: ['UserInfo'], queryFn: axiosGet });
 };
 

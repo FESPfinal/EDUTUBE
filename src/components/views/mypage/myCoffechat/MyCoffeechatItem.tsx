@@ -1,6 +1,6 @@
 'use client';
 
-import NextImage from '@/components/atom/NextImge';
+import NextImage from '@/components/atom/NextImage';
 import { formatDate } from '@/helper/utils/datetime';
 import useSelectCoffeechatInfo from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
 import { MyCoffeechat } from '@/queries/mypage/myCoffeechat/useSelectMyCoffeechat';
@@ -31,6 +31,7 @@ const MyCoffeechatItem = ({ data }: Props) => {
               </div>
             </div>
             <p className="text-sm font-semibold leading-6 text-gray-900">{data.name}</p>
+            <p className="text-sm leading-6 text-gray-900">{parentsData?.extra.place}</p>
             <p className="text-sm leading-6 text-gray-900">
               {firstDate} ~ {lastDate}
             </p>
@@ -43,7 +44,8 @@ const MyCoffeechatItem = ({ data }: Props) => {
           <p className="text-sm font-semibold leading-6 text-gray-900">
             예약 인원 |{' '}
             <span className="text-light-main">
-              {data.quantity - (parentsData?.options.length || 0)}
+              {data.quantity -
+                (parentsData?.options?.item?.filter(item => !item.buyQuantity).length || 0)}
             </span>{' '}
             /{data.quantity}
           </p>

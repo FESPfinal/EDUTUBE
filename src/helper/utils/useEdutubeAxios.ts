@@ -15,17 +15,15 @@ const useEdutubeAxios = () => {
   const logout = () => {
     deleteAccessToken();
     deleteUserInfo();
-    Cookies.remove('accessToken');
+    Cookies.remove('userType');
     Cookies.remove('refreshToken');
-    Cookies.remove('user_id');
-    Cookies.remove('user_name');
     router.refresh();
     router.push('/');
   };
 
   const edutubeAxios = axios.create({
     baseURL: BASE_URL,
-    timeout: 1000,
+    timeout: 10000,
   });
 
   /** 1. 요청 전 - access토큰 header에 설정 */
@@ -48,7 +46,7 @@ const useEdutubeAxios = () => {
     async error => {
       // 응답 에러 처리 로직
       const originalRequest = error.config;
-      if (error.response.status === 401 && !originalRequest._retry) {
+      if (error.response?.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true;
         if (refreshToken) {
           try {

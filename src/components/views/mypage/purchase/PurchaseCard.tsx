@@ -1,10 +1,11 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { ShowPurchaseList } from './PurchaseList';
 import Button from '@/components/atom/Button';
-import NextImage from '@/components/atom/NextImge';
+import NextImage from '@/components/atom/NextImage';
+import useSelectMyCoffeechatChatLink from '@/queries/mypage/myCoffeechat/useSelectMyCoffeechatChatLink';
+import { isBetweenTenToHour } from '@/helper/utils/datetime';
 
 const PLACE_LIST = {
   ONLINE: 'online',
@@ -12,6 +13,10 @@ const PLACE_LIST = {
 };
 
 const PurchaseCard = ({ data }: { data: ShowPurchaseList }) => {
+  const { data: chatLinkData } = useSelectMyCoffeechatChatLink(data._id);
+
+  const isChatButtonShow = !!chatLinkData?.title && isBetweenTenToHour(data.datetime.time);
+
   return (
     <li className="bg-white p-4 rounded-md shadow-md flex flex-col gap-1">
       <Link href={`/coffeechat/info/${data.parent}`}>
@@ -40,14 +45,14 @@ const PurchaseCard = ({ data }: { data: ShowPurchaseList }) => {
       <section className="flex gap-2 justify-between">
         {PLACE_LIST.ONLINE === data.place && (
           <div className="w-full">
-            <Link href={'/'}>
+            <Link href={chatLinkData?.title || ''}>
               <Button
                 content={'채팅 시작'}
                 size={'small'}
                 color={'bg-white border solid border-dark-main'}
                 hoverColor={'hover:bg-dark-main hover:text-white'}
                 textColor={'text-dark-main disabled:text-white'}
-                disabled={true}
+                disabled={!isChatButtonShow}
               />
             </Link>
           </div>

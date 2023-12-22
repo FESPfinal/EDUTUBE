@@ -1,9 +1,22 @@
 import CoffeechatLists from '../../src/components/views/coffeechat/CoffeechatLists';
 
-const CoffeechatListPage = () => {
+const URL = `${process.env.NEXT_PUBLIC_EDUTUBE_API}/products`;
+
+async function getData() {
+  const res = await fetch(URL, { cache: 'no-store' });
+  if (!res.ok) {
+    throw new Error('Failed to fetch data');
+  }
+
+  return res.json();
+}
+
+const CoffeechatListPage = async () => {
+  const data = await getData();
+
   return (
     <div className="mb-20">
-      <CoffeechatLists />
+      <CoffeechatLists initData={data.item} />
     </div>
   );
 };

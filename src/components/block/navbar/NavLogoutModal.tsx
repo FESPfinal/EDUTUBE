@@ -14,9 +14,7 @@ const NavLogoutModal = () => {
   const handleLogout = () => {
     deleteUserInfo();
     deleteUserCartCount();
-    Cookies.remove('accessToken');
     Cookies.remove('refreshToken');
-    Cookies.remove('user_id');
     Cookies.remove('userType');
     router.refresh();
     router.push('/');

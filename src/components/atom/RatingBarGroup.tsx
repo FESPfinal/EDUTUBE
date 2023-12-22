@@ -2,7 +2,7 @@
 
 import RatingBar from './RatingBar';
 
-type PercentList = { five: string; four: string; three: string; two: string; one: string };
+type PercentList = { five: string | number; four: string | number; three: string | number; two: string | number; one: string | number };
 
 interface Props {
   percentList: PercentList;
