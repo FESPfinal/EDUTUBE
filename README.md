@@ -10,7 +10,7 @@
 6.  [폴더 구조](#6-폴더-구조)
 7.  [구현 기능](#7-구현-기능)
 8.  [주요 코드](#8-주요-코드)
-9.  [리펙토링 할 부분](#9-리펙토링-할-부분)
+9.  [리팩토링 할 부분](#9-리팩토링-할-부분)
 10. [팀원 소개](#10팀원-소개)
 11. [회고 및 소감](#11-회고-및-소감)
 
@@ -102,7 +102,7 @@
 
 #### NextJs 사용: React 기반의 웹 프레임워크
 ```
-· 초기 로딩 성능을 향상시켜 검색엔진 최적화(SEO)를 개선학 사용자에게 빠른 페이지 로딩 속도를 제공하여 사용했습니다.
+· 초기 로딩 성능을 향상시켜 검색엔진 최적화(SEO)를 개선해 사용자에게 빠른 페이지 로딩 속도를 제공하여 사용하였습니다.
 
 · 파일 시스템 기반의 간편한 라우팅을 제공해 페이지 제작시 특정 디렉토리 구조를 따르면 자동으로 라우팅이 설정되어 사용하였습니다.
 ```
@@ -131,9 +131,7 @@
 
 # 4. 협업 환경
 
-## Convention
-
-- ### Prettier Convention
+- ## Prettier Convention
 
 
 ```
@@ -180,7 +178,7 @@
 
 <br>
 
-- ### Git Commit Convention
+- ## Git Commit Convention
 
 <detail>
   <table>
@@ -255,7 +253,7 @@
 
 <br>
 
-- ### PR Convention
+- ## PR Convention
 
 ```markdown
 ## ✨ 구현기능 
@@ -274,15 +272,21 @@
 ```
 
 ## Google Sheets
+- 진행상황 및 도움이 필요한 부분을 쉽게 파악하기 위해 매일 아침 10시마다 스크럼을 진행하여 Google Sheets에 작성해 공유하였습니다.
+<br >
 ![image 3](https://github.com/FESPfinal/EDUTUBE/assets/119591236/af39a3ed-1e1c-45bf-b7a8-cb35c0144b05)
 <br>
 
 ## Notion
-URL: https://www.notion.so/FESP_-_EduTube-4873904b5a454a29b51c90a9b7ee3b06
+- 전체적인 프로젝트에 필요한 정보들을 정리하여 언제든지 정보를 빠르게 찾을 수 있도록 노션을 통해 관리하였습니다.
+<br >
+- URL: https://www.notion.so/FESP_-_EduTube-4873904b5a454a29b51c90a9b7ee3b06
 ![캡처_2023_12_21_21_02_46_199 1](https://github.com/FESPfinal/EDUTUBE/assets/119591236/7737291c-59ea-4839-adb4-76bb66d20e73)
 <br>
 
 ## Discord
+- Discord에 git 알림 봇을 연결하여 PR, Issue, 브랜치 생성등 알림을 받아 현재 진행사항을 보다 빠르게 파악할 수 있었습니다.
+<br >
 ![image 23](https://github.com/FESPfinal/EDUTUBE/assets/119591236/346b9029-c663-422f-aa20-878fa126093d)
 <br >
 
@@ -389,7 +393,7 @@ URL: https://www.notion.so/FESP_-_EduTube-4873904b5a454a29b51c90a9b7ee3b06
         <th colspan="1">채팅</th>
     </tr>
     <tr align="center">
-      <td><img src="https://github.com/FRONTENDSCHOOL5/final-02-Ta-dak_Ta-dak/assets/126536438/eb76ff62-49a0-4abd-b06e-f1b6df0e4a38" /></td>
+      <td><img src="#" /></td>
     </tr> 
   <tr align="center">
       <th colspan="1">커피챗 후기 등록</th>
@@ -444,7 +448,7 @@ URL: https://www.notion.so/FESP_-_EduTube-4873904b5a454a29b51c90a9b7ee3b06
 
 React-Hook-Form으로 입력 필드 갱신시 리렌더링 최소화하며, yup으로 클라이언트 측에서 데이터 유효성을 처리합니다.
 
-Yup 라이브러리로 폼 필드에 유효성 검사 규칙을 정의한 뒤, React-Hook-Form에서는 register훅으로 입력 등록 및 errors 객체로 유효성 검사 오류를 처리한다.
+Yup 라이브러리로 폼 필드에 유효성 검사 규칙을 정의한 뒤, React-Hook-Form에서는 register훅으로 입력 등록 및 errors 객체로 유효성 검사 오류를 처리합니다.
 
 ```tsx
 const schema = yup.object().shape({
@@ -478,9 +482,9 @@ const schema = yup.object().shape({
 
 각 axios 요청마다 헤더에 access token을 설정하는 번거로움을 줄입니다.
 
-로컬 스토리지 대신 zustand와 쿠키를 사용하여 access token을 저장함으로써, XSS와 CSRF와 같ㅌ은 공격에 대한 방어력을 강화한다.
+로컬 스토리지 대신 zustand와 쿠키를 사용하여 access token을 저장함으로써, XSS와 CSRF와 같은 공격에 대한 방어력을 강화합니다.
 
-새로고침이나 다른 상황에서 zustand가 초기화되더라도 자동으로 access token을 재발급받아 설정하므로, 사용자는 세션을 유지하는데 문제가 없다.
+새로고침이나 다른 상황에서 zustand가 초기화되더라도 자동으로 access token을 재발급받아 설정하므로, 사용자는 세션을 유지하는데 문제가 없습니다.
 
 ```tsx
   edutubeAxios.interceptors.response.use(
@@ -576,7 +580,7 @@ export const isBetweenTenToHour = (datetime: string) => {
 
 <br>
 
-# 9. 리펙토링 할 부분
+# 9. 리팩토링 할 부분
 
 ![Group 5399](https://github.com/FESPfinal/EDUTUBE/assets/119591236/17aababa-f1d7-4835-a395-bfa6f1dd70ea)
 ![Group 5399 (1)](https://github.com/FESPfinal/EDUTUBE/assets/119591236/c6dcab44-6eb4-4dea-b1e4-7a6e0a63adb2)
