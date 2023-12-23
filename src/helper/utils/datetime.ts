@@ -21,12 +21,12 @@ export const formatTime = (date: string) => {
  * @param datetime string 예약된 일자 및 시간
  * @returns 계산된 밀리초 차
  */
-export const calculateTimeDifferenceInMinutes = (datetime: string) => {
+export const calculateTimeDifferenceInMinutes = (datetime: Date) => {
   // 현재 시간
   const currentTime = new Date();
 
   // 비교할 날짜
-  const reservedDate = new Date(datetime);
+  const reservedDate = datetime;
 
   // 두 시간 사이의 차이를 밀리초로 계산
   const differenceInMilliseconds = reservedDate.getTime() - currentTime.getTime();
@@ -39,14 +39,21 @@ export const calculateTimeDifferenceInMinutes = (datetime: string) => {
  * @param datetime string 예약된 일자 및 시간
  * @returns boolean
  */
-export const isBetweenTenToHour = (datetime: string) => {
+export const isBetweenTenToHour = (inputDate: string, inputTime: string) => {
+  // dateStr에서 날짜를, timeStr에서 시간을 추출합니다.
+  const date = new Date(inputDate);
+  const time = new Date(inputTime);
+
+  // date 객체에 시간을 설정합니다.
+  date.setHours(time.getHours(), time.getMinutes(), time.getSeconds(), time.getMilliseconds());
+
   const tenMinutes = 10;
   const tenMinMilliseconds = tenMinutes * 60 * 1000; // 1분 = 60초, 1초 = 1000밀리초
 
   const hour = 60;
   const oneHourMilliseconds = hour * 60 * 1000; // 1분 = 60초, 1초 = 1000밀리초
 
-  const isLessThanTen = calculateTimeDifferenceInMinutes(datetime) <= tenMinMilliseconds;
-  const isMoreThanHour = calculateTimeDifferenceInMinutes(datetime) <= -oneHourMilliseconds;
+  const isLessThanTen = calculateTimeDifferenceInMinutes(date) <= tenMinMilliseconds;
+  const isMoreThanHour = calculateTimeDifferenceInMinutes(date) >= -oneHourMilliseconds;
   return isLessThanTen && isMoreThanHour;
 };

@@ -1,3 +1,5 @@
+import NotFound from './not-found';
+
 export default function Default() {
-  return null;
+  return <NotFound />;
 }
