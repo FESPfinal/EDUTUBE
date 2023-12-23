@@ -330,7 +330,111 @@ URL: https://www.notion.so/FESP_-_EduTube-4873904b5a454a29b51c90a9b7ee3b06
 
 # 7. 구현 기능 
 
-추후 추가 예정
+<table>
+  <tr align="center">
+      <th colspan="1">회원가입</th>
+  </tr>
+  <tr align="center">
+    <td><img src="https://github.com/FESPfinal/EDUTUBE/assets/119591236/24d76a2a-b648-46e0-9088-acacfc72126a" /></td>
+  </tr>
+   <tr align="center">
+      <th colspan="1">프로필 설정</th>
+  </tr>
+  <tr align="center">
+    <td><img src="https://github.com/FESPfinal/EDUTUBE/assets/119591236/c56abb7f-1674-42a3-b580-c9232009056a" /></td>
+  </tr>
+   <tr align="center">
+      <th colspan="1">로그인</th>
+  </tr>
+  <tr align="center">
+    <td><img src="https://github.com/FESPfinal/EDUTUBE/assets/119591236/219826ab-cb11-4f13-9c1d-714d488e75a7" /></td>
+  </tr>
+   <tr align="center">
+      <th colspan="1">커피챗</th>
+  </tr>
+  <tr align="center">
+    <td><img src="https://github.com/FESPfinal/EDUTUBE/assets/119591236/ef1a3e3d-ee0b-4100-8e60-5430e40e7055" /></td>
+  </tr>
+   <tr align="center">
+      <th colspan="1">커피챗 상세</th>
+  </tr>
+  <tr align="center">
+    <td><img src="https://github.com/FESPfinal/EDUTUBE/assets/119591236/5811c008-141b-4844-a790-913e8c7bfdcd" /></td>
+  </tr>
+ <tr align="center">
+      <th colspan="1">커피챗 등록</th>
+  </tr>
+  <tr align="center">
+    <td><img src="https://github.com/FESPfinal/EDUTUBE/assets/119591236/695912bb-33c6-4983-a106-2e270f1bc8a1" /></td>
+  </tr>
+ <tr align="center">
+      <th colspan="1">커피챗 예약</th>
+  </tr>
+  <tr align="center">
+    <td><img src="https://github.com/FESPfinal/EDUTUBE/assets/119591236/9f6e6766-2d39-478c-ba0a-abeffb8da127" /></td>
+  </tr> 
+ <tr align="center">
+      <th colspan="1">커피챗 수정</th>
+  </tr>
+  <tr align="center">
+    <td><img src="https://github.com/FESPfinal/EDUTUBE/assets/119591236/aa21ab12-29a9-47c9-a099-d463cbf53f90" /></td>
+  </tr>
+ <tr align="center">
+      <th colspan="1">커피챗 삭제</th>
+  </tr>
+  <tr align="center">
+    <td><img src="https://github.com/FESPfinal/EDUTUBE/assets/119591236/07120d69-2e72-40db-a288-0a6be985b394" /></td>
+  </tr>
+  <tr align="center">
+        <th colspan="1">채팅</th>
+    </tr>
+    <tr align="center">
+      <td><img src="https://github.com/FRONTENDSCHOOL5/final-02-Ta-dak_Ta-dak/assets/126536438/eb76ff62-49a0-4abd-b06e-f1b6df0e4a38" /></td>
+    </tr> 
+  <tr align="center">
+      <th colspan="1">커피챗 후기 등록</th>
+  </tr>
+  <tr align="center">
+    <td><img src="https://github.com/FESPfinal/EDUTUBE/assets/119591236/3d26fe9c-1d22-42ec-99d2-a124eb41bbb0" /></td>
+  </tr>
+  <tr align="center">
+      <th colspan="1">장바구니 담기</th>
+  </tr>
+  <tr align="center">
+    <td><img src="https://github.com/FESPfinal/EDUTUBE/assets/119591236/97568e0d-a20c-4bab-bd21-3606d91bdbf4" /></td>
+  </tr> 
+  <tr align="center">
+      <th colspan="1">장바구니 선택, 삭제, 결제</th>
+  </tr>
+  <tr align="center">
+    <td><img src="https://github.com/FESPfinal/EDUTUBE/assets/119591236/f40cfbd3-d7f5-4dd8-9227-9bea318ac3f6" /></td>
+  </tr> 
+  <tr align="center">
+      <th colspan="1">마이프로필</th>
+  </tr>
+  <tr align="center">
+    <td><img src="https://github.com/FESPfinal/EDUTUBE/assets/119591236/a46582a5-e1af-48e4-b863-a3fb6f094327" /></td>
+  </tr> 
+  <tr align="center">
+      <th colspan="1">마이프로필 수정</th>
+  </tr>
+  <tr align="center">
+    <td><img src="https://github.com/FESPfinal/EDUTUBE/assets/119591236/244fd491-5e19-472f-a7b9-c1eb68bbcf34" /></td>
+  </tr> 
+  <tr align="center">
+      <th colspan="1">마이프로필 예약자 조회(강사)</th>
+  </tr>
+  <tr align="center">
+    <td><img src="https://github.com/FESPfinal/EDUTUBE/assets/119591236/ae94753c-dbc4-4ea9-8761-812dc71f12ca" /></td>
+  </tr> 
+  <tr align="center">
+      <th colspan="1">마이프로필 등록한 커피챗 조회(강사)</th>
+  </tr>
+  <tr align="center">
+    <td><img src="https://github.com/FESPfinal/EDUTUBE/assets/119591236/c9528241-5787-4a39-b114-b6a864cf5c4c" /></td>
+  </tr> 
+</table>
+<br/>
 
 # 8. 주요 코드
 
