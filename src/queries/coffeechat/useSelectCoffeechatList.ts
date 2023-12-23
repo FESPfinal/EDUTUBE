@@ -1,7 +1,7 @@
 import useEdutubeAxios from '@/helper/utils/useEdutubeAxios';
 import { useQuery } from '@tanstack/react-query';
 
-type CoffeechatItem = {
+export type CoffeechatItem = {
   _id: number;
   mainImages: string[];
   name: string;
