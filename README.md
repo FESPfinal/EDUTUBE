@@ -393,7 +393,7 @@
         <th colspan="1">채팅</th>
     </tr>
     <tr align="center">
-      <td><img src="#" /></td>
+      <td><img src="https://github.com/FESPfinal/EDUTUBE/assets/119591236/9bcdfae7-ebd0-4c7c-be7a-4e248eea1be0" /></td>
     </tr> 
   <tr align="center">
       <th colspan="1">커피챗 후기 등록</th>
