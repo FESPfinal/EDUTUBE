@@ -29,7 +29,8 @@ const CoffeechatLists = ({ initData }: Props) => {
         },
         onError: error => { alert(`검색에 실패하였습니다 ${error.message}`) }
       });
-
+    } else {
+      setCoffeechatSearchList(initData);
     }
   };
 
