@@ -273,22 +273,25 @@
 
 ## Google Sheets
 - 진행상황 및 도움이 필요한 부분을 쉽게 파악하기 위해 매일 아침 10시마다 스크럼을 진행하여 Google Sheets에 작성해 공유하였습니다.
-<br >
+
 ![화면 캡처 2023-12-23 155755](https://github.com/FESPfinal/EDUTUBE/assets/119591236/d1538b50-d070-4d6c-90a1-6b195d937261)
+
 <br>
 
 ## Notion
 - 전체적인 프로젝트에 필요한 정보들을 정리하여 언제든지 정보를 빠르게 찾을 수 있도록 노션을 통해 관리하였습니다.
 <br >
 - URL: https://www.notion.so/FESP_-_EduTube-4873904b5a454a29b51c90a9b7ee3b06
-<br>
+
 ![화면 캡처 2023-12-23 155508](https://github.com/FESPfinal/EDUTUBE/assets/119591236/20f00325-4b60-45dd-ae3f-32e362bc1322)
+
 <br>
 
 ## Discord
 - Discord에 git 알림 봇을 연결하여 PR, Issue, 브랜치 생성등 알림을 받아 현재 진행사항을 보다 빠르게 파악할 수 있었습니다.
-<br >
+
 ![화면 캡처 2023-12-23 160037](https://github.com/FESPfinal/EDUTUBE/assets/119591236/a3514025-85eb-4e69-b2b9-604db976a485)
+
 <br >
 
 # 5. 역할 분담
