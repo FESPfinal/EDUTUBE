@@ -15,7 +15,8 @@ const PLACE_LIST = {
 const PurchaseCard = ({ data }: { data: ShowPurchaseList }) => {
   const { data: chatLinkData } = useSelectMyCoffeechatChatLink(data._id);
 
-  const isChatButtonShow = !!chatLinkData?.title && isBetweenTenToHour(data.datetime.time);
+  const isChatButtonShow =
+    !!chatLinkData?.title && isBetweenTenToHour(data.datetime.date, data.datetime.time);
 
   return (
     <li className="bg-white p-4 rounded-md shadow-md flex flex-col gap-1">
