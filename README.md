@@ -281,17 +281,17 @@
 - 전체적인 프로젝트에 필요한 정보들을 정리하여 언제든지 정보를 빠르게 찾을 수 있도록 노션을 통해 관리하였습니다.
 <br >
 - URL: https://www.notion.so/FESP_-_EduTube-4873904b5a454a29b51c90a9b7ee3b06
-![캡처_2023_12_21_21_02_46_199 1](https://github.com/FESPfinal/EDUTUBE/assets/119591236/7737291c-59ea-4839-adb4-76bb66d20e73)
+<img src="https://github.com/FESPfinal/EDUTUBE/assets/119591236/7737291c-59ea-4839-adb4-76bb66d20e73" />
 <br>
 
 ## Discord
 - Discord에 git 알림 봇을 연결하여 PR, Issue, 브랜치 생성등 알림을 받아 현재 진행사항을 보다 빠르게 파악할 수 있었습니다.
 <br >
-![image 23](https://github.com/FESPfinal/EDUTUBE/assets/119591236/346b9029-c663-422f-aa20-878fa126093d)
+<img src="https://github.com/FESPfinal/EDUTUBE/assets/119591236/346b9029-c663-422f-aa20-878fa126093d" />
 <br >
 
 # 5. 역할 분담
-![Group 5401](https://github.com/FESPfinal/EDUTUBE/assets/119591236/e9e2c7b6-4ec7-4428-91ea-07f8282d49e1)
+<img src="https://github.com/FESPfinal/EDUTUBE/assets/119591236/e9e2c7b6-4ec7-4428-91ea-07f8282d49e1" />
 <br>
 
 
