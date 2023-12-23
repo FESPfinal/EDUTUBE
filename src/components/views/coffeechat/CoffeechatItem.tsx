@@ -7,7 +7,6 @@ interface Props {
 }
 
 const CoffeechatItem = ({ item }: Props) => {
-  console.log(item)
   return (
     <li
       key={item._id}
