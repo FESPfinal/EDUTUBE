@@ -34,7 +34,7 @@ const PurchaseCard = ({ data }: { data: ShowPurchaseList }) => {
       <section>
         <p className="text-lg font-bold truncate">{data.name}</p>
         <p className="text-sm leading-6 text-gray-900 truncate">{data.intro}</p>
-        <p className="text-sm leading-6 text-gray-900">진행자: {data.author}</p>
+        <p className="text-sm leading-6 text-gray-900">바리스타: {data.author}</p>
         <p className="text-sm leading-6 text-gray-900">
           일시 | {new Date(data.datetime?.date).toLocaleDateString()} /
           {new Date(data.datetime?.time).toLocaleTimeString()}

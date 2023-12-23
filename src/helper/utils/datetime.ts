@@ -57,3 +57,18 @@ export const isBetweenTenToHour = (inputDate: string, inputTime: string) => {
   const isMoreThanHour = calculateTimeDifferenceInMinutes(date) >= -oneHourMilliseconds;
   return isLessThanTen && isMoreThanHour;
 };
+
+export const isOverThanReserveTime = (inputDate: string, inputTime: string) => {
+  // dateStr에서 날짜를, timeStr에서 시간을 추출합니다.
+  const date = new Date(inputDate);
+  const time = new Date(inputTime);
+
+  // date 객체에 시간을 설정합니다.
+  date.setHours(time.getHours(), time.getMinutes(), time.getSeconds(), time.getMilliseconds());
+
+  // 현재 시간을 가져옵니다.
+  const now = new Date();
+
+  // date가 now보다 이전이라면 true(시간이 지남), 아니라면 false(시간이 지나지 않음)를 반환합니다.
+  return date < now;
+};
