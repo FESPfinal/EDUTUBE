@@ -7,7 +7,7 @@ interface Props {
   round: number;
 }
 
-const Skeleton = ({ width, height, round }: Props) => {
+const SkeletonBox = ({ width, height, round }: Props) => {
   const { systemTheme, theme } = useTheme();
   const currentTheme = theme === 'system' ? systemTheme : theme;
 
@@ -20,4 +20,4 @@ const Skeleton = ({ width, height, round }: Props) => {
   );
 };
 
-export default Skeleton;
+export default SkeletonBox;

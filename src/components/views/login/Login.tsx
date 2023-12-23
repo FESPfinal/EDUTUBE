@@ -59,7 +59,7 @@ const Login = () => {
     deleteUserCartCount();
     Cookies.remove('refreshToken');
     Cookies.remove('userType');
-  }, [deleteUserCartCount, deleteUserInfo, router]);
+  }, []);
 
   return (
     <>

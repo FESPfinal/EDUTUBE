@@ -1,5 +1,7 @@
 'use client';
 
+import { CreateRoomResponse, MsgItem, RoomsData, socket } from '@/helper/utils/websocket';
+
 import FilterButtons from '@/components/atom/FilterButtons';
 import { formatDate, formatTime } from '@/helper/utils/datetime';
 import useSelectCoffeechatInfo, { Extra } from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
@@ -61,7 +63,13 @@ type OrderFormat = {
   };
 };
 
-const MyCoffeechatDetailBody = ({ _id }: { _id: string }) => {
+interface Props {
+  _id: string;
+  rooms: RoomsData;
+  handleCreateRoom: (optionData: ReservedState, callback: (isCreatedChat: boolean) => void) => void;
+}
+
+const MyCoffeechatDetailBody = ({ _id, rooms, handleCreateRoom }: Props) => {
   const { data: parentsOrderData } = useSelectCoffeechatInfo(_id);
   const { data: sellerOrdersData } = useSelectSellerOrders();
 
@@ -195,6 +203,8 @@ const MyCoffeechatDetailBody = ({ _id }: { _id: string }) => {
                               data={item}
                               parentsId={_id}
                               chatLink={''}
+                              rooms={rooms}
+                              handleCreateRoom={handleCreateRoom}
                             />
                           )}
                         </td>
