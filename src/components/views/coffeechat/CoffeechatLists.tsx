@@ -43,6 +43,10 @@ const CoffeechatLists = ({ initData }: Props) => {
       <div className="md:w-[500px] sm:w-full mx-auto mt-10 mb-10">
         <SearchBar onSearch={handleSearch} doSearch={doSearch} isLong={true} />
       </div>
+      {coffeechatSearchList && coffeechatSearchList.length === 0 && (
+        // TODO: 검색 결과 없는 이미지 추가
+        <p className="mt-20 text-center text-xl text-gray-500">검색 결과가 없습니다.</p>
+      )}
       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {coffeechatSearchList
           ? coffeechatSearchList.map((item: any) => (
