@@ -283,7 +283,7 @@
 <br >
 - URL: https://www.notion.so/FESP_-_EduTube-4873904b5a454a29b51c90a9b7ee3b06
 
-![화면 캡처 2023-12-23 155508](https://github.com/FESPfinal/EDUTUBE/assets/119591236/20f00325-4b60-45dd-ae3f-32e362bc1322)
+![노션](https://github.com/FESPfinal/EDUTUBE/assets/119591236/6da9a379-b265-45ab-9ebd-5243eb165209)
 
 <br>
 
