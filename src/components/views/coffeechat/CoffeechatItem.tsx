@@ -10,10 +10,9 @@ const CoffeechatItem = ({ item }: Props) => {
   return (
     <li
       key={item._id}
-      className="relative group bg-white p-4 rounded-lg shadow-md overflow-hidden scrollbar-hide transition duration-300 hover:opacity-80 "
+      className="relative group bg-white p-4 rounded-lg shadow-md overflow-hidden scrollbar-hide transition duration-300 hover:opacity-80"
     >
       <Link href={`coffeechat/info/${item._id}`}>
-
         <NextImage
           src={item.mainImages[0]}
           alt="Coffee Image"
