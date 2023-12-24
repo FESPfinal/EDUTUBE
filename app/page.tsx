@@ -13,11 +13,7 @@ async function getData() {
 
 const Home = async () => {
   const data = await getData();
-  return (
-    <>
-      <CoffeechatLists initData={data.item} />
-    </>
-  );
+  return <CoffeechatLists initData={data.item} />;
 };
 
 export default Home;

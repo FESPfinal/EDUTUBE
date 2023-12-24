@@ -8,6 +8,8 @@ import useUpdateOrder from '@/queries/coffeechat/order/useUpdateOrder';
 import useDeleteCoffeechatCart from '@/queries/coffeechat/cart/useDeleteCoffeechatCart';
 import useUpdateUserInfo from '@/queries/mypage/useUpdateUserInfo';
 import useUserCartInfo from '@/stores/cart';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 type SelectedItem = {
   _id: number;
@@ -22,8 +24,8 @@ export type IsSelectedItem = {
 const Cart = () => {
   const { userInfo } = useUserInfo(store => store);
   const { decreaseUserCartCount } = useUserCartInfo(store => store);
-  const { data: cartData, refetch: cartRefetch } = useSelectCart();
-  const { mutate: orderMutate } = useUpdateOrder();
+  const { data: cartData, refetch: cartRefetch, isLoading: cartDataIsLoading } = useSelectCart();
+  const { mutate: orderMutate, isPending: orderMutateIsPending } = useUpdateOrder();
   const { mutate: deleteCartItemMutate } = useDeleteCoffeechatCart();
   const { mutate: updateUserInfoMutate } = useUpdateUserInfo();
 
@@ -152,6 +154,16 @@ const Cart = () => {
           role="list"
           className="divide-y divide-gray-100 overflow-y-auto min-h-[calc(100vh-330px)] max-h-[calc(100vh-330px)] scrollbar-hide"
         >
+          {cartDataIsLoading && (
+            <>
+              <li>
+                <Skeleton height={150} />
+              </li>
+              <li>
+                <Skeleton height={150} />
+              </li>
+            </>
+          )}
           {cartData?.map((item: CartItem) => (
             <CartItemCard
               data={item}
@@ -177,9 +189,9 @@ const Cart = () => {
               <button
                 className="w-fit h-fit px-3 py-3 text-white bg-light-main rounded-md hover:bg-dark-main focus:outline-none disabled:bg-dark-disabled"
                 onClick={onPurchase}
-                disabled={!isPurchased}
+                disabled={!isPurchased || orderMutateIsPending}
               >
-                POINT로 결제하기
+                {orderMutateIsPending ? '결제 중...' : 'POINT로 결제하기'}
               </button>
             </section>
           </div>
