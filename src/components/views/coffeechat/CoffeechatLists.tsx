@@ -12,8 +12,8 @@ interface Props {
 const CoffeechatLists = ({ initData }: Props) => {
   return (
     <>
-      <div className="h-60 bg-black text-white">
-        <Image src={banner} alt="광고사진" />
+      <div>
+        <Image className="bg-cover w-full" src={banner} alt="광고사진" />
       </div>
       <div className="h-10"></div>
       <div className="h-10" />
