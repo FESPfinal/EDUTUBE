@@ -1,5 +1,3 @@
-'use client';
-
 import MainLogoWhiteBook from '/public/images/main-logo-book.svg';
 
 const LoadingHome = () => {
