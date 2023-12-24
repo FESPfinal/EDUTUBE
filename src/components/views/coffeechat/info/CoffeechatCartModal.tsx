@@ -15,7 +15,8 @@ const CoffeechatCartModal = () => {
   const _id = params?._id as string;
   const { increaseUserCartCount } = useUserCartInfo(store => store);
   const { data: coffeechatDetailData } = useSelectCoffeechatInfo(_id);
-  const { mutate: mutateCartCoffeechat } = useCreateCoffeechatCart();
+  const { mutate: mutateCartCoffeechat, isPending: isPendingCartCoffeechat } =
+    useCreateCoffeechatCart();
   const [selectedDatetimeId, setSelectedDatetimeId] = useState<number>();
 
   const handleDatetimeClick = (timeId: number) => {
@@ -96,10 +97,10 @@ const CoffeechatCartModal = () => {
             ))}
         </div>
         <Button
-          content="장바구니"
+          content={isPendingCartCoffeechat ? '요청 중입니다...' : '장바구니'}
           size="medium"
           onClick={() => selectedDatetimeId && cartCoffeechat(selectedDatetimeId)}
-          disabled={selectedDatetimeId === undefined}
+          disabled={selectedDatetimeId === undefined || isPendingCartCoffeechat}
         />
       </div>
     </>

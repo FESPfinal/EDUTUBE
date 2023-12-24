@@ -8,7 +8,7 @@ import Radio from '@/components/atom/Radio';
 import { jobCategoryConst, regionCategoryConst } from '@/helper/constants/categoryConst';
 import { PLACE_TYPES } from '@/helper/constants/placeConst';
 // queries
-import useUpdateCoffeechat, { } from '@/queries/coffeechat/update/useUpdateCoffeechat';
+import useUpdateCoffeechat from '@/queries/coffeechat/update/useUpdateCoffeechat';
 import useCreateFile from '@/queries/common/useCreateFile';
 import useSelectCoffeechatInfo from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
 // library
@@ -51,26 +51,38 @@ const CoffeechatUpdate = () => {
   } = useForm<RegistFormData>({
     resolver: yupResolver(schema),
   });
-  const { mutate: mutateUpdateCoffeechat } = useUpdateCoffeechat();
-  const { data: coffeechatDetailData } = useSelectCoffeechatInfo(_id);
+  const { mutate: mutateUpdateCoffeechat, isPending: isPendingUpdateCoffeechat } =
+    useUpdateCoffeechat();
+  const { data: coffeechatDetailData, refetch: refetchCoffeechatDetailData } =
+    useSelectCoffeechatInfo(_id);
   const { mutate: createImageMutate } = useCreateFile();
   const { userInfo } = useUserInfo(store => store);
   const [placeType, setPlaceType] = useState(`${coffeechatDetailData?.extra.place}`);
   const [imageFile, setImageFile] = useState<File>();
-  const [selectedJobCategory, setSelectedJobCategory] = useState<string[]>([`${coffeechatDetailData?.extra.jobCategory[0]}`]);
-  const [selectedRegionCategory, setSelectedRegionCategory] = useState(`${coffeechatDetailData?.extra.regionCategory}`);
+  const [selectedJobCategory, setSelectedJobCategory] = useState<string[]>([
+    `${coffeechatDetailData?.extra.jobCategory[0]}`,
+  ]);
+  const [selectedRegionCategory, setSelectedRegionCategory] = useState(
+    `${coffeechatDetailData?.extra.regionCategory}`,
+  );
 
   useEffect(() => {
-    coffeechatDetailData && setSelectedJobCategory([coffeechatDetailData?.extra.jobCategory[0]])
-    coffeechatDetailData && setSelectedRegionCategory(coffeechatDetailData?.extra.regionCategory)
-    coffeechatDetailData && setPlaceType(`${coffeechatDetailData?.extra.place}`)
-  }, [coffeechatDetailData])
+    coffeechatDetailData && setSelectedJobCategory([coffeechatDetailData?.extra.jobCategory[0]]);
+    coffeechatDetailData && setSelectedRegionCategory(coffeechatDetailData?.extra.regionCategory);
+    coffeechatDetailData && setPlaceType(`${coffeechatDetailData?.extra.place}`);
+  }, [coffeechatDetailData]);
 
   const handlePlaceType = (type: string) => {
     setPlaceType(type);
   };
 
-  const updateParentsProduct = ({ formSubmitData, fileName }: { formSubmitData: RegistFormData; fileName: string }) => {
+  const updateParentsProduct = ({
+    formSubmitData,
+    fileName,
+  }: {
+    formSubmitData: RegistFormData;
+    fileName: string;
+  }) => {
     const updateData = {
       mainImages: [fileName],
       name: formSubmitData.name,
@@ -90,19 +102,22 @@ const CoffeechatUpdate = () => {
         jobCategory: coffeechatDetailData?.extra?.jobCategory,
         regionCategory: coffeechatDetailData?.extra?.regionCategory,
         productType: 'parents',
-        depth: 1
-      }
-    }
-    mutateUpdateCoffeechat({ updateData, _id }, {
-      onSuccess: () => {
-        alert('커피챗 게시물 수정이 성공적으로 완료되었습니다.')
-        router.push(`/coffeechat/info/${_id}`)
+        depth: 1,
       },
-      onError: error => {
-        alert(`${error.message}`)
-      }
-    })
-  }
+    };
+    mutateUpdateCoffeechat(
+      { updateData, _id },
+      {
+        onSuccess: () => {
+          alert('커피챗 게시물 수정이 성공적으로 완료되었습니다.');
+          router.push(`/coffeechat/info/${_id}`);
+        },
+        onError: error => {
+          alert(`${error.message}`);
+        },
+      },
+    );
+  };
 
   const onSubmit = (data: RegistFormData) => {
     const formData = new FormData();
@@ -112,13 +127,18 @@ const CoffeechatUpdate = () => {
         onSuccess: (fileName: { name: string; path: string }) => {
           const imagePath = fileName.path;
           updateParentsProduct({ formSubmitData: data, fileName: imagePath });
+          refetchCoffeechatDetailData();
         },
         onError: error => {
           alert(`이미지 업로드가 실패하였습니다. ${error.message}`);
         },
       });
     } else {
-      coffeechatDetailData?.mainImages[0] && updateParentsProduct({ formSubmitData: data, fileName: coffeechatDetailData.mainImages[0] })
+      coffeechatDetailData?.mainImages[0] &&
+        updateParentsProduct({
+          formSubmitData: data,
+          fileName: coffeechatDetailData.mainImages[0],
+        });
     }
   };
   return (
@@ -127,7 +147,10 @@ const CoffeechatUpdate = () => {
       <div className="mb-4">
         <label className="block text-gray-700">
           이미지 업로드
-          <ImageUploader onImageUpload={setImageFile} defaultImage={coffeechatDetailData?.mainImages[0]} />
+          <ImageUploader
+            onImageUpload={setImageFile}
+            defaultImage={coffeechatDetailData?.mainImages[0]}
+          />
         </label>
       </div>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -226,7 +249,12 @@ const CoffeechatUpdate = () => {
           >
             온라인
           </Radio>
-          <Radio value={PLACE_TYPES.OFFLINE} name={PLACE_TYPE} onClick={handlePlaceType} disabled={true} >
+          <Radio
+            value={PLACE_TYPES.OFFLINE}
+            name={PLACE_TYPE}
+            onClick={handlePlaceType}
+            disabled={true}
+          >
             오프라인
           </Radio>
           {placeType === PLACE_TYPES.ONLINE ? (
@@ -257,26 +285,25 @@ const CoffeechatUpdate = () => {
         <div className="mb-4">
           <label className="block text-gray-700">날짜 및 시간 등록</label>
           <div className="flex gap-2 flex-wrap mb-6 mt-6">
-            {coffeechatDetailData?.options?.item
-              .map((item, index: number) => (
+            {coffeechatDetailData?.options?.item.map((item, index: number) => (
+              <p
+                key={index}
+                className={` border-2 border-solid border-gray-400 rounded-lg p-2 minWidth-48 flex bg-gray-200 `}
+              >
                 <p
-                  key={index}
-                  className={` border-2 border-solid border-gray-400 rounded-lg p-2 minWidth-48 flex bg-gray-200 `}
+                  className={`text-gray-700 leading-6 mr-2 text-gray-400 
+                      `}
                 >
-                  <p
-                    className={`text-gray-700 leading-6 mr-2 text-gray-400 
-                      `}
-                  >
-                    {formatDate(item.extra.datetime.date)}&nbsp;
-                  </p>
-                  <p
-                    className={`text-gray-700 leading-6 text-gray-400
-                      `}
-                  >
-                    {formatTime(item.extra.datetime.time)}
-                  </p>
+                  {formatDate(item.extra.datetime.date)}&nbsp;
                 </p>
-              ))}
+                <p
+                  className={`text-gray-700 leading-6 text-gray-400
+                      `}
+                >
+                  {formatTime(item.extra.datetime.time)}
+                </p>
+              </p>
+            ))}
           </div>
           {/* [TODO] 날짜 시간 유효성 검사 수정 */}
         </div>
@@ -297,12 +324,17 @@ const CoffeechatUpdate = () => {
         </div>
         <button
           type="submit"
-          className="bg-light-main hover:bg-dark-main text-white p-2 rounded  w-full"
+          className={
+            isPendingUpdateCoffeechat
+              ? 'bg-light-disabled hover:bg-light-disabled text-white p-2 rounded  w-full'
+              : 'bg-light-main hover:bg-dark-main text-white p-2 rounded  w-full'
+          }
+          disabled={isPendingUpdateCoffeechat}
         >
-          등록
+          {isPendingUpdateCoffeechat ? '등록 중입니다...' : '등록'}
         </button>
       </form>
     </div>
-  )
-}
+  );
+};
 export default CoffeechatUpdate;
