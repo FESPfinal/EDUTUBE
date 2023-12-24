@@ -1,15 +1,82 @@
 'use client';
+import CoffeechatItem from '@/components/views/coffeechat/coffeechatItem';
+import SearchBar from '@/components/block/searchBar/SearchBar';
 import { CoffeechatList } from '@/queries/coffeechat/useSelectCoffeechatList';
-import Link from 'next/link';
+import useSelectCoffeechatSearch from '@/queries/coffeechat/useSelectCoffeechatSearch';
 import banner from '/public/images/banner.png';
 import Image from 'next/image';
-import NextImage from '@/components/atom/NextImage';
+import { useState } from 'react';
+
 
 interface Props {
   initData: CoffeechatList;
 }
 
 const CoffeechatLists = ({ initData }: Props) => {
+  const { mutate: searchMutate } = useSelectCoffeechatSearch();
+  const [coffeechatList, setCoffeechatList] = useState<CoffeechatList>(initData);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
+  }
+
+  const doSearch = () => {
+    if (searchTerm) {
+      searchMutate(searchTerm, {
+        onSuccess: (data) => {
+          setCoffeechatList(data);
+        },
+        onError: error => { alert(`검색에 실패하였습니다 ${error.message}`) }
+      });
+    } else {
+      setCoffeechatList(initData);
+    }
+  };
+
+  const sortMoreExpensivePrice = () => {
+    if (coffeechatList) {
+      const sortedList = [...coffeechatList].sort((a, b) => b.price - a.price)
+      setCoffeechatList(sortedList);
+    }
+  }
+
+  const sortCheaperPrice = () => {
+    if (coffeechatList) {
+      const sortedList = [...coffeechatList].sort((a, b) => a.price - b.price)
+      setCoffeechatList(sortedList);
+    }
+  }
+
+  const sortLatest = () => {
+    if (coffeechatList) {
+      const sortedList = [...coffeechatList].sort((a, b) => {
+        const dateA = new Date(a.createdAt);
+        const dateB = new Date(b.createdAt);
+        if (!isNaN(dateA.getTime()) && !isNaN(dateB.getTime())) {
+          return dateB.getTime() - dateA.getTime();
+        }
+        return 0;
+      });
+      setCoffeechatList(sortedList);
+    }
+  }
+
+  const sortOldest = () => {
+    if (coffeechatList) {
+      const sortedList = [...coffeechatList].sort((a, b) => {
+        const dateA = new Date(a.createdAt);
+        const dateB = new Date(b.createdAt);
+        if (!isNaN(dateA.getTime()) && !isNaN(dateB.getTime())) {
+          return dateA.getTime() - dateB.getTime();
+        }
+        return 0;
+      });
+      setCoffeechatList(sortedList);
+    }
+  }
+
+
   return (
     <>
       <div>
@@ -17,46 +84,29 @@ const CoffeechatLists = ({ initData }: Props) => {
       </div>
       <div className="h-10"></div>
       <div className="h-10" />
+      <div className="md:w-[500px] sm:w-full mx-auto mt-10 mb-10">
+        <SearchBar onSearch={handleSearch} doSearch={doSearch} isLong={true} />
+      </div>
+      <div className="flex flex-row-reverse text-sm gap-3 mb-10">
+        <button className="text-gray-500" onClick={sortLatest}>최신순</button>
+        <p className="text-gray-500 leading-6" >|</p>
+        <button className="text-gray-500" onClick={sortOldest} >오래된 순</button>
+        <p className="text-gray-500 leading-6">|</p>
+        <button className="text-gray-500" onClick={sortMoreExpensivePrice}>가격 높은 순</button>
+        <p className="text-gray-500 leading-6">|</p>
+        <button className="text-gray-500" onClick={sortCheaperPrice}>가격 낮은 순</button>
+      </div>
+      {coffeechatList.length === 0 && (
+        // TODO: 검색 결과 없는 이미지 추가
+        <p className="mt-20 text-center text-xl text-gray-500">검색 결과가 없습니다.</p>
+      )}
       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {initData?.map(item => (
-          <li
-            key={item._id}
-            className="relative group bg-white p-4 rounded-lg shadow-md overflow-hidden scrollbar-hide transition duration-300 hover:opacity-80"
-          >
-            <Link href={`coffeechat/info/${item._id}`}>
-              <NextImage
-                src={item.mainImages[0]}
-                alt="Coffee Image"
-                className="w-full h-32 object-cover mb-4 rounded-md transform group-hover:scale-105 transition duration-300"
-              />
-              <div className="text-lg font-bold mb-2 text-opacity-90 group-hover:text-opacity-100 transition duration-300 text-black">
-                제목: {item.name}
-              </div>
-              <div className="text-gray-600 mb-2 text-opacity-70 group-hover:text-opacity-100 transition duration-300">
-                바리스타: {item.extra.author}
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <div className="min-w-fit text-xs font-semibold bg-light-main text-white w-fit px-2 py-1 rounded-xl">
-                  {item?.extra?.jobCategory?.[0] && item?.extra?.jobCategory[0]}
-                </div>
-                <div className="min-w-fit text-xs font-semibold bg-white text-light-main border border-light-main solid  w-fit px-2 py-1 rounded-xl">
-                  {item?.extra?.place}
-                </div>
-                {item.extra.place === 'offline' && (
-                  <div className="min-w-fit text-xs font-semibold bg-dark-main text-white w-fit px-2 py-1 rounded-xl">
-                    {item?.extra?.offline}
-                  </div>
-                )}
-              </div>
-              <div className="absolute top-0 left-0 w-full h-full opacity-0 bg-black text-white p-4 transition duration-300 group-hover:opacity-90">
-                <p className="text-lg font-bold mb-2">상세보기</p>
-                <p className="mb-2">intro: {item?.extra.intro}</p>
-              </div>
-            </Link>
-          </li>
+        {coffeechatList.map((item: any) => (
+          <CoffeechatItem key={item._id} item={item} />
         ))}
       </ul>
     </>
   );
-};
+}
+
 export default CoffeechatLists;
