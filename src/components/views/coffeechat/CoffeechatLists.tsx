@@ -82,8 +82,6 @@ const CoffeechatLists = ({ initData }: Props) => {
       <div>
         <Image className="bg-cover w-full" src={banner} alt="광고사진" />
       </div>
-      <div className="h-10"></div>
-      <div className="h-10" />
       <div className="md:w-[500px] sm:w-full mx-auto mt-10 mb-10">
         <SearchBar onSearch={handleSearch} doSearch={doSearch} isLong={true} />
       </div>

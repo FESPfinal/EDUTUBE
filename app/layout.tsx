@@ -3,6 +3,7 @@ import './globals.css';
 import Provider from './provider';
 import ReactQueryClient from '@/helper/utils/ReactQueryClient';
 import Navbar from '@/components/block/navbar/Navbar';
+import Footer from '@/components/views/footer/Footer';
 
 export const metadata: Metadata = {
   title: 'EDUTUBE 커피챗',
@@ -33,6 +34,7 @@ export default function RootLayout({
             </Provider>
           </div>
         </div>
+        <Footer />
       </body>
     </html>
   );
