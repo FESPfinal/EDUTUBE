@@ -15,7 +15,7 @@ const CoffeechatModal = () => {
   const params = useParams();
   const _id = params?._id as string;
   const { data: coffeechatDetailData, refetch: coffeechatRefetch } = useSelectCoffeechatInfo(_id);
-  const { mutate: mutateOrderCoffeechat } = useUpdateOrder();
+  const { mutate: mutateOrderCoffeechat, isPending: isPendingOrderCoffeechat } = useUpdateOrder();
   const { userInfo } = useUserInfo(store => store);
   const [selectedDatetimeId, setSelectedDatetimeId] = useState<number>();
   const [isPurchased, setIsPurchased] = useState(userInfo.extra.point > 0);
@@ -131,10 +131,10 @@ const CoffeechatModal = () => {
           </section>
         </div>
         <Button
-          content="예약하기"
+          content={isPendingOrderCoffeechat ? '요청 중입니다...' : '예약하기'}
           size="medium"
           onClick={() => selectedDatetimeId && reserveCoffeechat(selectedDatetimeId)}
-          disabled={!isPurchased || selectedDatetimeId === undefined}
+          disabled={isPendingOrderCoffeechat || !isPurchased || selectedDatetimeId === undefined}
         />
       </div>
     </>

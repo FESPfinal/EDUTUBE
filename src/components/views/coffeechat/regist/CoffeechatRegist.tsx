@@ -67,7 +67,7 @@ const CoffeechatRegist = () => {
   } = useForm<RegistFormData>({
     resolver: yupResolver(schema),
   });
-  const { mutate: mutateCreateProduct } = tempUseCreateProduct();
+  const { mutate: mutateCreateProduct, isPending: isPendingCreateProduct } = tempUseCreateProduct();
   const { mutate: createImageMutate } = useCreateFile();
   const { userInfo } = useUserInfo(store => store);
   const [placeType, setPlaceType] = useState(PLACE_TYPES.ONLINE);
@@ -407,9 +407,10 @@ const CoffeechatRegist = () => {
         </div>
         <button
           type="submit"
-          className="bg-light-main hover:bg-dark-main text-white p-2 rounded  w-full"
+          className="bg-light-main hover:bg-dark-main text-white p-2 rounded  w-full disabled:bg-dark-disabled"
+          disabled={isPendingCreateProduct}
         >
-          등록
+          {isPendingCreateProduct ? '등록 중입니다...' : '등록'}
         </button>
       </form>
     </div>
