@@ -10,9 +10,10 @@ const CoffeechatItem = ({ item }: Props) => {
   return (
     <li
       key={item._id}
-      className="relative group bg-white p-4 rounded-lg shadow-md overflow-hidden scrollbar-hide transition duration-300 hover:opacity-80"
+      className="relative group bg-white p-4 rounded-lg shadow-md overflow-hidden scrollbar-hide transition duration-300 hover:opacity-80 "
     >
       <Link href={`coffeechat/info/${item._id}`}>
+
         <NextImage
           src={item.mainImages[0]}
           alt="Coffee Image"
@@ -33,9 +34,16 @@ const CoffeechatItem = ({ item }: Props) => {
           </div>
           {item.extra.place === 'offline' && (
             <div className="min-w-fit text-xs font-semibold bg-dark-main text-white w-fit px-2 py-1 rounded-xl">
-              {item?.extra?.offline}
+              {item?.extra?.offline && (
+                item.extra.offline.length > 6
+                  ? `${item.extra.offline.slice(0, 6)}`
+                  : item.extra.offline
+              )}
             </div>
           )}
+        </div>
+        <div className="text-black font-bold text-lg mt-2 text-right ">
+          <p>{item?.price} 포인트</p>
         </div>
         <div className="absolute top-0 left-0 w-full h-full opacity-0 bg-black text-white p-4 transition duration-300 group-hover:opacity-90">
           <p className="text-lg font-bold mb-2">상세보기</p>
