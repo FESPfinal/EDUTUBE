@@ -21,7 +21,7 @@ export type Extra = {
   parent: number;
 };
 
-type Options = {
+export type Options = {
   _id: number;
   mainImages: string[];
   name: string;

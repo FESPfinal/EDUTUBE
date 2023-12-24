@@ -29,9 +29,9 @@ const useSelectMyCoffeechatChatLink = (_id: number) => {
   const getAxios = async () => {
     const response = await edutubeAxios.get(URL(_id));
     const lastItemIndex = response.data.item.length - 1;
-    return response.data.item?.[lastItemIndex] as ChatLinkItem;
+    return (response.data.item[lastItemIndex] as ChatLinkItem) || {};
   };
-  return useQuery({ queryKey: [URL, _id], queryFn: getAxios });
+  return useQuery({ queryKey: [URL(_id), _id], queryFn: getAxios });
 };
 
 export default useSelectMyCoffeechatChatLink;

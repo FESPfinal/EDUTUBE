@@ -7,6 +7,7 @@ import CartItemCard from './CartItem';
 import useUpdateOrder from '@/queries/coffeechat/order/useUpdateOrder';
 import useDeleteCoffeechatCart from '@/queries/coffeechat/cart/useDeleteCoffeechatCart';
 import useUpdateUserInfo from '@/queries/mypage/useUpdateUserInfo';
+import useUserCartInfo from '@/stores/cart';
 
 type SelectedItem = {
   _id: number;
@@ -20,6 +21,7 @@ export type IsSelectedItem = {
 };
 const Cart = () => {
   const { userInfo } = useUserInfo(store => store);
+  const { decreaseUserCartCount } = useUserCartInfo(store => store);
   const { data: cartData, refetch: cartRefetch } = useSelectCart();
   const { mutate: orderMutate } = useUpdateOrder();
   const { mutate: deleteCartItemMutate } = useDeleteCoffeechatCart();
@@ -98,6 +100,7 @@ const Cart = () => {
             return cartData?.filter(item => item.product_id === product_id)[0]._id;
           });
           cartIdList.map(cartId => cartId && deleteCartItemMutate(cartId));
+          decreaseUserCartCount(selectedItemList.length);
           updateUserInfoMutate({ extra: { point: userInfo.extra.point - sumSelectedItemPoint } });
           resetData();
         },
