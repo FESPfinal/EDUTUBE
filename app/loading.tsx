@@ -1,9 +1,7 @@
-'use client';
+import Loading from '@/components/views/loading/Loading';
 
-import LoadingHome from '@/components/views/loading/LoadingHome';
-
-const Loading = () => {
-  return <LoadingHome />;
+const LoadingPage = () => {
+  return <Loading />;
 };
 
-export default Loading;
+export default LoadingPage;
