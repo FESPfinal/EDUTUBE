@@ -1,5 +1,6 @@
 'use client';
 import { useTheme } from 'next-themes';
+import MainLogoWhiteBook from '/public/images/main-logo-book.svg';
 
 interface Props {
   width: string;
@@ -14,9 +15,11 @@ const SkeletonBox = ({ width, height, round }: Props) => {
   return (
     <div
       style={{ width: `${width}`, height: `${height}`, borderRadius: `${round}px` }}
-      className={`
+      className={`flex justify-center flex-col items-center
         ${currentTheme === 'dark' ? 'bg-dark-disabled' : 'bg-light-disabled'}`}
-    ></div>
+    >
+      <MainLogoWhiteBook />
+    </div>
   );
 };
 
