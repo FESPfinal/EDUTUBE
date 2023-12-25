@@ -12,29 +12,36 @@ interface Props {
   parentsId: string;
   chatLink: string | undefined;
   rooms: RoomsData;
-  handleCreateRoom: (optionData: ReservedState, callback: (isCreatedChat: boolean) => void) => void;
+  handleCreateRoom: (
+    optionData: ReservedState,
+    callback: (isCreatedChat: boolean, chatLink: string) => void,
+  ) => void;
 }
 
 const MyCoffeechatDetailChatButton = ({ data, rooms, handleCreateRoom }: Props) => {
   const { data: chatLinkData } = useSelectMyCoffeechatChatLink(data.itemInfo.optionId);
-  const [isExist, setExist] = useState<boolean>();
+  const [isExist, setExist] = useState({ isExist: !!chatLinkData?.title, chatLink: '' });
 
   useEffect(() => {
-    setExist(
-      rooms && !!Object.keys(rooms).filter(key => `/mypage/chat/${key}` === chatLinkData?.title)[0],
-    );
+    const roomKey = Object.keys(rooms).filter(
+      key => `/mypage/chat/${key}` === chatLinkData?.title,
+    )[0];
+    setExist({
+      isExist: rooms && !!roomKey,
+      chatLink: `/mypage/chat/${roomKey}`,
+    });
   }, [chatLinkData, rooms]);
 
   const handleOnClick = () => {
-    handleCreateRoom(data, isCreatedChat => setExist(isCreatedChat));
+    handleCreateRoom(data, (isCreatedChat, chatLink) =>
+      setExist({ isExist: isCreatedChat, chatLink }),
+    );
   };
-
-  console.log(isExist);
 
   return (
     <>
-      {isExist ? (
-        <Link href={chatLinkData?.title || ''}>
+      {isExist.isExist ? (
+        <Link href={chatLinkData?.title || isExist.chatLink || ''}>
           <Button
             content={'채팅방 참여'}
             size={'small'}
