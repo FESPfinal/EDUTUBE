@@ -72,7 +72,7 @@ const MyCoffeechatDetail = () => {
   const updateLink = (
     response: CreateRoomResponse,
     optionData: ReservedState,
-    callback: (isCreatedChat: boolean) => void,
+    callback: (isCreatedChat: boolean, chatLink: string) => void,
   ) => {
     const roomKey = Object.entries(response.roomList).filter(
       item => item[1].parents_option === `${_id}_${optionData.itemInfo.optionId}`,
@@ -94,7 +94,7 @@ const MyCoffeechatDetail = () => {
           onSuccess: () => {
             refetchAll();
             const isCreatedChat = true;
-            callback(isCreatedChat);
+            callback(isCreatedChat, chatLink);
           },
         },
       );
@@ -104,7 +104,7 @@ const MyCoffeechatDetail = () => {
   // 채팅방 생성
   const handleCreateRoom = (
     optionData: ReservedState,
-    callback: (isCreatedChat: boolean) => void,
+    callback: (isCreatedChat: boolean, chatLink: string) => void,
   ) => {
     console.log('clicked');
     if (userInfo) {
