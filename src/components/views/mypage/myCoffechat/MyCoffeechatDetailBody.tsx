@@ -66,7 +66,10 @@ type OrderFormat = {
 interface Props {
   _id: string;
   rooms: RoomsData;
-  handleCreateRoom: (optionData: ReservedState, callback: (isCreatedChat: boolean) => void) => void;
+  handleCreateRoom: (
+    optionData: ReservedState,
+    callback: (isCreatedChat: boolean, chatLink: string) => void,
+  ) => void;
 }
 
 const MyCoffeechatDetailBody = ({ _id, rooms, handleCreateRoom }: Props) => {
