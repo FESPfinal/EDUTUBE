@@ -51,7 +51,6 @@
  <td align="center" width="100px">사용 기술</td>
  <td width="800px">
   <img src="https://img.shields.io/badge/NEXTJS-ffffff?style=for-the-badge&logo=Next.JS&logoColor=000000"/>&nbsp  
-  <img src="https://img.shields.io/badge/REACT-61DAFB?style=for-the-badge&logo=React&logoColor=white"/>&nbsp 
   <img src="https://img.shields.io/badge/React%20Query-FF4154?style=for-the-badge&logo=ReactQuery&logoColor=white"/>&nbsp 
   <img src="https://img.shields.io/badge/zustand-528DD7?style=for-the-badge&logo=zustand&logoColor=black"/>&nbsp
   <img src="https://img.shields.io/badge/axios-7F2B7B?style=for-the-badge&logo=axios&logoColor=white"/>&nbsp 
