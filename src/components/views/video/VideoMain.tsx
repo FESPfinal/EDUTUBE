@@ -3,8 +3,8 @@ interface Props {
   initData: any;
 }
 
-const VideoLists = ({ initData }: Props) => {
+const VideoMain = ({ initData }: Props) => {
   return <>비디오 홈</>;
 };
 
-export default VideoLists;
+export default VideoMain;
