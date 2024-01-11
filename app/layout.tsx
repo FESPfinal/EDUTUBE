@@ -6,7 +6,7 @@ import Navbar from '@/components/block/navbar/Navbar';
 import Footer from '@/components/views/footer/Footer';
 
 export const metadata: Metadata = {
-  title: 'EDUTUBE 커피챗',
+  title: 'EDUTUBE',
   description: '교육 영상을 원하는 카테고리별로 무료수강하고, 현직자와 커피챗을 진행해보세요!',
   openGraph: {
     images: ['/uploads/edutube.jpg'],

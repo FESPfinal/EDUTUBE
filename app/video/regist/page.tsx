@@ -1,5 +1,7 @@
-const VideoRegist = () => {
-  return <h2>Video Regist</h2>;
+import VideoRegist from '@/components/views/video/regist/VideoRegist';
+
+const VideoRegistPage = () => {
+  return <VideoRegist />;
 };
 
-export default VideoRegist;
+export default VideoRegistPage;
