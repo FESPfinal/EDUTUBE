@@ -8,7 +8,6 @@ import * as yup from 'yup';
 import VideoList from './VideoList';
 import youtubeApi from '@/helper/utils/youtube/youtubeApi';
 import { extractVideoId } from '@/helper/utils/youtube';
-import { YoutubeResponse } from '@/helper/types/youtube';
 
 const youtubeRegex = /^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/;
 
@@ -63,9 +62,7 @@ const VideoRegist = () => {
     };
   };
 
-  console.log(videoList);
-
-  const handleVideoList = async (e: React.MouseEvent) => {
+  const addVideoList = async (e: React.MouseEvent) => {
     e.preventDefault();
     const videoUrl = getValues('videoUrl');
     const videoId = videoUrl && extractVideoId(videoUrl);
@@ -80,12 +77,20 @@ const VideoRegist = () => {
       alert('올바른 주소를 입력해주세요.');
     }
   };
+
+  const deleteVideoList = (videoId: string) => {
+    setVideoList(state => state.filter(video => video._id !== videoId));
+  };
+
+  const moveVideoList = (movedVideos: YoutubeSnippet[]) => {
+    setVideoList(movedVideos);
+  };
   return (
     <>
       <section>
         <p>동영상 커리큘럼 만들기</p>
       </section>
-      <section className="max-w-md mx-auto my-16">
+      <section className="max-w-xl mx-auto my-16">
         <div className="mb-4">
           <label className="block text-gray-700">
             썸네일 업로드
@@ -140,7 +145,11 @@ const VideoRegist = () => {
           </div>
           <div>
             동영상 리스트
-            <VideoList data={videoList} />
+            <VideoList
+              videos={videoList}
+              deleteVideoList={deleteVideoList}
+              moveVideoList={moveVideoList}
+            />
             <div className="flex gap-1">
               <input
                 type="text"
@@ -150,7 +159,7 @@ const VideoRegist = () => {
               />
               <button
                 type="button"
-                onClick={handleVideoList}
+                onClick={addVideoList}
                 className="p-2 bg-blue-500 text-white rounded hover:bg-blue-700"
               >
                 동영상 추가
