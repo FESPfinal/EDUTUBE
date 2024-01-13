@@ -1,15 +1,14 @@
 'use client';
 import Category from '@/components/atom/Category';
 import ImageUploader from '@/components/atom/ImageUploader';
+import { jobCategoryConst } from '@/helper/constants/categoryConst';
+import { extractVideoId, makeVideoSnippet } from '@/helper/utils/youtube';
+import useCreateVideoList from '@/queries/video/regist/useCreateVideoList';
 import { yupResolver } from '@hookform/resolvers/yup';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import VideoList from './VideoList';
-import youtubeApi from '@/helper/utils/youtube/youtubeApi';
-import { extractVideoId } from '@/helper/utils/youtube';
-import useCreateVideoList from '@/queries/video/regist/useCreateVideoList';
-import { jobCategoryConst } from '@/helper/constants/categoryConst';
 
 const youtubeRegex = /^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/;
 
@@ -79,20 +78,6 @@ const VideoRegist = () => {
   }, []);
 
   const onSubmit = (data: RegistFormData) => {};
-
-  const makeVideoSnippet = async (videoId: string, videoUrl: string) => {
-    const snippet = await youtubeApi(videoId);
-    return {
-      _id: snippet.items[0].id,
-      channelId: snippet.items[0].snippet.channelId,
-      title: snippet.items[0].snippet.localized?.title || snippet.items[0].snippet.title,
-      description:
-        snippet.items[0].snippet.localized?.description || snippet.items[0].snippet.description,
-      thumbnails: snippet.items[0].snippet.thumbnails.high.url,
-      channelTitle: snippet.items[0].snippet.channelTitle,
-      link: videoUrl,
-    };
-  };
 
   const addVideoList = async (e: React.MouseEvent) => {
     e.preventDefault();
