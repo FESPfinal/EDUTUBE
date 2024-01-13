@@ -6,6 +6,9 @@ import React, { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import VideoList from './VideoList';
+import youtubeApi from '@/helper/utils/youtube/youtubeApi';
+import { extractVideoId } from '@/helper/utils/youtube';
+import { YoutubeResponse } from '@/helper/types/youtube';
 
 const youtubeRegex = /^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/;
 
@@ -26,30 +29,57 @@ const schema = yup.object().shape({
 
 type RegistFormData = yup.InferType<typeof schema>;
 
+export type YoutubeSnippet = {
+  _id: string;
+  channelId: string;
+  title: string;
+  description: string;
+  thumbnails: string;
+  channelTitle: string;
+  link: string;
+};
+
 const VideoRegist = () => {
   const { register, handleSubmit, getValues, setValue } = useForm({
     resolver: yupResolver(schema),
   });
 
   const [imageFile, setImageFile] = useState<File>();
-  const [videoList, setVideoList] = useState<string[]>([]);
+  const [videoList, setVideoList] = useState<YoutubeSnippet[]>([]);
 
   const onSubmit = (data: RegistFormData) => {};
 
-  const handleVideoList = (e: React.MouseEvent) => {
+  const makeVideoSnippet = async (videoId: string, videoUrl: string) => {
+    const snippet = await youtubeApi(videoId);
+    return {
+      _id: snippet.items[0].id,
+      channelId: snippet.items[0].snippet.channelId,
+      title: snippet.items[0].snippet.localized?.title || snippet.items[0].snippet.title,
+      description:
+        snippet.items[0].snippet.localized?.description || snippet.items[0].snippet.description,
+      thumbnails: snippet.items[0].snippet.thumbnails.high.url,
+      channelTitle: snippet.items[0].snippet.channelTitle,
+      link: videoUrl,
+    };
+  };
+
+  console.log(videoList);
+
+  const handleVideoList = async (e: React.MouseEvent) => {
     e.preventDefault();
     const videoUrl = getValues('videoUrl');
-    if (videoUrl && youtubeRegex.test(videoUrl)) {
-      if (videoList.includes(videoUrl)) {
+    const videoId = videoUrl && extractVideoId(videoUrl);
+    if (videoId && videoUrl && youtubeRegex.test(videoUrl)) {
+      if (videoList.map(video => video._id).includes(videoId)) {
         return alert('이미 추가된 영상입니다.');
       }
-      setVideoList(state => [...state, videoUrl]);
+      const videoSnippet = await makeVideoSnippet(videoId, videoUrl);
+      setVideoList(state => [...state, videoSnippet]);
       setValue('videoUrl', '');
     } else {
       alert('올바른 주소를 입력해주세요.');
     }
   };
-
   return (
     <>
       <section>
