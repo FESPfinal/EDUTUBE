@@ -37,12 +37,18 @@ const Navbar = () => {
           </div>
           <div className="flex gap-6 text-white text-xl">
             <Link href={'/'}>
-              <div className={!isCoffeechat ? 'border border-solid border-white' : ''}>
+              <div
+                className={
+                  !isCoffeechat ? 'p-2  font-semibold underline underline-offset-8' : 'p-2'
+                }
+              >
                 <span>커리큘럼 동영상</span>
               </div>
             </Link>
             <Link href={'/coffeechat'}>
-              <div className={isCoffeechat ? 'border border-solid border-white' : ''}>
+              <div
+                className={isCoffeechat ? 'p-2 font-semibold underline  underline-offset-8' : 'p-2'}
+              >
                 <span>커피챗</span>
               </div>
             </Link>
