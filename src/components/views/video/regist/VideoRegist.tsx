@@ -3,12 +3,23 @@ import Category from '@/components/atom/Category';
 import ImageUploader from '@/components/atom/ImageUploader';
 import { jobCategoryConst } from '@/helper/constants/categoryConst';
 import { extractVideoId, makeVideoSnippet } from '@/helper/utils/youtube';
-import useCreateVideoList from '@/queries/video/regist/useCreateVideoList';
+import useCreateVideoList, {
+  VideoData,
+  YoutubeSnippet,
+} from '@/queries/video/regist/useCreateVideoList';
 import { yupResolver } from '@hookform/resolvers/yup';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import VideoList from './VideoList';
+import VideoRegistList from './VideoRegistList';
+import H3 from '@/components/atom/H3';
+import useCreateFile from '@/queries/common/useCreateFile';
+import useUserInfo from '@/stores/userInfo';
+
+import { faYoutube } from '@fortawesome/free-brands-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { useRouter } from 'next/navigation';
 
 const youtubeRegex = /^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/;
 
@@ -43,17 +54,8 @@ const schema = yup.object().shape({
 
 type RegistFormData = yup.InferType<typeof schema>;
 
-export type YoutubeSnippet = {
-  _id: string;
-  channelId: string;
-  title: string;
-  description: string;
-  thumbnails: string;
-  channelTitle: string;
-  link: string;
-};
-
 const VideoRegist = () => {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -65,7 +67,8 @@ const VideoRegist = () => {
     resolver: yupResolver(schema),
     mode: 'onChange',
   });
-
+  const { userInfo } = useUserInfo(store => store);
+  const { mutate: createThumbnailMutate } = useCreateFile();
   const { mutate: videoCreateMutate, isPending: isPendingCreateProduct } = useCreateVideoList();
 
   const [imageFile, setImageFile] = useState<File>();
@@ -77,7 +80,38 @@ const VideoRegist = () => {
     setValue('videoList', []);
   }, []);
 
-  const onSubmit = (data: RegistFormData) => {};
+  const onSubmit = (data: RegistFormData) => {
+    const videoDataFormat = (fileName: string): VideoData => {
+      return {
+        name: data.name,
+        mainImages: [fileName],
+        content: data.content,
+        author: userInfo.name,
+        profile: userInfo.extra.profileImage.path,
+        category: category,
+        videoList: videoList,
+      };
+    };
+    const formData = new FormData();
+    if (imageFile) {
+      formData.append('attach', imageFile);
+      createThumbnailMutate(formData, {
+        onSuccess: (fileName: string) => {
+          videoCreateMutate(videoDataFormat(fileName), {
+            onSuccess: () => {
+              alert('동영상 플레이 리스트를 등록하였습니다.');
+              router.push('/');
+            },
+          });
+        },
+        onError: () => {
+          alert('썸네일 업로드가 실패하였습니다.');
+        },
+      });
+    } else {
+      alert('프로필 사진을 등록해주세요.');
+    }
+  };
 
   const addVideoList = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -113,13 +147,10 @@ const VideoRegist = () => {
   };
   return (
     <>
-      <section>
-        <p>동영상 커리큘럼 만들기</p>
-      </section>
       <section className="max-w-xl mx-auto my-16">
         <div className="mb-4">
-          <label className="block text-gray-700">
-            썸네일 업로드
+          <label>
+            <H3>썸네일 업로드</H3>
             <ImageUploader
               onImageUpload={async e => {
                 setImageFile(e);
@@ -130,10 +161,10 @@ const VideoRegist = () => {
           </label>
           {errors.image && <p className="text-red-500 text-sm">{errors.image.message}</p>}
         </div>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="mb-4">
-            <label className="block text-gray-700">
-              제목
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
+          <div>
+            <label>
+              <H3>제목</H3>
               <input
                 type="text"
                 placeholder="제목을 입력해주세요"
@@ -143,9 +174,9 @@ const VideoRegist = () => {
             </label>
             {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
           </div>
-          <div className="mb-4">
-            <label className="block text-gray-700">
-              내용
+          <div>
+            <label>
+              <H3>내용</H3>
               <input
                 type="text"
                 placeholder="내용을 입력해주세요"
@@ -158,51 +189,55 @@ const VideoRegist = () => {
             </label>
             {errors.content && <p className="text-red-500 text-sm">{errors.content.message}</p>}
           </div>
-          <div className="mb-4">
-            <label className="block text-gray-700">직무 카테고리 선택</label>
-            <div className="flex mt-2 flex-wrap gap-2 ">
-              {jobCategoryConst.map(jobCategory => (
-                <Category
-                  key={jobCategory}
-                  name={jobCategory}
-                  setSelectedCategory={async ({ name }) => {
-                    if (category[0] == name) {
-                      setCategory([]);
-                      setValue('category', []);
-                    } else {
-                      setCategory([name]);
-                      setValue('category', [name]);
-                    }
-                    await trigger('category');
-                  }}
-                  selectedCategory={category[0]}
-                />
-              ))}
-            </div>
+          <div>
+            <label>
+              <H3>직무 카테고리 선택</H3>
+              <div className="flex mt-2 flex-wrap gap-2 ">
+                {jobCategoryConst.map(jobCategory => (
+                  <Category
+                    key={jobCategory}
+                    name={jobCategory}
+                    setSelectedCategory={async ({ name }) => {
+                      if (category[0] == name) {
+                        setCategory([]);
+                        setValue('category', []);
+                      } else {
+                        setCategory([name]);
+                        setValue('category', [name]);
+                      }
+                      await trigger('category');
+                    }}
+                    selectedCategory={category[0]}
+                  />
+                ))}
+              </div>
+            </label>
             {errors.category && <p className="text-red-500 text-sm">{errors.category.message}</p>}
           </div>
           <div>
-            동영상 리스트
-            <VideoList
-              videos={videoList}
-              deleteVideoList={deleteVideoList}
-              moveVideoList={moveVideoList}
-            />
-            <div className="flex gap-1">
-              <input
-                type="text"
-                placeholder="제목을 입력해주세요"
-                {...register('videoUrl')}
-                className="flex-grow p-2 border rounded "
+            <label>
+              <H3>동영상 리스트</H3>
+              <VideoRegistList
+                videos={videoList}
+                deleteVideoList={deleteVideoList}
+                moveVideoList={moveVideoList}
               />
-              <button
-                type="button"
-                onClick={addVideoList}
-                className="p-2 bg-blue-500 text-white rounded hover:bg-blue-700"
-              >
-                동영상 추가
-              </button>
-            </div>
+              <div className="flex gap-1 mt-1">
+                <input
+                  type="text"
+                  placeholder="Youtube 링크를 입력해주세요"
+                  {...register('videoUrl')}
+                  className="flex-grow p-2 border rounded "
+                />
+                <button
+                  type="button"
+                  onClick={addVideoList}
+                  className="p-2 bg-red-600 text-white rounded hover:bg-stone-900"
+                >
+                  <FontAwesomeIcon icon={faYoutube as IconProp} /> 링크 추가
+                </button>
+              </div>
+            </label>
             {errors.videoList && <p className="text-red-500 text-sm">{errors.videoList.message}</p>}
           </div>
           <button

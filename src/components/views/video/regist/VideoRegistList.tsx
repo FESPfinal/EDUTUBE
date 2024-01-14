@@ -1,10 +1,11 @@
 'use client';
 
-import { YoutubeSnippet } from './VideoRegist';
 import NextImage from '@/components/atom/NextImage';
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { YoutubeSnippet } from '@/queries/video/regist/useCreateVideoList';
 
 interface Props {
   videos: YoutubeSnippet[];
@@ -12,7 +13,7 @@ interface Props {
   moveVideoList: (movedVideos: YoutubeSnippet[]) => void;
 }
 
-const VideoList = ({ videos, deleteVideoList, moveVideoList }: Props) => {
+const VideoRegistList = ({ videos, deleteVideoList, moveVideoList }: Props) => {
   const [draggedVideo, setDraggedVideo] = useState<YoutubeSnippet | null>(null);
 
   const handleDragStart = (event: React.MouseEvent, video: YoutubeSnippet) => {
@@ -39,18 +40,18 @@ const VideoList = ({ videos, deleteVideoList, moveVideoList }: Props) => {
   };
 
   return (
-    <ul>
+    <ul className="flex flex-col gap-1">
       {videos?.map((video, i) => {
         return (
           <li
             key={video._id}
-            className="flex gap-1 mb-2 border border-solid border-color-gray rounded-lg"
+            className="flex gap-1 border border-solid border-color-gray rounded-lg"
             draggable={!draggedVideo} // 드래그 가능한지 여부를 설정하여 드래그 중에는 다른 요소가 드래그되지 않도록 합니다.
             onDragStart={event => handleDragStart(event, video)}
             onDragOver={event => handleDragOver(event, video)}
             onDrop={event => handleDrop(event, video)}
           >
-            <div className="pl-1 flex items-center">
+            <div className="pl-1 flex items-center cursor-pointer">
               <FontAwesomeIcon icon={faBars} />
             </div>
             <figure className="w-4/12">
@@ -65,8 +66,15 @@ const VideoList = ({ videos, deleteVideoList, moveVideoList }: Props) => {
               <p className="overflow-hidden whitespace-nowrap overflow-ellipsis">{video.title}</p>
               <p>{video.channelTitle}</p>
             </div>
-            <button className="p-4" onClick={() => deleteVideoList(video._id)}>
-              x
+            <button
+              type="button"
+              className="p-4"
+              onClick={e => {
+                e.preventDefault();
+                deleteVideoList(video._id);
+              }}
+            >
+              <FontAwesomeIcon icon={faXmark} />
             </button>
           </li>
         );
@@ -75,4 +83,4 @@ const VideoList = ({ videos, deleteVideoList, moveVideoList }: Props) => {
   );
 };
 
-export default VideoList;
+export default VideoRegistList;
