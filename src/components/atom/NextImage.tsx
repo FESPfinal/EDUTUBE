@@ -8,6 +8,7 @@ interface Props {
   src: string;
   alt?: string;
   className?: string;
+  youtube?: boolean;
 }
 
 const regex = /https:\/\//;
@@ -16,12 +17,13 @@ const NextImage = ({
   src,
   alt = '',
   className = 'w-full h-32 object-cover mb-4 rounded-md',
+  youtube,
 }: Props) => {
-  const isShow = !regex.test(src) && !!src && typeof src == 'string';
+  const isShow = youtube ? true : !regex.test(src) && !!src && typeof src == 'string';
 
   return isShow ? (
     <Image
-      src={IMAGE_ROUTE + src}
+      src={youtube ? src : IMAGE_ROUTE + src}
       alt={alt}
       width={80}
       height={80}

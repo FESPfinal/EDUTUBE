@@ -1,4 +1,4 @@
-import CoffeechatLists from '@/components/views/coffeechat/CoffeechatLists';
+import VideoMain from '@/components/views/video/VideoMain';
 
 const URL = `${process.env.NEXT_PUBLIC_EDUTUBE_API}/products`;
 
@@ -13,7 +13,7 @@ async function getData() {
 
 const Home = async () => {
   const data = await getData();
-  return <CoffeechatLists initData={data.item} />;
+  return <VideoMain initData={data.item} />;
 };
 
 export default Home;

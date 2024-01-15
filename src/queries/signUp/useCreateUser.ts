@@ -2,7 +2,6 @@
 
 import useEdutubeAxios from '@/helper/utils/useEdutubeAxios';
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
 
 export type SignUpData = {
   email: string;
@@ -22,7 +21,6 @@ export type SignUpData = {
   };
 };
 
-const BASE_URL = process.env.NEXT_PUBLIC_EDUTUBE_API;
 const URL = '/users';
 
 const useCreateUser = () => {
