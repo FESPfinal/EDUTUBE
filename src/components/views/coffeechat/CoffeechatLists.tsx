@@ -1,14 +1,14 @@
 'use client';
+import Category from '@/components/atom/Category';
 import SearchBar from '@/components/block/searchBar/SearchBar';
+import CoffeechatItem from '@/components/views/coffeechat/CoffeechatItem';
+import { jobCategoryConst, regionCategoryConst } from '@/helper/constants/categoryConst';
 import { CoffeechatList } from '@/queries/coffeechat/useSelectCoffeechatList';
 import useSelectCoffeechatSearch from '@/queries/coffeechat/useSelectCoffeechatSearch';
-import banner from '/public/images/banner.png';
+import useSelectInfiniteCoffeechatList from '@/queries/coffeechat/useSelectInfiniteCoffeechatList';
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
-import CoffeechatItem from './CoffeechatItem';
-import Category from '@/components/atom/Category';
-import { jobCategoryConst, regionCategoryConst } from '@/helper/constants/categoryConst';
-
+import React, { useEffect, useRef, useState } from 'react';
+import banner from '/public/images/banner.png';
 
 interface Props {
   initData: CoffeechatList;
@@ -16,10 +16,38 @@ interface Props {
 
 const CoffeechatLists = ({ initData }: Props) => {
   const { mutate: searchMutate } = useSelectCoffeechatSearch();
+  const { data: coffeechatListData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage, } = useSelectInfiniteCoffeechatList();
   const [coffeechatList, setCoffeechatList] = useState<CoffeechatList>(initData);
   const [selectedJobCategory, setSelectedJobCategory] = useState<string[]>([]);
   const [selectedRegionCategory, setSelectedRegionCategory] = useState<string>('');
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!loadMoreRef.current || !hasNextPage) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting) {
+          fetchNextPage();
+        }
+      },
+      {
+        threshold: 0.1
+      }
+    );
+
+    observer.observe(loadMoreRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [loadMoreRef.current, hasNextPage, fetchNextPage]);
 
   useEffect(() => {
     setCoffeechatList(initData);
@@ -113,7 +141,7 @@ const CoffeechatLists = ({ initData }: Props) => {
       <div className="md:w-[500px] sm:w-full mx-auto mt-10 mb-10">
         <SearchBar onSearch={handleSearch} doSearch={doSearch} isLong={true} />
       </div>
-      <div className="flex mt-2 flex-wrap gap-2 justify-center items-center mb-4">
+      <div className="flex mt-2 flex-wrap gap-2 justify-center items-center mb-4" >
         {jobCategoryConst.map(category => (
           <Category
             key={category}
@@ -162,11 +190,25 @@ const CoffeechatLists = ({ initData }: Props) => {
         // TODO: 검색 결과 없는 이미지 추가
         <p className="mt-20 text-center text-xl text-gray-500">검색 결과가 없습니다.</p>
       )}
-      <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {coffeechatList.map((item: any) => (
+      {/* <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {allCoffeechatList.map((item: any) => (
           <CoffeechatItem key={item._id} item={item} />
         ))}
+      </ul> */}
+      <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" >
+        {coffeechatListData && coffeechatListData.pages.map((group, i) => (
+          <React.Fragment key={i}>
+            {group?.map((item: any) => (
+              <CoffeechatItem key={item._id} item={item} />
+            ))}
+          </React.Fragment>
+        ))}
       </ul>
+      <div ref={loadMoreRef} className="flex justify-center items-center mt-10">
+        {isFetchingNextPage ? (
+          <div className="w-6 h-6 border-t-4 border-light-main rounded-full animate-spin-slow" />
+        ) : null}
+      </div>
     </>
   );
 };
