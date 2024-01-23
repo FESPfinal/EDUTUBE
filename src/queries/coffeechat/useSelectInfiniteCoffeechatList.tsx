@@ -35,7 +35,7 @@ export type CoffeechatItem = {
 
 export type CoffeechatList = CoffeechatItem[];
 
-const URL = (pageParam: number) => `/products?page=${pageParam}&limit=3`;
+const URL = (pageParam: number) => `/products?page=${pageParam}&limit=12`;
 
 const useSelectInfiniteCoffeechatList = () => {
   const { edutubeAxios } = useEdutubeAxios();
@@ -45,7 +45,7 @@ const useSelectInfiniteCoffeechatList = () => {
     return response.data.item as CoffeechatList;
   };
 
-  const { data, fetchNextPage, isFetchingNextPage, hasNextPage } = useInfiniteQuery({
+  const { data, fetchNextPage, isFetchingNextPage, hasNextPage, isLoading } = useInfiniteQuery({
     queryKey: ['coffeechatList'],
     queryFn: ({ pageParam }) => axiosGet(pageParam),
     initialPageParam: 1,
@@ -56,7 +56,7 @@ const useSelectInfiniteCoffeechatList = () => {
       return lastPageParam + 1;
     },
   });
-  return { data, fetchNextPage, isFetchingNextPage, hasNextPage };
+  return { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage };
 };
 
 
