@@ -17,6 +17,7 @@ interface Props {
 const CoffeechatLists = ({ initData }: Props) => {
   const { mutate: searchMutate } = useSelectCoffeechatSearch();
   const { data: coffeechatListData,
+    isLoading,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage, } = useSelectInfiniteCoffeechatList();
@@ -190,25 +191,28 @@ const CoffeechatLists = ({ initData }: Props) => {
         // TODO: 검색 결과 없는 이미지 추가
         <p className="mt-20 text-center text-xl text-gray-500">검색 결과가 없습니다.</p>
       )}
-      {/* <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {allCoffeechatList.map((item: any) => (
-          <CoffeechatItem key={item._id} item={item} />
-        ))}
-      </ul> */}
-      <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" >
-        {coffeechatListData && coffeechatListData.pages.map((group, i) => (
-          <React.Fragment key={i}>
-            {group?.map((item: any) => (
-              <CoffeechatItem key={item._id} item={item} />
+      {isLoading ?
+        (<ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {coffeechatList.map((item: any) => (
+            <CoffeechatItem key={item._id} item={item} />
+          ))}
+        </ul>) : (
+          <div><ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" >
+            {coffeechatListData && coffeechatListData.pages.map((group, i) => (
+              <React.Fragment key={i}>
+                {group?.map((item: any) => (
+                  <CoffeechatItem key={item._id} item={item} />
+                ))}
+              </React.Fragment>
             ))}
-          </React.Fragment>
-        ))}
-      </ul>
-      <div ref={loadMoreRef} className="flex justify-center items-center mt-10">
-        {isFetchingNextPage ? (
-          <div className="w-6 h-6 border-t-4 border-light-main rounded-full animate-spin-slow" />
-        ) : null}
-      </div>
+          </ul>
+            <div ref={loadMoreRef} className="flex justify-center items-center mt-10">
+              {isFetchingNextPage ? (
+                <div className="w-6 h-6 border-t-4 border-light-main rounded-full animate-spin-slow" />
+              ) : null}
+            </div>
+          </div>)
+      }
     </>
   );
 };
