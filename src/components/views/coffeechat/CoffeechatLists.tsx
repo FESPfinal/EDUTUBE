@@ -4,8 +4,11 @@ import { CoffeechatList } from '@/queries/coffeechat/useSelectCoffeechatList';
 import useSelectCoffeechatSearch from '@/queries/coffeechat/useSelectCoffeechatSearch';
 import banner from '/public/images/banner.png';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import CoffeechatItem from './CoffeechatItem';
+import Category from '@/components/atom/Category';
+import { jobCategoryConst, regionCategoryConst } from '@/helper/constants/categoryConst';
+
 
 interface Props {
   initData: CoffeechatList;
@@ -14,7 +17,32 @@ interface Props {
 const CoffeechatLists = ({ initData }: Props) => {
   const { mutate: searchMutate } = useSelectCoffeechatSearch();
   const [coffeechatList, setCoffeechatList] = useState<CoffeechatList>(initData);
+  const [selectedJobCategory, setSelectedJobCategory] = useState<string[]>([]);
+  const [selectedRegionCategory, setSelectedRegionCategory] = useState<string>('');
   const [searchTerm, setSearchTerm] = useState<string>('');
+
+  useEffect(() => {
+    setCoffeechatList(initData);
+    if (selectedJobCategory.length !== 0 && selectedRegionCategory.length !== 0) {
+      const filteredList = initData.filter((item) => {
+        return selectedJobCategory[0] == item.extra.jobCategory[0] && selectedRegionCategory == item.extra.regionCategory;
+      })
+      setCoffeechatList(filteredList);
+    }
+    else if (selectedJobCategory.length !== 0) {
+      const matchedJobCategory = initData.filter((item) => {
+        return selectedJobCategory[0] == item.extra.jobCategory[0];
+      });
+      setCoffeechatList(matchedJobCategory);
+    }
+    else if (selectedRegionCategory.length !== 0) {
+      const matchedRegionCategory = initData.filter((item) => {
+        return selectedRegionCategory == item.extra.regionCategory;
+      });
+      setCoffeechatList(matchedRegionCategory);
+    }
+  }, [selectedJobCategory, selectedRegionCategory])
+
 
   const handleSearch = (term: string) => {
     setSearchTerm(term);
@@ -84,6 +112,34 @@ const CoffeechatLists = ({ initData }: Props) => {
       </div>
       <div className="md:w-[500px] sm:w-full mx-auto mt-10 mb-10">
         <SearchBar onSearch={handleSearch} doSearch={doSearch} isLong={true} />
+      </div>
+      <div className="flex mt-2 flex-wrap gap-2 justify-center items-center mb-4">
+        {jobCategoryConst.map(category => (
+          <Category
+            key={category}
+            name={category}
+            setSelectedCategory={({ name }) => {
+              selectedJobCategory[0] == name
+                ? setSelectedJobCategory([])
+                : setSelectedJobCategory([name]);
+            }}
+            selectedCategory={selectedJobCategory[0]}
+          />
+        ))}
+      </div>
+      <div className="flex mt-2 flex-wrap gap-2 justify-center items-center mb-10">
+        {regionCategoryConst.map(category => (
+          <Category
+            key={category}
+            name={category}
+            setSelectedCategory={({ name }) => {
+              selectedRegionCategory == name
+                ? setSelectedRegionCategory('')
+                : setSelectedRegionCategory(name);
+            }}
+            selectedCategory={selectedRegionCategory}
+          />
+        ))}
       </div>
       <div className="flex flex-row-reverse text-sm gap-3 mb-10">
         <button className="text-gray-500" onClick={sortLatest}>
