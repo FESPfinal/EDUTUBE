@@ -1,6 +1,6 @@
 import VideoMain from '@/components/views/video/VideoMain';
 
-const URL = `${process.env.NEXT_PUBLIC_EDUTUBE_API}/products`;
+const URL = `${process.env.NEXT_PUBLIC_EDUTUBE_API}/products?custom={"extra.type": "video"}`;
 
 async function getData() {
   const res = await fetch(URL, { cache: 'no-store' });
@@ -13,6 +13,7 @@ async function getData() {
 
 const Home = async () => {
   const data = await getData();
+
   return <VideoMain initData={data.item} />;
 };
 
