@@ -43,9 +43,18 @@ module.exports = {
             borderColor: 'white',
           },
         },
+        spin: {
+          '0%': {
+            transform: 'rotate(0deg)'
+          },
+          '100%': {
+            transform: 'rotate(360deg)'
+          },
+        },
       },
       animation: {
         typing: 'typing 2s steps(20) infinite alternate, blink .7s infinite',
+        'spin-slow': 'spin 3s linear infinite',
       },
     },
   },
