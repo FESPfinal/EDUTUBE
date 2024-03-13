@@ -1,5 +1,5 @@
 import NextImage from '@/components/atom/NextImage';
-import { CoffeechatItem } from '@/queries/coffeechat/useSelectCoffeechatList'
+import { CoffeechatItem } from '@/queries/coffeechat/useSelectCoffeechatList';
 import Link from 'next/link';
 
 interface Props {
@@ -15,7 +15,7 @@ const CoffeechatItem = ({ item }: Props) => {
       <Link href={`coffeechat/info/${item._id}`}>
         <NextImage
           src={item.mainImages[0]}
-          alt="Coffee Image"
+          alt={item.name}
           className="w-full h-32 object-cover mb-4 rounded-md transform group-hover:scale-105 transition duration-300"
         />
         <div className="text-lg font-bold mb-2 text-opacity-90 group-hover:text-opacity-100 transition duration-300 text-black">
@@ -33,11 +33,10 @@ const CoffeechatItem = ({ item }: Props) => {
           </div>
           {item.extra.place === 'offline' && (
             <div className="min-w-fit text-xs font-semibold bg-dark-main text-white w-fit px-2 py-1 rounded-xl">
-              {item?.extra?.offline && (
-                item.extra.offline.length > 6
+              {item?.extra?.offline &&
+                (item.extra.offline.length > 6
                   ? `${item.extra.offline.slice(0, 6)}`
-                  : item.extra.offline
-              )}
+                  : item.extra.offline)}
             </div>
           )}
         </div>
