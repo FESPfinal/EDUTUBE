@@ -156,6 +156,7 @@ const CoffeechatInfo = ({ _id, initData }: Props) => {
               src={`${coffeechatList?.mainImages[0]}`}
               alt={`${coffeechatList?.name}`}
               className="w-full h-full object-cover"
+              isEager={true}
             />
           </div>
         </div>
@@ -169,7 +170,7 @@ const CoffeechatInfo = ({ _id, initData }: Props) => {
             />
             <p className="text-md font-bold">{coffeechatList?.extra.author}</p>
           </div>
-          <p className="mb-2"> {coffeechatList?.extra.intro}</p>
+          <p className="mb-2 h-8"> {coffeechatList?.extra.intro}</p>
           <div className="flex items-center gap-3" style={{ marginTop: 'auto' }}>
             <p className="inline-block rounded-full px-2 py-1 text-sm font-medium tracking-wide border-solid border bg-light-main text-white">
               {coffeechatList?.extra?.jobCategory?.[0]}

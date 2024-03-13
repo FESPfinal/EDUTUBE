@@ -10,6 +10,7 @@ interface Props {
   alt: string;
   className?: string;
   youtube?: boolean;
+  isEager?: boolean; //우선 로드 여부
 }
 
 const regex = /https:\/\//;
@@ -19,13 +20,14 @@ const NextImage = ({
   alt = '이미지',
   className = 'w-full h-32 object-cover mb-4 rounded-md',
   youtube,
+  isEager = false,
 }: Props) => {
   const [loaded, setLoaded] = useState(false);
   const isShow = youtube ? true : !regex.test(src) && !!src && typeof src == 'string';
 
   return isShow ? (
     <>
-      {!loaded && <div>{alt}</div>}
+      {!loaded && <div>{alt && alt !== 'undefined' ? alt : '메인 이미지'}</div>}
       <Image
         src={youtube ? src : IMAGE_ROUTE + src}
         alt={alt}
@@ -35,6 +37,7 @@ const NextImage = ({
         className={className}
         style={{ display: loaded ? 'block' : 'none' }}
         onLoad={() => setLoaded(true)}
+        loading={isEager ? 'eager' : 'lazy'}
       />
     </>
   ) : (
