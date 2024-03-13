@@ -445,52 +445,118 @@
 
 # 8. 주요 코드
 
-<details>
-<summary>커피챗 게시물 등록</summary>
+
+## 1) 커피챗 게시물 등록
+
+Yup 라이브러리와 React-hook-form을 사용하여 폼 유효성 검사를 적용합니다.
+
+### 구현 목적
+
+1. 리렌더링 최소화
+    - React Hook Form으로 입력 필드 갱신 시 리렌더링 최소화
+2. 유효성 검사 관리의 용이
+    - Yup으로 클라이언트 측에서 데이터 유효성 처리
+
+### 동작 원리
+**1. 유효성 검사 규칙 정의**
+
+커피챗 게시물을 등록할 때 Yup 라이브러리를 사용하여 폼 필드에 유효성 검사의 규칙을 정의한 코드입니다. schema를 useForm에 선언하여 Form 제출 시 유효성 검사를 실시합니다.
+
+```jsx
+const schema = yup.object().shape({
+	name: yup.string().required('제목을 입력해주세요.').max(30, '최대 30자까지 입력 가능합니다.'),
+	content: yup
+		.string()
+		.required('내용을 입력해주세요. ')
+		.min(10, '내용은 최소 10자 이상이어야 합니다.')
+		.max(500, '최대 500자까지 입력 가능합니다.')
+});
+```
+파일 위치: src/components/views/coffeechat/regist/coffeechatRegist.tsx
+
+**2. 입력 등록 및 에러 검사**
+
+react-hook-form에서는 register 훅으로 입력을 등록하고, 유효성 검사에 통과하지 못할 시 error message를 보여주고 통과 시 Form이 제출 됩니다.
+
+```jsx
 <div>
+	<label>
+		제목
+		<input
+			type="text"
+			placeholder="제목을 입력하세요."
+			{...register('name', { required: '제목은 필수 입력입니다.' })}
+		/>
+	</label>
+	{errors.name && <p>{errors/name.message}</p>}
+</div>
+```
+파일위치: src/components/views/coffeechat/regist/coffeechatRegist.tsx
 
-React-Hook-Form으로 입력 필드 갱신시 리렌더링 최소화하며, yup으로 클라이언트 측에서 데이터 유효성을 처리합니다.
+## 2) 인증 토큰 관리
 
-Yup 라이브러리로 폼 필드에 유효성 검사 규칙을 정의한 뒤, React-Hook-Form에서는 register훅으로 입력 등록 및 errors 객체로 유효성 검사 오류를 처리합니다.
+Axios instance Zustand를 사용하여 인증 토큰을 관리합니다.
+
+### 구현 목적
+
+1. 개발 효율성을 증대
+- Axios Intercepter를 사용해 header에 baseUrl과 accessToken을 세팅하여 axios 사용 시 반복적인 config 설정없이 사용할 수 있도록 하였습니다.
+2. 보안 강화
+- accessToken을 zustand에 저장하여 외부에 노출 시키지 않음으로서 보안을 강화하였습니다.
+3. 사용자 경험 향상
+- refresh token을 사용해 access token을 재발급 받게 함으로써 사용자의 세션을 유지해 사용자 경험을 향상하였습니다.
+
+### 동작 원리
+
+**1. 토큰 저장**
+
+사용자가 로그인을 하면 응답값에서 access token을 store에 refresh token은 쿠키에 저장합니다.
 
 ```tsx
-const schema = yup.object().shape({
-  name: yup.string().required('제목을 입력해주세요.').max(30, '최대 30자까지 입력 가능합니다.'),
-  content: yup
-    .string()
-    .required('내용을 입력해주세요.')
-    .min(10, '내용은 최소 10자 이상이어야 합니다.')
-    .max(500, '최대 500자까지 입력 가능합니다.'),
-  intro: yup.string().required('소개글을 입력해주세요.').max(50, '최대 50자까지 입력 가능합니다.'),
-  datetimeList: yup.array().of(datetimeSchema).required('하나 이상의 날짜 및 시간을 추가해주세요.'),
-  price: yup
-    .number()
-    .required('가격을 입력해주세요.')
-    .min(0, '최소 가격은 0 이어야 합니다.')
-    .typeError('숫자를 입력하세요.'),
-  online: yup.string(),
-  offline: yup.string(),
-  onlinePlace: yup.string(),
-  offlinePlace: yup.string(),
-});
-
+const useAuth = create<Auth>(set => ({
+  accessToken: '',
+  setAccessToken: (token: string) => {
+    set({ accessToken: token });
+  },
+  deleteAccessToken: () => set({ accessToken: '' }),
+}));
 ```
 
-</div>
-</details>
+파일위치: src/stores/auth.ts
 
-<details>
-<summary>인증 토큰 관리</summary>
-<div>
+**2. axios instance에 access token 추가**
 
-각 axios 요청마다 헤더에 access token을 설정하는 번거로움을 줄입니다.
-
-로컬 스토리지 대신 zustand와 쿠키를 사용하여 access token을 저장함으로써, XSS와 CSRF와 같은 공격에 대한 방어력을 강화합니다.
-
-새로고침이나 다른 상황에서 zustand가 초기화되더라도 자동으로 access token을 재발급받아 설정하므로, 사용자는 세션을 유지하는데 문제가 없습니다.
+store에 저장된 acesstoken을 axios intercepter를 사용해 헤더에 추가합니다.
 
 ```tsx
-  edutubeAxios.interceptors.response.use(
+edutubeAxios.interceptors.request.use(
+  config => {
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+    return config;
+  },
+  error => Promise.reject(error),
+);
+```
+
+파일위치: src/helper/utils/useEdutubeAxios.ts
+
+**3. 새로 고침 대응**
+
+쿠키에 저장된 refresh token을 사용해 새로고침을 해도 accesstoken을 재발급 받아 사용할 수 있습니다. 
+
+```tsx
+const useRefreshToken = async () => {
+  const refreshToken = Cookies.get('refreshToken');
+  return await axios.get(BASE_URL + URL, { headers: { Authorization: `Bearer ${refreshToken}` } });
+};
+```
+
+파일위치: src/queries/auth/useRefreshToken.ts
+
+```tsx
+edutubeAxios.interceptors.response.use(
     response => {
       // 응답 성공 시 처리 로직
       return response;
@@ -524,21 +590,42 @@ const schema = yup.object().shape({
       return Promise.reject(error);
     },
   );
-
 ```
+파일위치: src/helper/utils/useEdutubeAxios.ts
 
-</div>
-</details>
+## 채팅 기능(Socket.io-client)
+
+soket.io-client를 사용하여 채팅기능을 구현하였습니다. 
+
+### 구현 목적
+
+1. **유저의 이탈을 방지**
+- 서비스내애서 모든 동작이 이루어지게 함으로써 사용자의 서비스 이탈을 방지합니다.
+  
+2. **편리성**
+- 줌이나 카카오톡 등 다른 플랫폼을 이용할 필요 없이 서비스 내에서 바로 소통할 수 있게 함으로서 편리성을 증대합니다.
+  
+3. **유저 참여 증가**
+- 유저의 참여도를 증가하게 하여 만족도 및 브랜드 충성도를 향상합니다.
+
+### 동작 원리
+
+동작 원리로는 채팅방을 생성하고, 입장하며, 커피챗을 진행 하는 것입니다. 
+
+**1. 채팅방 생성 및 입장**
+
+![image](https://github.com/FESPfinal/EDUTUBE/assets/67677374/262da895-a37e-4880-8bde-66f02324069a)
 
 
-<details>
-<summary>채팅 기능(Socket.io-client)</summary>
-<div>
+바리스타가 채팅방 생성 버튼을 클릭하면 백엔드에서 채팅방 번호를 생성해주고, 응답 받은 채팅방 번호를 게시물 생성 api에 받아 post한 후 게시물 정보를 저장하고, 게시물 생성이 성공적으로 이루어졌다면 채팅방 입장으로 버튼이 변경하게 됩니다.
 
-서비스 내에서 커피챗의 전체 과정이 이루어지도록 함으로써, 사용자의 서비스 이탈을 방지합니다.
+이후 손님은 채팅방에 입장하여 의사소통을 할 수 있습니다.
 
-또한 서비스 내에서 바로 소통할 수 있어 다른 플랫폼으로 이동할 필요가 없어 유저들이 서비스에
-더욱 적극적으로 참여하도록 유도해 유저의 참여도와 만족도를 높이며 브랜드 충성도를 향상시킵니다.
+웹소켓의 경우에는 컴포넌트가 마운트 될 때 연결이 설정되고, 언마운트 될 때 연결이 해제됩니다.
+
+**2. 채팅방의 정책**
+
+채팅방의 정책의 경우 커피챗 시작 시간 10분 전 부터 커피챗 예약 시간에만 입장이 가능하며, 그 이외에는 채팅방 입장이 불가능 합니다. 관련 기능을 구현하기 위해 시간계산 함수를 별도로 구현하였습니다.
 
 ```tsx
 /**
@@ -575,11 +662,9 @@ export const isBetweenTenToHour = (datetime: string) => {
   const isMoreThanHour = calculateTimeDifferenceInMinutes(datetime) <= -oneHourMilliseconds;
   return isLessThanTen && isMoreThanHour;
 };
-
 ```
 
-</div>
-</details>
+파일위치: src/helper/utils/datetime.ts
 
 <br>
 
