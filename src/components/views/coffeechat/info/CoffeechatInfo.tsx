@@ -193,10 +193,7 @@ const CoffeechatInfo = ({ _id, initData }: Props) => {
         <div className="md:w-2/3 p-3 border-2 border-gray-200">
           <div id="content" className="mb-6">
             <p className="text-lg font-bold mb-2">내용</p>
-            <p
-              className="text-md mb-2"
-              dangerouslySetInnerHTML={{ __html: coffeechatList?.content || '' }}
-            />
+            <p className="text-md mb-2">{coffeechatList?.content || ''}</p>
           </div>
           <div id="schedule" className="mb-6 ">
             <h3 className="text-lg font-bold mb-4">일정</h3>
