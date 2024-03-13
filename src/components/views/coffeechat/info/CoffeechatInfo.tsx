@@ -1,27 +1,26 @@
 'use client';
 import Avatar from '@/components/atom/Avatar';
 import {
+  default as CartButton,
   default as DeleteButton,
   default as PurchaseButton,
-  default as CartButton,
   default as UpdateButton,
 } from '@/components/atom/Button';
+import NextImage from '@/components/atom/NextImage';
 import RatingSummary from '@/components/views/coffeechat/review/RatingSummary';
 import ReplyItemCard from '@/components/views/coffeechat/review/ReplyItem';
 import { IMAGE_ROUTE } from '@/helper/constants/commons';
+import { formatDate, formatTime, isOverThanReserveTime } from '@/helper/utils/datetime';
+import useDeleteCoffeechat from '@/queries/coffeechat/delete/useDeleteCoffeechat';
 import useSelectCoffeechatInfo, {
   Options,
   ProductItem,
 } from '@/queries/coffeechat/info/useSelectCoffeechatInfo';
 import useSelectReply from '@/queries/coffeechat/review/useSelectReply';
-import useDeleteCoffeechat from '@/queries/coffeechat/delete/useDeleteCoffeechat';
 import useUserInfo from '@/stores/userInfo';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { formatDate, formatTime, isOverThanReserveTime } from '@/helper/utils/datetime';
-import NextImage from '@/components/atom/NextImage';
 
 interface Props {
   _id: string;
@@ -157,27 +156,43 @@ const CoffeechatInfo = ({ _id, initData }: Props) => {
               src={`${coffeechatList?.mainImages[0]}`}
               alt={`${coffeechatList?.name}`}
               className="w-full h-full object-cover"
+              isEager={true}
+              priority={true}
             />
           </div>
         </div>
         {/* 색션 1-2 */}
         <div className="md:w-1/3 p-2 flex flex-col gap-3">
-          <h1 className="text-2xl font-bold mb-2">{coffeechatList?.name}</h1>
-          <div className="flex items-center gap-3 mb-2">
-            <Avatar
-              imageUrl={`${IMAGE_ROUTE}${coffeechatList?.extra.authorImage}`}
-              size={'xsmall'}
-            />
-            <p className="text-md font-bold">{coffeechatList?.extra.author}</p>
+          <h1 className="text-2xl font-bold mb-2">
+            {coffeechatList ? coffeechatList?.name : 'Loading...'}
+          </h1>
+          <div className="flex items-center gap-3 mb-2 h-8">
+            {coffeechatList ? (
+              <>
+                <Avatar
+                  imageUrl={`${IMAGE_ROUTE}${coffeechatList?.extra.authorImage}`}
+                  size={'xsmall'}
+                />
+                <p className="text-md font-bold">{coffeechatList?.extra.author}</p>
+              </>
+            ) : (
+              'Loading...'
+            )}
           </div>
-          <p className="mb-2"> {coffeechatList?.extra.intro}</p>
-          <div className="flex items-center gap-3" style={{ marginTop: 'auto' }}>
-            <p className="inline-block rounded-full px-2 py-1 text-sm font-medium tracking-wide border-solid border bg-light-main text-white">
-              {coffeechatList?.extra?.jobCategory?.[0]}
-            </p>
-            <p className="inline-block rounded-full px-2 py-1 text-sm font-medium tracking-wide border-solid border bg-dark-main text-white">
-              {coffeechatList?.extra.regionCategory}
-            </p>
+          <p className="mb-2 h-8"> {coffeechatList?.extra.intro}</p>
+          <div className="flex items-center gap-3 h-8" style={{ marginTop: 'auto' }}>
+            {coffeechatList ? (
+              <>
+                <p className="inline-block rounded-full px-2 py-1 text-sm font-medium tracking-wide border-solid border bg-light-main text-white h-8">
+                  {coffeechatList?.extra?.jobCategory?.[0]}
+                </p>
+                <p className="inline-block rounded-full px-2 py-1 text-sm font-medium tracking-wide border-solid border bg-dark-main text-white h-8">
+                  {coffeechatList?.extra.regionCategory}
+                </p>
+              </>
+            ) : (
+              <>Loading...</>
+            )}
           </div>
         </div>
       </div>
@@ -194,10 +209,7 @@ const CoffeechatInfo = ({ _id, initData }: Props) => {
         <div className="md:w-2/3 p-3 border-2 border-gray-200">
           <div id="content" className="mb-6">
             <p className="text-lg font-bold mb-2">내용</p>
-            <p
-              className="text-md mb-2"
-              dangerouslySetInnerHTML={{ __html: coffeechatList?.content || '' }}
-            />
+            <p className="text-md mb-2">{coffeechatList?.content}</p>
           </div>
           <div id="schedule" className="mb-6 ">
             <h3 className="text-lg font-bold mb-4">일정</h3>
