@@ -8,7 +8,7 @@ import useSelectCoffeechatSearch from '@/queries/coffeechat/useSelectCoffeechatS
 import useSelectInfiniteCoffeechatList from '@/queries/coffeechat/useSelectInfiniteCoffeechatList';
 import Image from 'next/image';
 import React, { useEffect, useRef, useState } from 'react';
-import banner from '/public/images/banner.png';
+import banner from '/public/images/banner.webp';
 
 interface Props {
   initData: CoffeechatList;
@@ -16,11 +16,13 @@ interface Props {
 
 const CoffeechatLists = ({ initData }: Props) => {
   const { mutate: searchMutate } = useSelectCoffeechatSearch();
-  const { data: coffeechatListData,
+  const {
+    data: coffeechatListData,
     isLoading,
     fetchNextPage,
     hasNextPage,
-    isFetchingNextPage, } = useSelectInfiniteCoffeechatList();
+    isFetchingNextPage,
+  } = useSelectInfiniteCoffeechatList();
   const [coffeechatList, setCoffeechatList] = useState<CoffeechatList>(initData);
   const [selectedJobCategory, setSelectedJobCategory] = useState<string[]>([]);
   const [selectedRegionCategory, setSelectedRegionCategory] = useState<string>('');
@@ -39,8 +41,8 @@ const CoffeechatLists = ({ initData }: Props) => {
         }
       },
       {
-        threshold: 0.1
-      }
+        threshold: 0.1,
+      },
     );
 
     observer.observe(loadMoreRef.current);
@@ -53,25 +55,25 @@ const CoffeechatLists = ({ initData }: Props) => {
   useEffect(() => {
     setCoffeechatList(initData);
     if (selectedJobCategory.length !== 0 && selectedRegionCategory.length !== 0) {
-      const filteredList = initData.filter((item) => {
-        return selectedJobCategory[0] == item.extra.jobCategory[0] && selectedRegionCategory == item.extra.regionCategory;
-      })
+      const filteredList = initData.filter(item => {
+        return (
+          selectedJobCategory[0] == item.extra.jobCategory[0] &&
+          selectedRegionCategory == item.extra.regionCategory
+        );
+      });
       setCoffeechatList(filteredList);
-    }
-    else if (selectedJobCategory.length !== 0) {
-      const matchedJobCategory = initData.filter((item) => {
+    } else if (selectedJobCategory.length !== 0) {
+      const matchedJobCategory = initData.filter(item => {
         return selectedJobCategory[0] == item.extra.jobCategory[0];
       });
       setCoffeechatList(matchedJobCategory);
-    }
-    else if (selectedRegionCategory.length !== 0) {
-      const matchedRegionCategory = initData.filter((item) => {
+    } else if (selectedRegionCategory.length !== 0) {
+      const matchedRegionCategory = initData.filter(item => {
         return selectedRegionCategory == item.extra.regionCategory;
       });
       setCoffeechatList(matchedRegionCategory);
     }
-  }, [selectedJobCategory, selectedRegionCategory])
-
+  }, [selectedJobCategory, selectedRegionCategory]);
 
   const handleSearch = (term: string) => {
     setSearchTerm(term);
@@ -142,7 +144,7 @@ const CoffeechatLists = ({ initData }: Props) => {
       <div className="md:w-[500px] sm:w-full mx-auto mt-10 mb-10">
         <SearchBar onSearch={handleSearch} doSearch={doSearch} isLong={true} />
       </div>
-      <div className="flex mt-2 flex-wrap gap-2 justify-center items-center mb-4" >
+      <div className="flex mt-2 flex-wrap gap-2 justify-center items-center mb-4">
         {jobCategoryConst.map(category => (
           <Category
             key={category}
@@ -191,28 +193,31 @@ const CoffeechatLists = ({ initData }: Props) => {
         // TODO: 검색 결과 없는 이미지 추가
         <p className="mt-20 text-center text-xl text-gray-500">검색 결과가 없습니다.</p>
       )}
-      {isLoading ?
-        (<ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      {isLoading ? (
+        <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {coffeechatList.map((item: any) => (
             <CoffeechatItem key={item._id} item={item} />
           ))}
-        </ul>) : (
-          <div><ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" >
-            {coffeechatListData && coffeechatListData.pages.map((group, i) => (
-              <React.Fragment key={i}>
-                {group?.map((item: any) => (
-                  <CoffeechatItem key={item._id} item={item} />
-                ))}
-              </React.Fragment>
-            ))}
+        </ul>
+      ) : (
+        <div>
+          <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {coffeechatListData &&
+              coffeechatListData.pages.map((group, i) => (
+                <React.Fragment key={i}>
+                  {group?.map((item: any) => (
+                    <CoffeechatItem key={item._id} item={item} />
+                  ))}
+                </React.Fragment>
+              ))}
           </ul>
-            <div ref={loadMoreRef} className="flex justify-center items-center mt-10">
-              {isFetchingNextPage ? (
-                <div className="w-6 h-6 border-t-4 border-light-main rounded-full animate-spin-slow" />
-              ) : null}
-            </div>
-          </div>)
-      }
+          <div ref={loadMoreRef} className="flex justify-center items-center mt-10">
+            {isFetchingNextPage ? (
+              <div className="w-6 h-6 border-t-4 border-light-main rounded-full animate-spin-slow" />
+            ) : null}
+          </div>
+        </div>
+      )}
     </>
   );
 };
